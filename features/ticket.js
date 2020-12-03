@@ -25,9 +25,9 @@ module.exports = client => {
 
             if(channel.guild.member(client.user).hasPermission('ADMINISTRATOR')) {
 
-            const everyone = reaction.message.guild.roles.cache.find(r => r.name == '@everyone');
+            channel.updateOverwrite(reaction.message.guild.everyone, {VIEW_CHANNEL: false})
 
-            channel.updateOverwrite(everyone, {VIEW_CHANNEL: false})
+            channel.updateOverwrite(user, {VIEW_CHANNEL: true})
 
             ticketCategory.staff_roles.forEach(element => {
                 channel.updateOverwrite(element, {VIEW_CHANNEL: true})
@@ -49,7 +49,7 @@ module.exports = client => {
             channel.send(TicketCreatedEmbed)
             channel.send(`<@${user.id}>`)
 
-        })
+        }).catch(err => reaction.message.channel.send(`Couldn't create new channel. **Error**: \`${err}\``))
 
     })
 
