@@ -75,8 +75,9 @@ module.exports = client => {
 
     client.on('messageUpdate', async (oldMessage, newMessage) => {
 
-        if (oldMessage.embeds || newMessage.embeds) return;
+        if(oldMessage.partial || newMessage.partial) return;
 
+        if (oldMessage.embeds == [] || newMessage.embeds == []) return;
         if (!newMessage.editedAt) return;
 
         const result = await client.schemas.get('server-settings.js').findOne({ _id: newMessage.member.guild.id})
@@ -84,15 +85,19 @@ module.exports = client => {
         if(!result.logsChannelId) return;
         if(!client.channels.cache.find(c => c.id == result.logsChannelId)) return;
 
+        var writtenH = oldMessage.createdAt.getHours()
+        if(writtenH / 10 < 1) writtenH = `0${writtenH}`
+        var writtenM = oldMessage.createdAt.getMinutes()
+        if(writtenM / 10 < 1) writtenM = `0${writtenM}`
+
         let MessageUpdateEmbed = new Discord.MessageEmbed()
             .setTitle('Nachricht bearbeitet')
             .setColor('#292b2f')
             .setAuthor(newMessage.member.displayName, newMessage.author.displayAvatarURL({dynamic : true}))
             .addField('Zuvor:', oldMessage.content)
             .addField('Update:', newMessage.content)
-            .addField('Nachricht geschrieben:',`${oldMessage.createdAt.getHours()}:${oldMessage.createdAt.getMinutes()}, ${oldMessage.createdAt.toDateString()}`)
-            .addField('Channel:', newMessage.channel)
-            .addField('Nachricht:', newMessage.url)
+            .addField('Nachricht geschrieben:',`${writtenH}:${writtenM}, ${oldMessage.createdAt.toDateString()}`)
+            .addField('Channel:', `${newMessage.channel} \n [Go To Message](${newMessage.url})`)
             .setTimestamp(Date.now())
 
 
