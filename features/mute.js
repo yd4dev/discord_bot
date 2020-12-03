@@ -2,8 +2,6 @@ module.exports = client => {
 
     const checkMutes = async () => {
 
-        console.log('CHECKING MUTE DATA')
-
         const now = Date.now()
 
         const conditional = {
