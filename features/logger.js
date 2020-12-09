@@ -77,7 +77,7 @@ module.exports = client => {
 
         if(oldMessage.partial || newMessage.partial) return;
 
-        if (oldMessage.embeds == [] || newMessage.embeds == []) return;
+        if (oldMessage.embeds || newMessage.embeds) return;
         if (!newMessage.editedAt) return;
 
         const result = await client.schemas.get('server-settings.js').findOne({ _id: newMessage.member.guild.id})
