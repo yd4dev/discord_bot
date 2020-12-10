@@ -22,7 +22,8 @@ module.exports = client => {
             if(!result.autoChannel_channel) return;
             if(newState.channel.id != result.autoChannel_channel) return;
 
-            let name = result.autoChannel_name.replace('%USER', newState.member.displayName)
+            let name = result.autoChannel_name.replace('%USER[0]', newState.member.displayName.split(' ')[0])
+            name = name.replace('%USER', newState.member.displayName)
 
             newState.guild.channels.create(name, {
                 type: 'voice',
