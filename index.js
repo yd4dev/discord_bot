@@ -32,6 +32,14 @@ client.once('ready', async () => {
     client.user.setPresence({ activity: { name: `${client.guilds.cache.size} servers` , type: 'COMPETING'}, status: 'online' })
     loadFeatures(client);
     await mongo();
+
+    client.guilds.cache.forEach(async guild => {
+        if(!await client.schemas.get('server-settings.js').findOne({ _id: guild.id})) 
+        {
+            await client.schemas.get('server-settings.js').create({_id: guild.id})
+        }
+    })
+
     console.log('Ready!');
 });
 
@@ -42,9 +50,8 @@ client.on('message', async message => {
     const settings = await client.schemas.get('server-settings.js').findOne({ _id: message.guild.id})
 
     let prefix = '!'
-    if(settings) {
     if(settings.prefix) {
-        prefix = settings.prefix}}
+        prefix = settings.prefix}
 
     if (message.content.startsWith(prefix)) {
 
@@ -71,6 +78,17 @@ client.on('message', async message => {
     
     }
 
-});
+})
+
+client.on('GuildCreate', async guild => {
+
+    await client.schemas.get('server-settings.js').findOneAndUpdate({
+        _id: guild.id
+    }, {
+        _id: guild.id,
+    }, {
+        upsert: true
+    })
+})
 
     client.login(process.env.token);
