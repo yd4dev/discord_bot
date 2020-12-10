@@ -42,8 +42,9 @@ client.on('message', async message => {
     const settings = await client.schemas.get('server-settings.js').findOne({ _id: message.guild.id})
 
     let prefix = '!'
+    if(settings) {
     if(settings.prefix) {
-        prefix = settings.prefix}
+        prefix = settings.prefix}}
 
     if (message.content.startsWith(prefix)) {
 
