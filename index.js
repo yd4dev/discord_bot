@@ -13,8 +13,9 @@ client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
+    console.log(`Enabling command "${file}"`)
 	const command = require(`./commands/${file}`);
-	client.commands.set(command.name, command);
+    client.commands.set(command.name, command);
 }
 
 client.schemas = new Discord.Collection();
@@ -22,15 +23,16 @@ client.schemas = new Discord.Collection();
 const schemas = fs.readdirSync('./schemas').filter(file=> file.endsWith('.js'));
 
 for (const file of schemas) {
+    console.log(`Enabling schema "${file}"`)
     const schema = require(`./schemas/${file}`);
     client.schemas.set(path.basename(`./commands/${file}`), schema);
 }
 
 client.once('ready', async () => {
-    console.log('Ready!');
     client.user.setPresence({ activity: { name: `${client.guilds.cache.size} servers` , type: 'COMPETING'}, status: 'online' })
     loadFeatures(client);
     await mongo();
+    console.log('Ready!');
 });
 
 client.on('message', async message => {
