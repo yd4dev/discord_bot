@@ -26,6 +26,7 @@ module.exports = client => {
 
             newState.guild.channels.create(name, {
                 type: 'voice',
+                parent: newState.channel.parent,
                 permissionOverwrites: [
                    {
                      id: newState.member.id,
