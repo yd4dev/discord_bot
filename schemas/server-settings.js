@@ -10,7 +10,9 @@ const serverSettingsSchema = mongoose.Schema({
     prefix: {type: String},
     logsChannelId: {type: String},
     joinRoles: {type: Array},
-    bannedWords: {type: Array}
+    bannedWords: {type: Array},
+    autoChannel_channel: {type: String},
+    autoChannel_name: {type: String},
 });
 
 module.exports = mongoose.model('server-settings', serverSettingsSchema);
