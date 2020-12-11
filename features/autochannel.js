@@ -6,7 +6,7 @@ module.exports = client => {
 
           if(oldState.channel) {
 
-              if(oldState.channel.members.array.length == 0) {
+              if(oldState.channel.members.size == 0) {
                 let tempChannel = await client.schemas.get('tempChannel.js').findOne({ _id: oldState.channel.id})
                 if(tempChannel) {
                   oldState.channel.delete('Temp Channel')
