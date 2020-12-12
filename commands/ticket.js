@@ -50,7 +50,7 @@ module.exports = {
 
                     switch(operation) {
 
-                        //ticket category [name] edit [name] [newName]
+                        //ticket category [name] edit name [newName]
                         case 'edit':
                             switch(args[3]) {
                                 case 'name':
