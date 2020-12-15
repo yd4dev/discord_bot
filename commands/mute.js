@@ -11,7 +11,7 @@ module.exports = {
 
         if(!target) return message.reply('please provide a user.')
 
-        const currentlyMuted = await client.schemas.get('mute.js').find({
+        const currentlyMuted = await client.schemas.get('mute').find({
             guildId: message.guild.id,
             userId: target.id
             })
@@ -64,7 +64,7 @@ module.exports = {
 
         if(!mutedRole) return message.channel.send(`I could not find a \`Muted\` role. Let me set up one by using \`${prefix}setup mute\``)
 
-        await client.schemas.get('mute.js').findOneAndUpdate({
+        await client.schemas.get('mute').findOneAndUpdate({
 
             guildId: message.guild.id,
             userId: target.id,

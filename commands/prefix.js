@@ -6,7 +6,7 @@ module.exports = {
         
         if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply('I don\'t think you have enough permissions to run that command')
 
-        await client.schemas.get('server-settings.js').findOneAndUpdate({
+        await client.schemas.get('server-settings').findOneAndUpdate({
             _id: message.guild.id
         }, {
             _id: message.guild.id,

@@ -15,7 +15,7 @@ module.exports = {
 				if(!channel) return message.channel.send('Please provide a valid channel id.')
 				if(channel.type != 'voice') return message.channel.send('Please provide a voice channel.')
 
-				await client.schemas.get('server-settings.js').findOneAndUpdate({
+				await client.schemas.get('server-settings').findOneAndUpdate({
                     _id: message.guild.id
                 }, {
                     _id: message.guild.id,
@@ -35,7 +35,7 @@ module.exports = {
 
 				if( name == '' ) return message.channel.send('Please provide a channel name. Use `%USER` to add the username.')
 
-				await client.schemas.get('server-settings.js').findOneAndUpdate({
+				await client.schemas.get('server-settings').findOneAndUpdate({
                     _id: message.guild.id
                 }, {
                     _id: message.guild.id,

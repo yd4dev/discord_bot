@@ -9,12 +9,12 @@ module.exports = {
         const target = message.mentions.members.first();
         const mutedRole = message.guild.roles.cache.find(role => role.name === 'Muted')
 
-        const result = await client.schemas.get('mute.js').findOne({
+        const result = await client.schemas.get('mute').findOne({
             guildId: message.guild.id,
             userId: target.id
         })
 
-        const joinRoles = await client.schemas.get('server-settings.js').findOne({
+        const joinRoles = await client.schemas.get('server-settings').findOne({
             _id: message.guild.id
         })
 
@@ -33,7 +33,7 @@ module.exports = {
 
             target.roles.remove(mutedRole)
 
-            await client.schemas.get('mute.js').deleteOne(result)
+            await client.schemas.get('mute').deleteOne(result)
 
             message.channel.send(`Successfully unmuted ${target}.`)
 

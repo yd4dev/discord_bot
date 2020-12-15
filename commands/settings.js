@@ -8,16 +8,21 @@ module.exports = {
     
         if(!message.member.hasPermission('ADMINISTRATOR')) return message.reply('I don\'t think you have enough permissions to run that command')
 
-        let settings = await client.schemas.get('server-settings.js').findOne({ _id: message.guild.id})  
+        let settings = await client.schemas.get('server-settings').findOne({ _id: message.guild.id })  
+
+        let joinRoles = []
+        settings.joinRoles.forEach(role => {
+            joinRoles.push(message.guild.roles.cache.get(role))
+        })
 
         let settingsEmbed = new Discord.MessageEmbed()
-        .setTitle('Server Settings')
-        .setAuthor(client.user.username, client.user.displayAvatarURL({dynamic: true}))
-        .setDescription(`These settings can be changed by using \`${prefix}set\``)
-        .addField('Prefix:', settings.prefix)
-        .addField('Logs Channel:', `<#${settings.logsChannelId}>`)
-        .addField('Banned Words:', settings.bannedWords)
-        .addField('Join Roles:', settings.joinRoles)
+            .setTitle('Server Settings')
+            .setAuthor(client.user.username, client.user.displayAvatarURL({dynamic: true}))
+            .setDescription(`These settings can be changed by using \`${prefix}set\``)
+            if (settings.prefix) settingsEmbed.addField('Prefix:', settings.prefix)      
+            if (settings.logsChannelId) settingsEmbed.addField('Logs Channel:', `<#${settings.logsChannelId}>`)
+            if (settings.bannedWords.length != 0) settingsEmbed.addField('Banned Words:', settings.bannedWords)
+            if (joinRoles.length != 0) settingsEmbed.addField('Join Roles:', joinRoles)
 
         message.channel.send(settingsEmbed)
 
