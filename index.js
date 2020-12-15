@@ -10,13 +10,27 @@ const loadFeatures = require('./features/load-features')
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 client.commands = new Discord.Collection();
 
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+function loadCommands(dir) {
+    fs.readdir(dir, function (err, files) {
+        if (err) throw err
+        files.forEach(file => {
+            const filepath = path.join(dir, file)
+            fs.stat(filepath, function (err, stats) {
+                if (stats.isDirectory()) {
+                    loadCommands(filepath)
+                } else if (file.endsWith('.js')) {
+                    console.log(`Enabling command "${file}"`)
+                    const command = require('./'.concat(filepath));
+                    client.commands.set(command.name, command);
+                }
+            })
 
-for (const file of commandFiles) {
-    console.log(`Enabling command "${file}"`)
-	const command = require(`./commands/${file}`);
-    client.commands.set(command.name, command);
+            
+        })
+    })
 }
+
+loadCommands('./commands')
 
 client.schemas = new Discord.Collection();
 
@@ -35,9 +49,9 @@ client.once('ready', async () => {
     await mongo();
 
     client.guilds.cache.forEach(async guild => {
-        if(!await client.schemas.get('server-settings').findOne({ _id: guild.id})) 
+        if(!await client.schemas.get('guild').findOne({ _id: guild.id})) 
         {
-            await client.schemas.get('server-settings').create({_id: guild.id})
+            await client.schemas.get('guild').create({_id: guild.id})
         }
     })
 
@@ -48,7 +62,7 @@ client.on('message', async message => {
 
     if (message.author.bot || message.channel.type == 'dm') return; //No bots, no dms.
 
-    const settings = await client.schemas.get('server-settings').findOne({ _id: message.guild.id})
+    const settings = await client.schemas.get('guild').findOne({ _id: message.guild.id})
 
     let prefix = '!'
     if(settings.prefix) {
@@ -83,7 +97,7 @@ client.on('message', async message => {
 
 client.on('GuildCreate', async guild => {
 
-    await client.schemas.get('server-settings').findOneAndUpdate({
+    await client.schemas.get('guild').findOneAndUpdate({
         _id: guild.id
     }, {
         _id: guild.id,

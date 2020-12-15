@@ -13,6 +13,6 @@ const ticketCategorySchema = mongoose.Schema({
     embed_title: {type: String},
     embed_message: {type: String},
     staff_roles: {type: Array}
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('ticketCategory', ticketCategorySchema);

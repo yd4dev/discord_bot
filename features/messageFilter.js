@@ -4,7 +4,7 @@
 
         if(message.member.hasPermission('MANAGE_MESSAGES')) return;
     
-        let result = await client.schemas.get('server-settings').findOne({ _id: message.member.guild.id})  
+        let result = await client.schemas.get('guild').findOne({ _id: message.member.guild.id})  
             
         if (!result.bannedWords) return;        
     

@@ -7,6 +7,6 @@ const reqString = {
 
 const tempChannelSchema = mongoose.Schema({
     _id: reqString
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('tempChannel', tempChannelSchema);

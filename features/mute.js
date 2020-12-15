@@ -19,7 +19,7 @@ module.exports = client => {
 
                 const member = await guild.members.fetch(result.userId)
 
-                const joinRoles = await client.schemas.get('server-settings').findOne({_id: guild.id})
+                const joinRoles = await client.schemas.get('guild').findOne({_id: guild.id})
 
                 if(joinRoles.joinRoles) {
                     joinRoles.joinRoles.forEach(role => {
