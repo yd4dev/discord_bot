@@ -9,7 +9,7 @@ module.exports = client => {
 
         if (currentMute) return
 
-        let result = await client.schemas.get('server-settings').findOne({ _id: member.guild.id})  
+        let result = await client.schemas.get('guild').findOne({ _id: member.guild.id})  
 
         if(result.joinRoles) {
             result.joinRoles.forEach(role => {

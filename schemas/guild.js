@@ -13,6 +13,6 @@ const guildSchema = mongoose.Schema({
     bannedWords: {type: Array},
     autoChannel_channel: {type: String},
     autoChannel_name: {type: String},
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('guild', guildSchema);

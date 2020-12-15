@@ -14,7 +14,7 @@ module.exports = {
             userId: target.id
         })
 
-        const joinRoles = await client.schemas.get('server-settings').findOne({
+        const joinRoles = await client.schemas.get('guild').findOne({
             _id: message.guild.id
         })
 

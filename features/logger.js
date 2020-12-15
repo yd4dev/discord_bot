@@ -4,7 +4,7 @@ module.exports = client => {
 
     client.on('guildMemberAdd', async member => {
     
-        const result = await client.schemas.get('server-settings').findOne({ _id: member.guild.id})  
+        const result = await client.schemas.get('guild').findOne({ _id: member.guild.id})  
     
         if(!result.logsChannelId) return;
         if(!client.channels.cache.find(c => c.id == result.logsChannelId)) return;
@@ -22,7 +22,7 @@ module.exports = client => {
     
     client.on('guildMemberRemove', async member => {
     
-        const result = await client.schemas.get('server-settings').findOne({ _id: member.guild.id})  
+        const result = await client.schemas.get('guild').findOne({ _id: member.guild.id})  
     
         if(!result.logsChannelId) return;
         if(!client.channels.cache.find(c => c.id == result.logsChannelId)) return;
@@ -42,7 +42,7 @@ module.exports = client => {
 
         if (message.partial) return
         
-        const result = await client.schemas.get('server-settings').findOne({ _id: message.guild.id})
+        const result = await client.schemas.get('guild').findOne({ _id: message.guild.id})
         
         if(!result.logsChannelId) return;
         if(!client.channels.cache.find(c => c.id == result.logsChannelId)) return;
@@ -80,7 +80,7 @@ module.exports = client => {
         if (oldMessage.embeds || newMessage.embeds) return;
         if (!newMessage.editedAt) return;
 
-        const result = await client.schemas.get('server-settings').findOne({ _id: newMessage.member.guild.id})
+        const result = await client.schemas.get('guild').findOne({ _id: newMessage.member.guild.id})
 
         if(!result.logsChannelId) return;
         if(!client.channels.cache.find(c => c.id == result.logsChannelId)) return;
@@ -109,7 +109,7 @@ module.exports = client => {
     if(newState.channel) {
         if(oldState.channel && oldState.channel != newState.channel) {
 
-            const result = await client.schemas.get('server-settings').findOne({ _id: newState.member.guild.id})
+            const result = await client.schemas.get('guild').findOne({ _id: newState.member.guild.id})
 
             if(!result.logsChannelId) return;
             if(!client.channels.cache.find(c => c.id == result.logsChannelId)) return;
@@ -125,7 +125,7 @@ module.exports = client => {
             return client.channels.cache.get(result.logsChannelId).send(ChannelMovedEmbed);
         } else if (oldState.channel != newState.channel) {
 
-            const result = await client.schemas.get('server-settings').findOne({ _id: newState.member.guild.id})
+            const result = await client.schemas.get('guild').findOne({ _id: newState.member.guild.id})
 
             if(!result.logsChannelId) return;
             if(!client.channels.cache.find(c => c.id == result.logsChannelId)) return;
@@ -141,7 +141,7 @@ module.exports = client => {
         }
     } else if (oldState.channel) {
 
-        const result = await client.schemas.get('server-settings').findOne({ _id: newState.member.guild.id})
+        const result = await client.schemas.get('guild').findOne({ _id: newState.member.guild.id})
 
         if(!result.logsChannelId) return;
         if(!client.channels.cache.find(c => c.id == result.logsChannelId)) return;

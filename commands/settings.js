@@ -8,7 +8,7 @@ module.exports = {
     
         if(!message.member.hasPermission('ADMINISTRATOR')) return message.reply('I don\'t think you have enough permissions to run that command')
 
-        let settings = await client.schemas.get('server-settings').findOne({ _id: message.guild.id })  
+        let settings = await client.schemas.get('guild').findOne({ _id: message.guild.id })  
 
         let joinRoles = []
         settings.joinRoles.forEach(role => {
