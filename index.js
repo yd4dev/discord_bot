@@ -23,9 +23,10 @@ client.schemas = new Discord.Collection();
 const schemas = fs.readdirSync('./schemas').filter(file=> file.endsWith('.js'));
 
 for (const file of schemas) {
-    console.log(`Enabling schema "${file}"`)
+    const schemaName = file.substring(0, file.length - 3);
+    console.log(`Enabling schema "${schemaName}"`)
     const schema = require(`./schemas/${file}`);
-    client.schemas.set(path.basename(`./commands/${file}`), schema);
+    client.schemas.set(schemaName, schema);
 }
 
 client.once('ready', async () => {
@@ -34,9 +35,9 @@ client.once('ready', async () => {
     await mongo();
 
     client.guilds.cache.forEach(async guild => {
-        if(!await client.schemas.get('server-settings.js').findOne({ _id: guild.id})) 
+        if(!await client.schemas.get('server-settings').findOne({ _id: guild.id})) 
         {
-            await client.schemas.get('server-settings.js').create({_id: guild.id})
+            await client.schemas.get('server-settings').create({_id: guild.id})
         }
     })
 
@@ -47,7 +48,7 @@ client.on('message', async message => {
 
     if (message.author.bot || message.channel.type == 'dm') return; //No bots, no dms.
 
-    const settings = await client.schemas.get('server-settings.js').findOne({ _id: message.guild.id})
+    const settings = await client.schemas.get('server-settings').findOne({ _id: message.guild.id})
 
     let prefix = '!'
     if(settings.prefix) {
@@ -82,7 +83,7 @@ client.on('message', async message => {
 
 client.on('GuildCreate', async guild => {
 
-    await client.schemas.get('server-settings.js').findOneAndUpdate({
+    await client.schemas.get('server-settings').findOneAndUpdate({
         _id: guild.id
     }, {
         _id: guild.id,

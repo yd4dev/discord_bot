@@ -1,3 +1,5 @@
+const Discord = require("discord.js");
+
 module.exports = {
 	name: 'set',
     description: 'A command to change the bot settings on a server. Requires Manage Channels Permissions.',
@@ -5,6 +7,14 @@ module.exports = {
 	async execute(message, args, client, prefix) {
         
         if (!message.member.hasPermission('MANAGE_CHANNELS')) return message.reply('you do not have enough permissions to run this command. [MANAGE_CHANNELS]');
+
+        const setHelpEmbed = new Discord.MessageEmbed()
+            .setTitle('Set Settings')
+            .addField('Command Help',
+                `${prefix}set logs [#channel]\n
+                ${prefix}set filter [filtered words]\n
+                ${prefix}set roles join [mention roles]\n
+                ${prefix}settings\n`)
 
         switch (args[0]) {
             case 'logs':
@@ -21,7 +31,7 @@ module.exports = {
                 }
 
 
-                await client.schemas.get('server-settings.js').findOneAndUpdate({
+                await client.schemas.get('server-settings').findOneAndUpdate({
                     _id: message.guild.id
                 }, {
                     _id: message.guild.id,
@@ -30,7 +40,7 @@ module.exports = {
                     upsert: true
                 })
 
-                message.reply(`the logs will now be sent in ${channel}`);
+                message.channel.send(`The logs will now be sent in ${channel}`);
 
                 break;
 
@@ -44,7 +54,7 @@ module.exports = {
                 }
 
 		        
-                    await client.schemas.get('server-settings.js').findOneAndUpdate({
+                    await client.schemas.get('server-settings').findOneAndUpdate({
                         _id: message.guild.id
                     }, {
                         _id: message.guild.id,
@@ -53,7 +63,7 @@ module.exports = {
                         upsert: true
                     })
 
-                    message.reply(`banned words \`${words}\``);
+                    message.channel.send(`Banned words \`${words}\``);
 
             break;
 
@@ -63,7 +73,9 @@ module.exports = {
                     case 'join':
 
                         const mentionedRoles = message.mentions.roles.array()
-                        await client.schemas.get('server-settings.js').findOneAndUpdate({
+                        console.log(mentionedRoles.length)
+                        if (mentionedRoles.length == 0) return message.channel.send('Please mention roles you want to assign.')
+                        await client.schemas.get('server-settings').findOneAndUpdate({
                             _id: message.guild.id
                         }, {
                             _id: message.guild.id,
@@ -76,13 +88,13 @@ module.exports = {
 
                     break;
                     default:
-                        message.reply('valid arguments are `join`.')
+                        message.channel.send('Valid arguments are `join`.')
                 }
 
                 break;
         
             default:
-                message.reply('valid settings are \`logs\`, \`filter\`, \`roles\`.');
+                message.channel.send(setHelpEmbed);
         }
 
 	},

@@ -10,7 +10,7 @@ module.exports = client => {
             }
         }
 
-        const results = await client.schemas.get('mute.js').find(conditional)
+        const results = await client.schemas.get('mute').find(conditional)
 
         if (results && results.length) {
             for (const result of results){
@@ -19,7 +19,7 @@ module.exports = client => {
 
                 const member = await guild.members.fetch(result.userId)
 
-                const joinRoles = await client.schemas.get('server-settings.js').findOne({_id: guild.id})
+                const joinRoles = await client.schemas.get('server-settings').findOne({_id: guild.id})
 
                 if(joinRoles.joinRoles) {
                     joinRoles.joinRoles.forEach(role => {
@@ -42,7 +42,7 @@ module.exports = client => {
 
             }
 
-        await client.schemas.get('mute.js').deleteMany(conditional)
+        await client.schemas.get('mute').deleteMany(conditional)
 
         }
 
@@ -53,7 +53,7 @@ module.exports = client => {
 
     client.on('guildMemberAdd', async member => {
 
-        const currentMute = await client.schemas.get('mute.js').findOne({
+        const currentMute = await client.schemas.get('mute').findOne({
             guildId: member.guild.id,
             userId: member.id
         })

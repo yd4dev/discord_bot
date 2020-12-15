@@ -6,7 +6,7 @@ module.exports = client => {
 
         if(user.bot) return
 
-        const ticketCategory = await client.schemas.get('ticketCategory.js').findOne({
+        const ticketCategory = await client.schemas.get('ticketCategory').findOne({
             guild_id: reaction.message.guild.id,
             category_message: reaction.message.id
         })

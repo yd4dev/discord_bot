@@ -5,7 +5,7 @@ const reqString = {
     required: true
 };
 
-const serverSettingsSchema = mongoose.Schema({
+const guildSchema = mongoose.Schema({
     _id: reqString,
     prefix: {type: String},
     logsChannelId: {type: String},
@@ -15,4 +15,4 @@ const serverSettingsSchema = mongoose.Schema({
     autoChannel_name: {type: String},
 });
 
-module.exports = mongoose.model('server-settings', serverSettingsSchema);
+module.exports = mongoose.model('guild', guildSchema);

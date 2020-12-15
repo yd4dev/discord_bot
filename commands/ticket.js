@@ -17,8 +17,8 @@ module.exports = {
 
                     if(!args[2]) return message.reply('Please provide a category name.')
 
-                    if(await client.schemas.get('ticketCategory.js').findOne({guild_id: message.guild.id, category_name: args[2]})) return message.reply('this category already exists.')
-                    await client.schemas.get('ticketCategory.js').findOneAndUpdate({
+                    if(await client.schemas.get('ticketCategory').findOne({guild_id: message.guild.id, category_name: args[2]})) return message.reply('this category already exists.')
+                    await client.schemas.get('ticketCategory').findOneAndUpdate({
                         guild_id: message.guild.id,
                         category_name: args[2]
                     }, {
@@ -33,8 +33,8 @@ module.exports = {
 
                     if(!args[2]) return message.reply('Please provide a category name.')
 
-                    if(!await client.schemas.get('ticketCategory.js').findOne({guild_id: message.guild.id, category_name: args[2]})) return message.reply('this category does not exist.')
-                    await client.schemas.get('ticketCategory.js').findOneAndDelete({
+                    if(!await client.schemas.get('ticketCategory').findOne({guild_id: message.guild.id, category_name: args[2]})) return message.reply('this category does not exist.')
+                    await client.schemas.get('ticketCategory').findOneAndDelete({
                         guild_id: message.guild.id,
                         category_name: args[2]
                     })
@@ -44,7 +44,7 @@ module.exports = {
 
                     const categoryName = args[1]
 
-                    if(!await client.schemas.get('ticketCategory.js').findOne({guild_id: message.guild.id, category_name: categoryName})) return message.reply('this category does not exist.')
+                    if(!await client.schemas.get('ticketCategory').findOne({guild_id: message.guild.id, category_name: categoryName})) return message.reply('this category does not exist.')
 
                     const operation = args[2]
 
@@ -56,7 +56,7 @@ module.exports = {
                                 case 'name':
                                     if(!args[4]) return message.reply(`the correct usage is \`${prefix}ticket category [category name] edit [newName].\``)
 
-                                    var curResult = await client.schemas.get('ticketCategory.js').findOne({
+                                    var curResult = await client.schemas.get('ticketCategory').findOne({
                                         guild_id: message.guild.id,
                                         category_name: categoryName
                                     })
@@ -65,14 +65,14 @@ module.exports = {
 
                                     const newName = args[4]
 
-                                    var newNameCategory = await client.schemas.get('ticketCategory.js').findOne({
+                                    var newNameCategory = await client.schemas.get('ticketCategory').findOne({
                                         guild_id: message.guild.id,
                                         category_name: newName
                                     })
 
                                     if(newNameCategory) return message.reply(`Category ${newName} already exists.`)
 
-                                    await client.schemas.get('ticketCategory.js').findOneAndUpdate({
+                                    await client.schemas.get('ticketCategory').findOneAndUpdate({
                                         guild_id: message.guild.id,
                                         category_name: categoryName
                                     }, {
@@ -103,7 +103,7 @@ module.exports = {
 
                                     var title = args.join(' ')
 
-                                    await client.schemas.get('ticketCategory.js').findOneAndUpdate({
+                                    await client.schemas.get('ticketCategory').findOneAndUpdate({
                                         guild_id: message.guild.id,
                                         category_name: categoryName
                                     }, {
@@ -125,7 +125,7 @@ module.exports = {
                                     
                                     var embed_message = args.join(' ')
 
-                                    await client.schemas.get('ticketCategory.js').findOneAndUpdate({
+                                    await client.schemas.get('ticketCategory').findOneAndUpdate({
                                         guild_id: message.guild.id,
                                         category_name: categoryName
                                     }, {
@@ -151,7 +151,7 @@ module.exports = {
                             if(!category_channel || !category_message) return message.reply('channel id or message id invalid.')
                             if(category_channel.type != 'text') return message.reply('the channel is not a text channel.')
 
-                            await client.schemas.get('ticketCategory.js').findOneAndUpdate({
+                            await client.schemas.get('ticketCategory').findOneAndUpdate({
                                 guild_id: message.guild.id,
                                 category_name: categoryName
                             }, {
@@ -169,7 +169,7 @@ module.exports = {
                         case 'staff':
                             if(!message.mentions.roles) return message.reply('please provide at least one role (mention).')
 
-                            await client.schemas.get('ticketCategory.js').findOneAndUpdate({
+                            await client.schemas.get('ticketCategory').findOneAndUpdate({
                                 guild_id: message.guild.id,
                                 category_name: categoryName
                             }, {
