@@ -12,7 +12,8 @@ const mutesSchema = mongoose.Schema({
     userRoles: {type: Array, required: false},
     expires: {type: Date, required: true}
 }, {
-    timestamps: true
+        timestamps: true,
+        versionKey: false
 });
 
 module.exports = mongoose.model('mutes', mutesSchema);
