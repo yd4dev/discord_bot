@@ -1,8 +1,10 @@
   module.exports = client => {
 
-    client.on('message', async message => {
+      client.on('message', async message => {
 
-        if(message.member.hasPermission('MANAGE_MESSAGES')) return;
+          console.log('Message Filter Author ' + message.author)
+
+        if( message.member.hasPermission('MANAGE_MESSAGES') ) return;
     
         let result = await client.schemas.get('guild').findOne({ _id: message.member.guild.id})  
             
