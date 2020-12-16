@@ -1,10 +1,10 @@
 module.exports = {
 	name: 'autochannel',
-    description: 'A command to change autochannel settings.',
-    args: false,
+    description: 'Lets you change autochannel settings.',
+	args: 2,
+	permissions: 'MANAGE_CHANNELS',
+	usage: '%prefixautochannel [channel] [voice channel id] \n %prefixautochannel name [name] \n Use `%USER` to replace add the user\'s name to a channel name.',
 	async execute(message, args, client, prefix) {
-		
-		if (!message.member.hasPermission('MANAGE_CHANNELS')) return message.channel.send('You do not have enough permissions to run this command. [MANAGE_CHANNELS]');
 
 		switch (args[0]) {
 			
@@ -56,5 +56,5 @@ module.exports = {
 
 		}
 
-	},
+	}
 };

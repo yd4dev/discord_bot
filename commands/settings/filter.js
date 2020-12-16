@@ -1,10 +1,10 @@
 module.exports = {
 	name: 'filter',
     description: 'Set banned words.',
-    args: true,
+    args: 1,
+    permissions: 'MANAGE_MESSAGES',
+    usage: '%prefixfilter [words to filter (separated by a comma)]',
     async execute(message, args, client, prefix) {
-        
-        if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply('you do not have enough permissions to run this command. [ADMINISTRATOR]');
 
         let words = message.content.slice(prefix.length + 6).trim().split(',');
         
@@ -29,5 +29,5 @@ module.exports = {
             
         message.channel.send(`Banned words ${bannedWords}`);
 
-	},
+	}
 };

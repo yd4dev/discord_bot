@@ -1,10 +1,10 @@
 module.exports = {
 	name: 'prefix',
-    description: 'An administrator command to chane the server\'s prefix.',
-    args: true,
+    description: 'Change the server\'s prefix.',
+    args: 1,
+    permissions: 'ADMINISTRATOR',
+    usage: '%prefixprefix [new prefix]',
 	async execute(message, args, client, prefix) {
-        
-        if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply('I don\'t think you have enough permissions to run that command')
 
         await client.schemas.get('guild').findOneAndUpdate({
             _id: message.guild.id

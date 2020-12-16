@@ -3,10 +3,10 @@ const Discord = require('discord.js')
 module.exports = {
 	name: 'ticket',
     description: 'A command to handle tickets.',
-    args: false,
+    args: 2,
+    permissions: 'ADMINISTRATOR',
+    usage: '%prefixticket category create [category name] \n %prefixticket category delete [category name] \n %prefixcategory [catgeory name] edit name [new name] \n %prefixcategory [category name] embed title [title] \n %prefixcategory [category name] message [message] \n %prefixcategory [category name] react [channel id] [message id] \n %prefixcategory [category name] staff [mention roles]',
 	async execute(message, args, client, prefix) {
-
-        if(message.member.hasPermission('ADMINISTRATOR'))
         //ticket  args[0]   args[1]         args[2]                        args[3++]
         //ticket category [category Name] [create / edit / embed / react] [args]
 

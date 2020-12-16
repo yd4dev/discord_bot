@@ -1,10 +1,10 @@
 module.exports = {
 	name: 'mute',
-    description: 'A moderator command to mute users.',
-    args: true,
+    description: 'Lets you mute users.',
+    args: 2,
+    permissions: 'MANAGE_MESSAGES',
+    usage: '%prefixmute [@Target] [Time]',
 	async execute(message, args, client, prefix) {
-
-        if(!message.member.hasPermission('MANAGE_MESSAGES')) return message.reply('you do not have enough permissions to run this command. [MANAGE_MESSAGES]');
 
         args.shift();
         const target = message.mentions.members.first();
@@ -87,5 +87,5 @@ module.exports = {
 
         message.channel.send(`I have muted ${target} until ${expirationDate.toDateString()}, ${expirationDate.toTimeString()}`);
 
-	},
+	}
 };
