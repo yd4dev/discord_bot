@@ -2,7 +2,7 @@ module.exports = {
 	name: 'roles',
     description: 'Set different roles for the server.',
     args: false,
-    execute(message, args, client, prefix) {
+    async execute(message, args, client, prefix) {
 
         if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply('you do not have enough permissions to run this command. [ADMINISTRATOR]');
         
