@@ -1,10 +1,10 @@
 module.exports = {
 	name: 'unlock',
-    description: 'A moderator unlock a channel.',
+    description: 'Unlocks a channel.',
     args: false,
+    permissions: 'MANAGE_MESSAGES',
+    usage: '%prefixunlock',
 	execute(message, args, client, prefix) {
-    
-        if(!message.member.hasPermission('MANAGE_MESSAGES')) return message.reply('you do not have enough permissions to run this command. [MANAGE_MESSAGES]');
 
         if(message.channel.permissionsFor(message.guild.roles.everyone).has('SEND_MESSAGES') && message.channel.permissionsFor(message.guild.roles.everyone).has('ADD_REACTIONS') ) {
 

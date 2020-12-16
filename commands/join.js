@@ -2,6 +2,7 @@ module.exports = {
 	name: 'join',
     description: 'A simple test command.',
     args: false,
+    usage: '%prefixjoin',
 	execute(message, args, client, prefix) {
 
         if(message.author.id != '104537226192371712') return message.channel.send('Sorry, this command is restricted to the bot\'s owner.')

@@ -1,10 +1,10 @@
 module.exports = {
     name: 'logs',
     description: 'Lets you change the server logs settings.',
-    args: true,
+    args: 2,
+    permissions: 'ADMINISTRATOR',
+    usage: '%prefixlogs channel [text channel]',
     async execute(message, args, client, prefix) {
-
-        if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply('you do not have enough permissions to run this command. [ADMINISTRATOR]');
         
         switch (args[0]) {
             case 'channel':

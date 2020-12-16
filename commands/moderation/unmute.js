@@ -1,10 +1,10 @@
 module.exports = {
     name: 'unmute',
-    description: 'A command to unmute a member.',
-    args: true,
+    description: 'Lets you unmute users.',
+    args: 1,
+    permissions: 'MANAGE_MESSAGES',
+    usage: '%prefixunmute [@Target]',
     async execute (message, args, client, prefix) {
-
-        if(!message.member.hasPermission('MANAGE_MESSAGES')) return message.reply('you do not have enough permissions to run this command.')
 
         const target = message.mentions.members.first();
         const mutedRole = message.guild.roles.cache.find(role => role.name === 'Muted')

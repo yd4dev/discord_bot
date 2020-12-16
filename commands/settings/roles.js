@@ -1,10 +1,10 @@
 module.exports = {
 	name: 'roles',
     description: 'Set different roles for the server.',
-    args: false,
+    args: 2,
+    permissions: 'ADMINISTRATOR',
+    usage: '%prefixroles join [mention roles]',
     async execute(message, args, client, prefix) {
-
-        if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply('you do not have enough permissions to run this command. [ADMINISTRATOR]');
         
         switch (args[0]) {
             case 'join':
