@@ -21,6 +21,8 @@ function loadCommands(dir) {
                 } else if (file.endsWith('.js')) {
                     console.log(`Enabling command "${file}"`)
                     const command = require('./'.concat(filepath));
+                    const category = filepath.split(/\/|\\/)
+                    command.category = category[category.length - 2]
                     client.commands.set(command.name, command);
                 }
             })
@@ -79,9 +81,19 @@ client.on('message', async message => {
             return;
         }
 
-        if (command.args && !args.length) {
-            message.reply('you did not provide any arguments.');
-            return;
+        if (command.permissions && !message.member.hasPermission(command.permissions)) {
+            return message.channel.send('You do not have the required permissions to execute that command, <@' + message.author + '>')
+        }
+
+        if (args.length < command.args) {
+            const usage = command.usage.replace(/%prefix/g, prefix)
+            let HelpEmbed = new Discord.MessageEmbed()
+                .setTitle('Help ' + prefix + commandName)
+                if(command.description) HelpEmbed.setDescription(command.description)
+                if(command.permissions) HelpEmbed.addField('Required Permissions', command.permissions)
+                if(command.usage) HelpEmbed.addField('Usage', usage)
+            
+            return message.channel.send(HelpEmbed)
         }
 
         try {
