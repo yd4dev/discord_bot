@@ -6,6 +6,8 @@ module.exports = client => {
 
         const result = await client.schemas.get('guild').findOne({ _id: newState.guild.id })
 
+        if (!result.voicelinks) return
+
         for (k of result.voicelinks) {
             if (oldState.channel && oldState.channel.id == k[0]) {
                 if (oldState.guild.roles.cache.find(r => r.id == result.voicelinks.get(k[0]))) {
