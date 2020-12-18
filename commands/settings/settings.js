@@ -4,9 +4,9 @@ module.exports = {
 	name: 'settings',
     description: 'An administrator command to show server settings.',
     args: false,
+    permissions: 'ADMINISTRATOR',
+    usage: '%prefixsettings',
 	async execute(message, args, client, prefix) {
-    
-        if(!message.member.hasPermission('ADMINISTRATOR')) return message.reply('I don\'t think you have enough permissions to run that command')
 
         let settings = await client.schemas.get('guild').findOne({ _id: message.guild.id })  
 

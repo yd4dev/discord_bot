@@ -2,9 +2,9 @@ module.exports = {
 	name: 'setup',
     description: 'A command to setup certain things on your server.',
     args: false,
+    permissions: 'ADMINISTRATOR',
+    usage: '%prefixsetup mute',
 	async execute(message, args, client, prefix) {
-
-        if(!message.member.hasPermission('ADMINISTRATOR')) return message.reply('you do not have enough permissions to run this command.')
         
         switch(args[0]) {
             case 'mute':

@@ -2,8 +2,6 @@
 
       client.on('message', async message => {
 
-          console.log('Message Filter Author ' + message.author)
-
         if( message.member.hasPermission('MANAGE_MESSAGES') ) return;
     
         let result = await client.schemas.get('guild').findOne({ _id: message.member.guild.id})  
