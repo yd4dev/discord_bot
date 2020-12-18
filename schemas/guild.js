@@ -7,12 +7,13 @@ const reqString = {
 
 const guildSchema = mongoose.Schema({
     _id: reqString,
-    prefix: {type: String},
-    logsChannelId: {type: String},
-    joinRoles: {type: Array},
-    bannedWords: {type: Array},
-    autoChannel_channel: {type: String},
-    autoChannel_name: {type: String},
+    prefix: { type: String },
+    logsChannelId: { type: String },
+    joinRoles: { type: Array },
+    bannedWords: { type: Array },
+    autoChannel_channel: { type: String },
+    autoChannel_name: { type: String },
+    voicelinks: { type: Map, of: String }
 }, { versionKey: false });
 
 module.exports = mongoose.model('guild', guildSchema);
