@@ -53,7 +53,7 @@ module.exports = {
                 upsert: true
             })
             
-            message.channel.send(`Linked 🔈 ${vc.name} to ${role}`)
+            message.channel.send(`Linked 🔊 \`${vc.name}\` to ${role}`)
 
         }
 
