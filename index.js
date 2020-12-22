@@ -68,17 +68,30 @@ client.on('message', async message => {
 
     let prefix = '!'
     if(settings.prefix) {
-        prefix = settings.prefix}
+        prefix = settings.prefix
+    }
 
-    if (message.content.startsWith(prefix)) {
+    let slice = undefined
+    if (message.content.startsWith(prefix)) slice = prefix.length
+    else if (message.content.startsWith(`<@${client.user.id}>`)) {
+        slice = `<@${client.user.id}>`.length
+    }
+    else if (message.content.startsWith(`<@!${client.user.id}>`)) {
+        slice = `<@!${client.user.id}>`.length
+    } 
+    
+    if (slice) {
 
-        const args = message.content.slice(prefix.length).trim().split(/ +/);
+        const args = message.content.slice(slice).trim().split(/ +/);
+
         const commandName = args.shift().toLowerCase();
 
         const command = client.commands.get(commandName);
 
+
+
         if (!client.commands.has(commandName)) {
-            return;
+            return
         }
 
         if (command.permissions && !message.member.hasPermission(command.permissions)) {
@@ -86,14 +99,7 @@ client.on('message', async message => {
         }
 
         if (args.length < command.args) {
-            const usage = command.usage.replace(/%prefix/g, prefix)
-            let HelpEmbed = new Discord.MessageEmbed()
-                .setTitle('Help ' + prefix + commandName)
-                if(command.description) HelpEmbed.setDescription(command.description)
-                if(command.permissions) HelpEmbed.addField('Required Permissions', command.permissions)
-                if(command.usage) HelpEmbed.addField('Usage', usage)
-            
-            return message.channel.send(HelpEmbed)
+            return client.commands.get('help').commandHelp(message, commandName, prefix, client)
         }
 
         try {
@@ -102,7 +108,6 @@ client.on('message', async message => {
             console.error(err);
             message.reply('there was an error trying to execute that command.');
         }
-    
     }
 
 })
