@@ -40,6 +40,8 @@ module.exports = client => {
     
     client.on('messageDelete', async message => {
 
+        if (message.author.bot) return
+
         if (message.partial) return
         
         const result = await client.schemas.get('guild').findOne({ _id: message.guild.id})
@@ -75,6 +77,8 @@ module.exports = client => {
 
     client.on('messageUpdate', async (oldMessage, newMessage) => {
 
+        if (message.author.bot) return
+
         if(oldMessage.partial || newMessage.partial) return;
 
         if (oldMessage.embeds || newMessage.embeds) return;
@@ -105,6 +109,8 @@ module.exports = client => {
     })
 
     client.on('voiceStateUpdate', async (oldState, newState) => {
+
+    if(newState.member.user.bot) return
 
     if(newState.channel) {
         if(oldState.channel && oldState.channel != newState.channel) {
