@@ -6,14 +6,17 @@ module.exports = {
     usage: '%prefixunlock',
 	execute(message, args, client, prefix) {
 
-        if(message.channel.permissionsFor(message.guild.roles.everyone).has('SEND_MESSAGES') && message.channel.permissionsFor(message.guild.roles.everyone).has('ADD_REACTIONS') ) {
+        if (message.channel.permissionsFor(message.guild.roles.everyone).has('SEND_MESSAGES') && message.channel.permissionsFor(message.guild.roles.everyone).has('ADD_REACTIONS')) {
+            
+            message.channel.send('🔓 This channel is not locked.')
 
-            message.channel.updateOverwrite(message.guild.roles.everyone, {SEND_MESSAGES: true, ADD_REACTIONS: true})
-
-            message.channel.send('🔓 Unlocked the channel.')
         }
         else {
-            message.channel.send('🔓 This channel is not locked.')
+         
+            message.channel.updateOverwrite(message.guild.roles.everyone, {SEND_MESSAGES: null, ADD_REACTIONS: null})
+
+            message.channel.send('🔓 Unlocked the channel.')
+            
         }
 
     }
