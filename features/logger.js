@@ -77,7 +77,7 @@ module.exports = client => {
 
     client.on('messageUpdate', async (oldMessage, newMessage) => {
 
-        if (message.author.bot) return
+        if (oldMessage.author.bot) return
 
         if(oldMessage.partial || newMessage.partial) return;
 
