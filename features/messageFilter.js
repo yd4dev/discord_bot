@@ -26,7 +26,7 @@
             if (message.member.hasPermission('MANAGE_MESSAGES')) return
         } catch (err) {
             console.log('ERROR + \n' + err)
-            console.log('MESSAGE THAT CAUSED THE ERROR: \n' + message)
+            console.log('MESSAGE THAT CAUSED THE ERROR: \n' + message.url)
             console.log('ERROR END \n')
         }
   
