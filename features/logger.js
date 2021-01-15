@@ -52,24 +52,19 @@ module.exports = client => {
         const fetchedLogs = await message.guild.fetchAuditLogs({limit: 1, type: 'MESSAGE_DELETE'});
         const log = fetchedLogs.entries.first();
     
-        let content;
-    
-        if(!message.content && message.embeds) 
-        {
-            content = 'Embed';
-        } else {
-            content = message.content;
-        }
-    
         let MessageDeletedEmbed = new Discord.MessageEmbed()
             .setTitle('Nachricht gelöscht')
             .setColor('#5B0000')
-            .setAuthor(message.member.displayName, message.author.displayAvatarURL({dynamic : true}))
-            .addField('Inhalt:', content)
-            .addField('Nachricht geschrieben:',`${message.createdAt.getHours()}:${message.createdAt.getMinutes()}, ${message.createdAt.toDateString()}`)
+            .setAuthor(message.member.displayName, message.author.displayAvatarURL({ dynamic: true }))
+            
+        if (message.content) MessageDeletedEmbed.addField('Inhalt:', message.content)
+
+        MessageDeletedEmbed.addField('Nachricht geschrieben:',`${message.createdAt.getHours()}:${message.createdAt.getMinutes()}, ${message.createdAt.toDateString()}`)
             .addField('Channel:', message.channel)
             .setTimestamp(Date.now())
-            if(log && log.target.id == message.author.id) MessageDeletedEmbed.addField('Moderator:', log.executor);
+
+        if (log && log.target.id == message.author.id) MessageDeletedEmbed.addField('Moderator:', log.executor);
+        if (message.attachments.size != 0) MessageDeletedEmbed.addField('Attachment:', message.attachments.first().url)
     
     
         client.channels.cache.get(result.logsChannelId).send(MessageDeletedEmbed);
