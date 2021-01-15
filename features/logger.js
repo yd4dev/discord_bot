@@ -40,6 +40,8 @@ module.exports = client => {
     
     client.on('messageDelete', async message => {
 
+        if(message.channel.type == 'dm') return
+
         if (message.author.bot) return
 
         if (message.partial) return
@@ -71,6 +73,8 @@ module.exports = client => {
     })
 
     client.on('messageUpdate', async (oldMessage, newMessage) => {
+
+        if(newMessage.channel.type == 'dm') return
 
         if (oldMessage.author.bot) return
 
