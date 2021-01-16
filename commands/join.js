@@ -2,6 +2,7 @@ module.exports = {
 	name: 'join',
     description: 'A simple test command.',
     args: false,
+    guild: true,
     usage: '%prefixjoin',
 	execute(message, args, client, prefix) {
 

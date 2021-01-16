@@ -2,6 +2,7 @@ module.exports = {
 	name: 'lock',
     description: 'Locks a channel.',
     args: false,
+    guild: true,
     permissions: 'MANAGE_MESSAGES',
     usage: '%prefixlock',
 	execute(message, args, client, prefix) {

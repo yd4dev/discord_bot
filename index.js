@@ -62,13 +62,18 @@ client.once('ready', async () => {
 
 client.on('message', async message => {
 
-    if (message.author.bot || message.channel.type == 'dm') return; //No bots, no dms.
-
-    const settings = await client.schemas.get('guild').findOne({ _id: message.guild.id})
+    if (message.author.bot) return; //No bots, no dms.
 
     let prefix = '!'
-    if(settings.prefix) {
-        prefix = settings.prefix
+
+    if (message.guild) {
+
+        const settings = await client.schemas.get('guild').findOne({ _id: message.guild.id })
+    
+        if (settings.prefix) {
+            prefix = settings.prefix
+        }
+
     }
 
     let slice = undefined
@@ -94,8 +99,18 @@ client.on('message', async message => {
             return
         }
 
-        if (command.permissions && !message.member.hasPermission(command.permissions)) {
-            return message.channel.send('You do not have the required permissions to execute that command, <@' + message.author + '>')
+        if (command.guild && message.channel.type != 'text') {
+            return message.channel.send('You can only use this command in a guild.')
+        }
+
+        if (command.permissions) {
+
+            if (command.permissions != 'BOT_OWNER' && !message.member.hasPermission(command.permissions)) return message.channel.send('You do not have the required permissions to execute that command, <@' + message.author + '>')
+            else if (command.permissions == 'BOT_OWNER' && message.author.id != process.env.botOwnerId) return message.channel.send('This command can only be used by the bot\'s owner.')
+        }
+
+        if (command.permissions == 'BOT_OWNER' && message.author.id != process.env.botOwnerId) {
+            return message.channel.send('This command can only be used by the bot\'s owner.')
         }
 
         if (args.length < command.args) {

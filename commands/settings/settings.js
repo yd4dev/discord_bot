@@ -4,6 +4,7 @@ module.exports = {
 	name: 'settings',
     description: 'An administrator command to show server settings.',
     args: false,
+    guild: true,
     permissions: 'ADMINISTRATOR',
     usage: '%prefixsettings',
 	async execute(message, args, client, prefix) {

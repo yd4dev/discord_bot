@@ -2,6 +2,7 @@ module.exports = {
     name: 'unmute',
     description: 'Lets you unmute users.',
     args: 1,
+    guild: true,
     permissions: 'MANAGE_MESSAGES',
     usage: '%prefixunmute [@Target]',
     async execute (message, args, client, prefix) {

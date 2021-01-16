@@ -3,7 +3,8 @@ const Discord = require('discord.js')
 module.exports = {
 	name: 'voicelink',
     description: 'Links roles to specific voice channels.',
-	args: false,
+    args: false,
+    guild: true,
     usage: '%prefixvoicelink [voice channel id] [role mention / id] \n %prefixvoicelink remove [voice channel id]',
     permissions: 'MANAGE_CHANNELS',
 	async execute(message, args, client, prefix) {

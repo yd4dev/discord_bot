@@ -2,6 +2,7 @@ module.exports = {
 	name: 'mute',
     description: 'Lets you mute users.',
     args: 2,
+    guild: true,
     permissions: 'MANAGE_MESSAGES',
     usage: '%prefixmute [@Target] [Time]',
 	async execute(message, args, client, prefix) {

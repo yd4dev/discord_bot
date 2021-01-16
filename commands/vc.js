@@ -1,7 +1,8 @@
 module.exports = {
 	name: 'vc',
     description: 'Voice Chat Functions.',
-	args: true,
+    args: true,
+    guild: true,
     usage: '%prefixvc move [voice channel id]',
     permissions: 'MOVE_MEMBERS',
     execute(message, args, client, prefix) {

@@ -2,6 +2,7 @@ module.exports = {
 	name: 'setup',
     description: 'A command to setup certain things on your server.',
     args: false,
+    guild: true,
     permissions: 'ADMINISTRATOR',
     usage: '%prefixsetup mute',
 	async execute(message, args, client, prefix) {

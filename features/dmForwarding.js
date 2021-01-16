@@ -7,10 +7,9 @@ module.exports = client => {
     client.on('message', async message => {
 
         if (message.channel.type != 'dm') return
-        if(message.author.bot) return
+        if (message.author.bot || message.author.id == process.env.botOwnerId) return
 
         let MessageDMEmbed = new Discord.MessageEmbed()
-            .setTitle('Direct Message')
             .setAuthor(message.author.tag, message.author.displayAvatarURL())
             .setTimestamp(message.createdTimestamp)
         

@@ -2,6 +2,7 @@ module.exports = {
 	name: 'prefix',
     description: 'Change the server\'s prefix.',
     args: 1,
+    guild: true,
     permissions: 'ADMINISTRATOR',
     usage: '%prefixprefix [new prefix]',
 	async execute(message, args, client, prefix) {

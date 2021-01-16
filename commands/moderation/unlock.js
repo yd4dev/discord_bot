@@ -2,6 +2,7 @@ module.exports = {
 	name: 'unlock',
     description: 'Unlocks a channel.',
     args: false,
+    guild: true,
     permissions: 'MANAGE_MESSAGES',
     usage: '%prefixunlock',
 	execute(message, args, client, prefix) {

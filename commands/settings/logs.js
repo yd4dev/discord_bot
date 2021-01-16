@@ -2,6 +2,7 @@ module.exports = {
     name: 'logs',
     description: 'Lets you change the server logs settings.',
     args: 2,
+    guild: true,
     permissions: 'ADMINISTRATOR',
     usage: '%prefixlogs channel [text channel]',
     async execute(message, args, client, prefix) {

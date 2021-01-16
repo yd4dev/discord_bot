@@ -4,6 +4,7 @@ module.exports = {
 	name: 'ticket',
     description: 'A command to handle tickets.',
     args: 2,
+    guild: true,
     permissions: 'ADMINISTRATOR',
     usage: '%prefixticket category create [category name] \n %prefixticket category delete [category name] \n %prefixcategory [catgeory name] edit name [new name] \n %prefixcategory [category name] embed title [title] \n %prefixcategory [category name] message [message] \n %prefixcategory [category name] react [channel id] [message id] \n %prefixcategory [category name] staff [mention roles]',
 	async execute(message, args, client, prefix) {

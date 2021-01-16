@@ -2,6 +2,7 @@ module.exports = {
 	name: 'roles',
     description: 'Set different roles for the server.',
     args: 2,
+    guild: true,
     permissions: 'ADMINISTRATOR',
     usage: '%prefixroles join [mention roles]',
     async execute(message, args, client, prefix) {

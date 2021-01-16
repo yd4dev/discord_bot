@@ -74,14 +74,11 @@ module.exports = client => {
 
     client.on('messageUpdate', async (oldMessage, newMessage) => {
 
+        if (oldMessage.partial || newMessage.partial) return;
+
         if(newMessage.channel.type == 'dm') return
-
-        if (oldMessage.author.bot) return
-
-        if(oldMessage.partial || newMessage.partial) return;
-
-        if (oldMessage.embeds || newMessage.embeds) return;
-        if (!newMessage.editedAt) return;
+        
+        if (newMessage.author.bot) return
 
         const result = await client.schemas.get('guild').findOne({ _id: newMessage.member.guild.id})
 
