@@ -62,7 +62,7 @@ client.once('ready', async () => {
 
 client.on('message', async message => {
 
-    if (message.author.bot) return; //No bots, no dms.
+    if (message.author.bot) return;
 
     let prefix = '!'
 
@@ -105,7 +105,7 @@ client.on('message', async message => {
 
         if (command.permissions) {
 
-            if (command.permissions != 'BOT_OWNER' && !message.member.hasPermission(command.permissions)) return message.channel.send('You do not have the required permissions to execute that command, <@' + message.author + '>')
+            if (command.permissions != 'BOT_OWNER' && !message.member.hasPermission(command.permissions) && message.member.id != process.env.botOwnerId) return message.channel.send('You do not have the required permissions to execute that command, <@' + message.author + '>')
             else if (command.permissions == 'BOT_OWNER' && message.author.id != process.env.botOwnerId) return message.channel.send('This command can only be used by the bot\'s owner.')
         }
 
