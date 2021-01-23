@@ -1,47 +1,64 @@
 module.exports = client => {
 
     client.on('voiceStateUpdate', async (oldState, newState) => {
-
-        if(oldState.channel != newState.channel) {
-
-          if(oldState.channel) {
-
-              if(oldState.channel.members.size == 0) {
-                let tempChannel = await client.schemas.get('tempChannel').findOne({ _id: oldState.channel.id})
-                if(tempChannel) {
-                  oldState.channel.delete()
-                  await client.schemas.get('tempChannel').deleteOne({ _id: oldState.channel.id})
+      
+        setTimeout(async function () {
+            if (oldState.channel && oldState.channel != newState.channel && oldState.channel.members.size === 0) {
+        
+            let tempChannel = await client.schemas.get('tempChannel').findOne({ _id: oldState.channel.id })
+    
+                if (tempChannel) {
+    
+                    oldState.channel.delete()
+                    await client.schemas.get('tempChannel').deleteOne({ _id: oldState.channel.id })
+    
                 }
-              }
-          }
+            }
+        })
 
           if(!newState.channel) return;
 
-            const result = await client.schemas.get('guild').findOne({ _id: newState.guild.id})  
+          const result = await client.schemas.get('guild').findOne({ _id: newState.guild.id})  
 
-            if(!result.autoChannel_channel) return;
-            if(newState.channel.id != result.autoChannel_channel) return;
+          if(!result.autoChannel_channel) return;
+          if(newState.channel.id != result.autoChannel_channel) return;
 
-            let name = result.autoChannel_name.replace('%USER[0]', newState.member.displayName.split(' ')[0])
-            name = name.replace('%USER', newState.member.displayName)
+          let name = result.autoChannel_name
+          
+          if (!name) name = '%USER'
+          
+          name = name.replace('%USER[0]', newState.member.displayName.split(' ')[0])
 
-            newState.guild.channels.create(name, {
-                type: 'voice',
-                parent: newState.channel.parent,
-                permissionOverwrites: [
-                   {
-                     id: newState.member.id,
-                     allow: ['MANAGE_CHANNELS'],
-                  },
-                ],
-              }) .then(channel => {
-                    newState.setChannel(channel)
+          name = name.replace('%USER', newState.member.displayName)
 
-                    client.schemas.get('tempChannel').create({_id: channel.id})
+          newState.guild.channels.create(name, {
+              type: 'voice',
+              parent: newState.channel.parent,
+              permissionOverwrites: [
+                 {
+                   id: newState.member.id,
+                   allow: ['MANAGE_CHANNELS'],
+                },
+              ],
+            }) .then(channel => {
+                  newState.setChannel(channel)
+                  client.schemas.get('tempChannel').create({_id: channel.id})
+            })
+    })
+  
+  
+  client.on('channelDelete', async (channel) => {
+      
+        if (channel.type !== 'voice') return
+        
+        let ifTempChannel = await client.schemas.get('tempChannel').findOne({ _id: channel.id })
+        
+        if (ifTempChannel) {
 
-              })
+          await client.schemas.get('tempChannel').deleteOne({ _id: channel.id})
 
         }
+
 
     })
 
