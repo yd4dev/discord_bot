@@ -10,7 +10,6 @@ const guildSchema = mongoose.Schema({
     prefix: { type: String },
     logsChannelId: { type: String },
     joinRoles: { type: Array },
-    bannedWords: { type: Array },
     autoChannel_channel: { type: String },
     autoChannel_name: { type: String },
     voicelinks: { type: Map, of: String }
