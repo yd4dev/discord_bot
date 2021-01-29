@@ -10,7 +10,7 @@ module.exports = client => {
 
         const logsChannel = channel.guild.channels.cache.find(c => c.id === logsChannelId)
         
-        if (!logs.get('channelCreate') || !logsChannel) return
+        if (!logs || !logs.get('channelCreate') || !logsChannel) return
         
         let Embed = new Discord.MessageEmbed()
             .setTitle('Channel Created')
@@ -39,7 +39,7 @@ module.exports = client => {
 
         const logsChannel = channel.guild.channels.cache.find(c => c.id === logsChannelId)
 
-        if (!logs.get('channelDelete') || !logsChannel) return
+        if (!logs || !logs.get('channelDelete') || !logsChannel) return
         
         let Embed = new Discord.MessageEmbed()
             .setTitle('Channel Deleted')
@@ -70,7 +70,7 @@ module.exports = client => {
         
         const logsChannel = newChannel.guild.channels.cache.find(c => c.id === logsChannelId)
 
-        if (!logs.get('channelUpdate') || !logsChannel) return
+        if (!logs || !logs.get('channelUpdate') || !logsChannel) return
 
         let Embed = new Discord.MessageEmbed()
             .setTitle('Channel Updated')
@@ -164,7 +164,7 @@ module.exports = client => {
         
         const logsChannel = guild.channels.cache.find(c => c.id === logsChannelId)
 
-        if (!logs.get('guildBanAdd') || !logsChannel) return
+        if (!logs || !logs.get('guildBanAdd') || !logsChannel) return
 
         let Embed = new Discord.MessageEmbed()
             .setTitle('Member Banned')
@@ -187,7 +187,7 @@ module.exports = client => {
         
         const logsChannel = guild.channels.cache.find(c => c.id === logsChannelId)
 
-        if (!logs.get('guildBanRemove') || !logsChannel) return
+        if (!logs || !logs.get('guildBanRemove') || !logsChannel) return
 
         let Embed = new Discord.MessageEmbed()
             .setTitle('Member Unbanned')
@@ -210,7 +210,7 @@ module.exports = client => {
         
         const logsChannel = member.guild.channels.cache.find(c => c.id === logsChannelId)
     
-        if(!logs.get('guildMemberAdd') || !logsChannel) return
+        if (!logs || !logs.get('guildMemberAdd') || !logsChannel) return
     
         let Embed = new Discord.MessageEmbed()
             .setTitle('Member Joined')
@@ -231,7 +231,7 @@ module.exports = client => {
     
         const logsChannel = member.guild.channels.cache.find(c => c.id === logsChannelId)
 
-        if ((!logs.get('guildMemberRemove') && !logs.get('guildMemberKick')) || !logsChannel) return
+        if (!logs || (!logs.get('guildMemberRemove') && !logs.get('guildMemberKick')) || !logsChannel) return
 
         let Embed = new Discord.MessageEmbed()
             .setColor('#FF2A2A')
@@ -264,7 +264,7 @@ module.exports = client => {
     
         const logsChannel = newMember.guild.channels.cache.find(c => c.id === logsChannelId)
 
-        if (!logs.get('guildMemberUpdate') || !logsChannel) return
+        if (!logs || !logs.get('guildMemberUpdate') || !logsChannel) return
 
         let Embed = new Discord.MessageEmbed()        
             .setFooter(client.user.username, client.user.displayAvatarURL())
@@ -302,7 +302,7 @@ module.exports = client => {
 
         const logsChannel = message.guild.channels.cache.find(c => c.id === logsChannelId)
 
-        if (!logs.get('messageDelete') || !logsChannel) return
+        if (!logs || !logs.get('messageDelete') || !logsChannel) return
     
         let Embed = new Discord.MessageEmbed()
             .setTitle('Message Deleted')
@@ -336,7 +336,7 @@ module.exports = client => {
 
         const logsChannel = messages.first().guild.channels.cache.find(c => c.id === logsChannelId)
 
-        if (!logs.get('messageDelete') || !logsChannel) return
+        if (!logs || !logs.get('messageDelete') || !logsChannel) return
 
         let Embed = new Discord.MessageEmbed()
             .setTitle('Message Bulk Deleted')
@@ -357,7 +357,7 @@ module.exports = client => {
 
         const logsChannel = newMessage.guild.channels.cache.find(c => c.id === logsChannelId)
 
-        if(!logs.get('messageUpdate') || logsChannel) return
+        if (!logs || !logs.get('messageUpdate') || logsChannel) return
 
         let writtenH = oldMessage.createdAt.getHours()
         if(writtenH / 10 < 1) writtenH = `0${writtenH}`
@@ -388,7 +388,7 @@ module.exports = client => {
 
         const logsChannel = newState.guild.channels.cache.find(c => c.id === logsChannelId)
 
-        if(!logs.get('voiceStateUpdate') || !logsChannel) return
+        if (!logs || !logs.get('voiceStateUpdate') || !logsChannel) return
 
         if(newState.channel) {
             if(oldState.channel) {

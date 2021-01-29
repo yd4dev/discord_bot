@@ -6,7 +6,7 @@ module.exports = client => {
 
         const { voicelinks } = await client.schemas.get('guild').findOne({ _id: newState.guild.id })
 
-        if (voicelinks) return
+        if (!voicelinks) return
 
         for (k of voicelinks) {
             if (oldState.channel && oldState.channel.id == k[0]) {
