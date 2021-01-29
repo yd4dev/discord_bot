@@ -8,11 +8,12 @@ const reqString = {
 const guildSchema = mongoose.Schema({
     _id: reqString,
     prefix: { type: String },
+    logs: { type: Map, of: Boolean },
     logsChannelId: { type: String },
     joinRoles: { type: Array },
     autoChannel_channel: { type: String },
     autoChannel_name: { type: String },
-    voicelinks: { type: Map, of: String }
+    voicelinks: { type: Map, of: String },
 }, { versionKey: false });
 
 module.exports = mongoose.model('guild', guildSchema);
