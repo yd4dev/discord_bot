@@ -1,37 +1,34 @@
 module.exports = {
 	name: 'eval',
-    description: 'A command to run eval.',
-    args: true,
-    permissions: 'BOT_OWNER',
+	description: 'A command to run eval.',
+	args: true,
+	permissions: 'BOT_OWNER',
 	usage: '%prefixeval [code]',
-    execute(message, args, client, prefix) {
+	execute(message, args) {
 
-        function clean(text) {
-            if (typeof(text) === "string")
-              return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-            else
-                return text;
-        }
-        
-        const code = args.join(' ')
+		function clean(text) {
+			if (typeof (text) === 'string') {return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));}
+			else {return text;}
+		}
 
-        let evaled = ''
+		const code = args.join(' ')
 
-        try {
-            evaled = eval(code);
-        } catch (err) {
-            message.channel.send(err.name + ': ' + err.message)
-            console.log(err)
-        }
+		let evaled = ''
 
-        
- 
-        if (typeof evaled !== "string")
-            evaled = require("util").inspect(evaled);
-        
-        if (clean(evaled).length > 2000) return message.channel.send('Return value is greater than 2000 chars.')
-        
-        message.channel.send(clean(evaled), {code:"xl"});
+		try {
+			evaled = eval(code);
+		}
+		catch (err) {
+			message.channel.send(err.name + ': ' + err.message)
+			console.log(err)
+		}
 
-    },
+
+		if (typeof evaled !== 'string') {evaled = require('util').inspect(evaled);}
+
+		if (clean(evaled).length > 2000) return message.channel.send('Return value is greater than 2000 chars.')
+
+		message.channel.send(clean(evaled), { code:'xl' });
+
+	},
 };

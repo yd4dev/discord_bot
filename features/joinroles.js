@@ -1,21 +1,21 @@
 module.exports = client => {
 
-    client.on('guildMemberAdd', async member => {
+	client.on('guildMemberAdd', async member => {
 
-        const currentMute = await client.schemas.get('mute').findOne({
-            guildId: member.guild.id,
-            userId: member.id
-        })
+		const currentMute = await client.schemas.get('mute').findOne({
+			guildId: member.guild.id,
+			userId: member.id,
+		})
 
-        if (currentMute) return
+		if (currentMute) return
 
-        let result = await client.schemas.get('guild').findOne({ _id: member.guild.id})  
+		const result = await client.schemas.get('guild').findOne({ _id: member.guild.id })
 
-        if(result.joinRoles) {
-            result.joinRoles.forEach(role => {
-                member.roles.add(role)
-            })
-        }
-    
-    })
+		if(result.joinRoles) {
+			result.joinRoles.forEach(role => {
+				member.roles.add(role)
+			})
+		}
+
+	})
 }

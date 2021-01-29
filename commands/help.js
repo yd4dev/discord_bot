@@ -1,79 +1,82 @@
-const Discord = require("discord.js");
+const Discord = require('discord.js');
 
 module.exports = {
-    name: 'help',
-    description: 'Shows a list of all commands.',
-    args: false,
-    usage: '%prefixhelp (command)',
-    commandHelp(message, commandName, prefix, client) {
+	name: 'help',
+	description: 'Shows a list of all commands.',
+	args: false,
+	usage: '%prefixhelp (command)',
+	commandHelp(message, commandName, prefix, client) {
 
-        if (client.commands.has(commandName)) {
+		if (client.commands.has(commandName)) {
 
-            const command = client.commands.get(commandName)
+			const command = client.commands.get(commandName)
 
-            let minArgs = command.args
+			let minArgs = command.args
 
-            if (minArgs == false) minArgs = 0
+			if (minArgs == false) minArgs = 0
 
-            let usage = command.usage.replace(/%prefix/g, prefix)
-            
-            let commandHelp = new Discord.MessageEmbed()
-                .setTitle('Help ' + command.name)
-                .setAuthor(client.user.username, client.user.displayAvatarURL())
-                .setColor('RANDOM')
-                .setFooter('Use !help for a list of all available commands.', client.user.displayAvatarURL())
-            if (command.description) commandHelp.setDescription(command.description)
-            if (command.usage) commandHelp.addField('Usage', usage)
-            commandHelp.addField('Required Arguments', minArgs, true)
-            if (command.permissions) commandHelp.addField('Required Permissions', command.permissions, true)
-            
-            message.channel.send(commandHelp)
+			const usage = command.usage.replace(/%prefix/g, prefix)
 
-        } else {
-            message.channel.send('That command does not exist.')
-        }
+			const commandHelp = new Discord.MessageEmbed()
+				.setTitle('Help ' + command.name)
+				.setAuthor(client.user.username, client.user.displayAvatarURL())
+				.setColor('RANDOM')
+				.setFooter('Use !help for a list of all available commands.', client.user.displayAvatarURL())
+			if (command.description) commandHelp.setDescription(command.description)
+			if (command.usage) commandHelp.addField('Usage', usage)
+			commandHelp.addField('Required Arguments', minArgs, true)
+			if (command.permissions) commandHelp.addField('Required Permissions', command.permissions, true)
 
-    },
-    execute(message, args, client, prefix) {
+			message.channel.send(commandHelp)
 
-        if (args[0]) {
+		}
+		else {
+			message.channel.send('That command does not exist.')
+		}
 
-            if (args[0].startsWith(prefix)) {
-                args[0].slice(0, prefix.length - 1)
-            }
+	},
+	execute(message, args, client, prefix) {
 
-            this.commandHelp(message, args[0], prefix, client)
+		if (args[0]) {
 
-        } else {
+			if (args[0].startsWith(prefix)) {
+				args[0].slice(0, prefix.length - 1)
+			}
 
-            let categories = new Map()
+			this.commandHelp(message, args[0], prefix, client)
 
-            client.commands.forEach(element => {
-                if (!categories.get(element.category)) categories.set(element.category, [])
-                categories.get(element.category).push(element.name)
+		}
+		else {
 
-            })
+			const categories = new Map()
 
-            let HelpEmbed = new Discord.MessageEmbed()
-                .setTitle('Help')
-                .setAuthor(client.user.username, client.user.displayAvatarURL())
-                .setDescription(`The server's prefix is set to \`${prefix}\`.`)
-                .setColor('RANDOM')
-                .setFooter('Use !help (command) for detailed information.', client.user.displayAvatarURL())
+			client.commands.forEach(element => {
+				if (!categories.get(element.category)) categories.set(element.category, [])
+				categories.get(element.category).push(element.name)
 
-            categories.forEach((values, key) => {
-                let commands = []
-                values.forEach(e => {
-                    if (client.commands.get(e).permissions === 'BOT_OWNER' && message.author.id !== process.env.botOwnerId) {
-                        return
-                    } else {
-                        commands.push(client.commands.get(e).name + ' | ' + client.commands.get(e).description)
-                    }
-                })
-                HelpEmbed.addField(key, commands)
-            })
+			})
 
-            message.channel.send(HelpEmbed)
-        }
-	}
+			const HelpEmbed = new Discord.MessageEmbed()
+				.setTitle('Help')
+				.setAuthor(client.user.username, client.user.displayAvatarURL())
+				.setDescription(`The server's prefix is set to \`${prefix}\`.`)
+				.setColor('RANDOM')
+				.setFooter('Use !help (command) for detailed information.', client.user.displayAvatarURL())
+
+			categories.forEach((values, key) => {
+				const commands = []
+				values.forEach(e => {
+					if (client.commands.get(e).permissions === 'BOT_OWNER' && message.author.id !== process.env.botOwnerId) {
+						return
+					}
+					else {
+						commands.push(client.commands.get(e).name + ' | ' + client.commands.get(e).description)
+					}
+				})
+				HelpEmbed.addField(key, commands)
+			})
+
+			message.channel.send(HelpEmbed)
+		}
+	},
 }

@@ -1,54 +1,53 @@
 module.exports = {
 	name: 'setup',
-    description: 'A command to setup certain things on your server.',
-    args: false,
-    guild: true,
-    permissions: 'ADMINISTRATOR',
-    usage: '%prefixsetup mute',
-	async execute(message, args, client, prefix) {
-        
-        switch(args[0]) {
-            case 'mute':
+	description: 'A command to setup certain things on your server.',
+	args: 1,
+	guild: true,
+	permissions: 'ADMINISTRATOR',
+	usage: '%prefixsetup mute',
+	async execute(message, args) {
 
-                let mutedRole = message.guild.roles.cache.find(role => role.name === 'Muted');
+		switch(args[0]) {
+		case 'mute': {
 
-                let changedChannels = 0;
+			let mutedRole = message.guild.roles.cache.find(role => role.name === 'Muted');
 
-                if(mutedRole) {
-                    message.guild.channels.cache.forEach(element => {
+			let changedChannels = 0;
 
-                        if(element.type != 'text') return;
+			if (mutedRole) {
+				message.guild.channels.cache.forEach(element => {
 
-                        element.updateOverwrite(mutedRole, { SEND_MESSAGES: false });
+					if (element.type != 'text') return;
 
-                        changedChannels = changedChannels + 1;
+					element.updateOverwrite(mutedRole, { SEND_MESSAGES: false });
 
-                    });
+					changedChannels = changedChannels + 1;
 
-                    message.channel.send(`Successfully set up the Muted role for ${changedChannels} channels.`)
-                } else {
+				});
 
-                        mutedRole = await message.guild.roles.create({data: { name: 'Muted', permissions: 0 }})
+				message.channel.send(`Successfully set up the Muted role for ${changedChannels} channels.`)
+			}
+			else {
 
-                    console.log(mutedRole)
+				mutedRole = await message.guild.roles.create({ data: { name: 'Muted', permissions: 0 } })
 
-                    message.guild.channels.cache.forEach(element => {
+				console.log(mutedRole)
 
-                        if(element.type != 'text') return;
+				message.guild.channels.cache.forEach(element => {
 
-                        element.updateOverwrite(mutedRole, { SEND_MESSAGES: false });
+					if (element.type != 'text') return;
 
-                        changedChannels = changedChannels + 1;
+					element.updateOverwrite(mutedRole, { SEND_MESSAGES: false });
 
-                    });
+					changedChannels = changedChannels + 1;
 
-                    message.channel.send(`Successfully created the ${mutedRole} role and set it up for ${changedChannels} channels.`)
-                }
-                break;
+				});
 
-            default:
-                message.reply('vald options are `mute`.')
-        }
+				message.channel.send(`Successfully created the ${mutedRole} role and set it up for ${changedChannels} channels.`)
+			}
+			break;
+		}
+		}
 
 	},
 };

@@ -1,9 +1,9 @@
 module.exports = {
 	name: 'ping',
-    description: 'A simple test command.',
+	description: 'A simple test command.',
 	args: false,
 	usage: '%prefixping',
-	execute(message, args, client, prefix) {
+	execute(message) {
 		message.reply('pong!')
 	},
 };

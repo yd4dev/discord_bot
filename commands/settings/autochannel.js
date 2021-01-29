@@ -1,61 +1,56 @@
 module.exports = {
 	name: 'autochannel',
-    description: 'Lets you change autochannel settings.',
+	description: 'Lets you change autochannel settings.',
 	args: 2,
 	guild: true,
 	permissions: 'MANAGE_CHANNELS',
-	usage: '%prefixautochannel channel [voice channel id] \n %prefixautochannel name [name] \n Use `%USER` to replace add the user\'s name to a channel name.',
-	async execute(message, args, client, prefix) {
+	usage: '%prefixautochannel channel [voice channel id] \n %prefixautochannel name [name] \n Use `%USER` to add the user\'s name to a channel name.',
+	async execute(message, args, client) {
 
 		switch (args[0]) {
-			
-			case 'channel':
 
-				let channel = message.guild.channels.cache.find(channel => channel.id == args[1])
+		case 'channel': {
 
-				if(!channel) return message.channel.send('Please provide a valid channel id.')
-				if(channel.type != 'voice') return message.channel.send('Please provide a voice channel.')
+			const channel = message.guild.channels.cache.find(channel => channel.id == args[1])
 
-				await client.schemas.get('guild').findOneAndUpdate({
-                    _id: message.guild.id
-                }, {
-                    _id: message.guild.id,
-                    autoChannel_channel: channel.id,
-                }, {
-                    upsert: true
-				})
-				
-				message.channel.send(`Auto Channels can now be created by joining into \`${channel.name}\`.`)
+			if (!channel) return message.channel.send('Please provide a valid channel id.')
+			if (channel.type != 'voice') return message.channel.send('Please provide a voice channel.')
 
-			break;
+			await client.schemas.get('guild').findOneAndUpdate({
+				_id: message.guild.id,
+			}, {
+				_id: message.guild.id,
+				autoChannel_channel: channel.id,
+			}, {
+				upsert: true,
+			})
 
-			case 'name':
-
-				args.shift()
-				let name = args.join(' ').trim()
-
-				if( name == '' ) return message.channel.send('Please provide a channel name. Use `%USER` to add the username.')
-
-				await client.schemas.get('guild').findOneAndUpdate({
-                    _id: message.guild.id
-                }, {
-                    _id: message.guild.id,
-                    autoChannel_name: name,
-                }, {
-                    upsert: true
-				})
-
-				message.channel.send(`Auto Channels will now be named \`${name}\`.`)
+			message.channel.send(`Auto Channels can now be created by joining into \`${channel.name}\`.`)
 
 			break;
-
-			default:
-
-				
-
-			break;
-
 		}
 
-	}
+		case 'name': {
+
+			args.shift()
+			const name = args.join(' ').trim()
+
+			if (name == '') return message.channel.send('Please provide a channel name. Use `%USER` to add the username.')
+
+			await client.schemas.get('guild').findOneAndUpdate({
+				_id: message.guild.id,
+			}, {
+				_id: message.guild.id,
+				autoChannel_name: name,
+			}, {
+				upsert: true,
+			})
+
+			message.channel.send(`Auto Channels will now be named \`${name}\`.`)
+
+			break;
+		}
+		}
+
+	},
 };

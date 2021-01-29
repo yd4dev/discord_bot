@@ -2,107 +2,111 @@ const Discord = require('discord.js')
 
 module.exports = {
 	name: 'voicelink',
-    description: 'Links roles to specific voice channels.',
-    args: false,
-    guild: true,
-    usage: '%prefixvoicelink [voice channel id] [role mention / id] \n %prefixvoicelink remove [voice channel id]',
-    permissions: 'MANAGE_CHANNELS',
-    async execute(message, args, client, prefix) {
+	description: 'Links roles to specific voice channels.',
+	args: false,
+	guild: true,
+	usage: '%prefixvoicelink [voice channel id] [role mention / id] \n %prefixvoicelink remove [voice channel id]',
+	permissions: 'MANAGE_CHANNELS',
+	async execute(message, args, client, prefix) {
 
-        async function saveMap(map) {
+		async function saveMap(map) {
 
-            await client.schemas.get('guild').findOneAndUpdate({
-                _id: message.guild.id
-            }, {
-                voicelinks: map
-            }, {
-                upsert: true
-            })
-    
-        }
+			await client.schemas.get('guild').findOneAndUpdate({
+				_id: message.guild.id,
+			}, {
+				voicelinks: map,
+			}, {
+				upsert: true,
+			})
 
-        // Clear Database entries if channel or role does not exist anymore.
-        
-        const { voicelinks } = await client.schemas.get('guild').findOne({ _id: message.guild.id })
+		}
 
-        let VLMap = new Map(voicelinks)
-            
-            VLMap.forEach((v, k) => {
+		// Clear Database entries if channel or role does not exist anymore.
 
-                if (!client.channels.cache.find(c => c.id === k) || !message.guild.roles.cache.find(r => r.id === v)) {
+		const { voicelinks } = await client.schemas.get('guild').findOne({ _id: message.guild.id })
 
-                    VLMap.delete(k)
+		const VLMap = new Map(voicelinks)
 
-                }
-            })
-        
-        if (VLMap !== voicelinks) {
+		VLMap.forEach((v, k) => {
 
-            saveMap(VLMap)
+			if (!client.channels.cache.find(c => c.id === k) || !message.guild.roles.cache.find(r => r.id === v)) {
 
-        }
-        
+				VLMap.delete(k)
 
-        //Voicelink List
-        
-        if (args.length === 0) {
+			}
+		})
 
-            let voicelinks_str = ''
+		if (VLMap !== voicelinks) {
 
-            VLMap.forEach((v, k) => {
+			saveMap(VLMap)
 
-                voicelinks_str += `🔊 ${client.channels.cache.find(c => c.id === k).name} [${client.channels.cache.find(c => c.id === k).id}] => ${message.guild.roles.cache.find(r => r.id === v)}\n`
+		}
 
-            })
 
-            let ListEmbed = new Discord.MessageEmbed()
-                .setTitle('Voice Link')
-                .setAuthor(client.user.username, client.user.displayAvatarURL())
-                .setDescription(`Setup Voice Link by using \`${prefix}voicelink [voice channel id] [role mention / id]\` \n Remove Linked Channels by using \`${prefix}voicelink remove [voice channel id]\``)
+		// Voicelink List
 
-            if (voicelinks_str) {
-                ListEmbed.addField('Linked Channels', voicelinks_str)
-                }
-                
-            
-            message.channel.send(ListEmbed)
-            
-        } else if (args[0] === 'remove') {
+		if (args.length === 0) {
 
-            if (VLMap.has(args[1])) {
-                
-                VLMap.delete(args[1])
+			let voicelinks_str = ''
 
-                saveMap(VLMap)
+			VLMap.forEach((v, k) => {
 
-                message.channel.send('Successfully removed voice link.')
+				voicelinks_str += `🔊 ${client.channels.cache.find(c => c.id === k).name} [${client.channels.cache.find(c => c.id === k).id}] => ${message.guild.roles.cache.find(r => r.id === v)}\n`
 
-            } else {
-                message.channel.send('Please provide a linked voice channel id.')
-            }
+			})
 
-        } else {
+			const ListEmbed = new Discord.MessageEmbed()
+				.setTitle('Voice Link')
+				.setAuthor(client.user.username, client.user.displayAvatarURL())
+				.setDescription(`Setup Voice Link by using \`${prefix}voicelink [voice channel id] [role mention / id]\` \n Remove Linked Channels by using \`${prefix}voicelink remove [voice channel id]\``)
 
-            const vc = message.guild.channels.cache.find(c => c.id == args[0])
-            if (!vc || vc.type != 'voice') return message.channel.send('Please provide a valid voice channel id.')
+			if (voicelinks_str) {
+				ListEmbed.addField('Linked Channels', voicelinks_str)
+			}
 
-            let role
-            
-            if (message.mentions.roles.size) {
-                role = message.mentions.roles.first()
-            } else {
-                role = message.guild.roles.cache.find(r => r.id == args[1])
-            }
 
-            if (!message.guild.roles.cache.find(r => r == role)) return message.channel.send('Please provide a valid role.')
-            
-            VLMap.set(vc.id, role.id)
+			message.channel.send(ListEmbed)
 
-            saveMap(VLMap)
-            
-            message.channel.send(`Linked 🔊 \`${vc.name}\` to ${role}`)
+		}
+		else if (args[0] === 'remove') {
 
-        }
+			if (VLMap.has(args[1])) {
+
+				VLMap.delete(args[1])
+
+				saveMap(VLMap)
+
+				message.channel.send('Successfully removed voice link.')
+
+			}
+			else {
+				message.channel.send('Please provide a linked voice channel id.')
+			}
+
+		}
+		else {
+
+			const vc = message.guild.channels.cache.find(c => c.id == args[0])
+			if (!vc || vc.type != 'voice') return message.channel.send('Please provide a valid voice channel id.')
+
+			let role
+
+			if (message.mentions.roles.size) {
+				role = message.mentions.roles.first()
+			}
+			else {
+				role = message.guild.roles.cache.find(r => r.id == args[1])
+			}
+
+			if (!message.guild.roles.cache.find(r => r == role)) return message.channel.send('Please provide a valid role.')
+
+			VLMap.set(vc.id, role.id)
+
+			saveMap(VLMap)
+
+			message.channel.send(`Linked 🔊 \`${vc.name}\` to ${role}`)
+
+		}
 
 	},
 };
