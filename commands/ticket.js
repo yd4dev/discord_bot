@@ -14,7 +14,7 @@ module.exports = {
 		switch(args[0]) {
             case 'category':
 
-                if(args[1] == 'create') {
+                if(args[1] === 'create') {
 
                     if(!args[2]) return message.reply('Please provide a category name.')
 
@@ -30,7 +30,7 @@ module.exports = {
                     })
                     message.channel.send(`Succesfully created Ticket category ${args[2]}`)
 
-                } else if(args[1] == 'delete') {
+                } else if(args[1] === 'delete') {
 
                     if(!args[2]) return message.reply('Please provide a category name.')
 

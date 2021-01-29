@@ -6,7 +6,7 @@ module.exports = {
 	usage: '%prefixdm [user] [message]',
 	execute(message, args, client, prefix) {
 
-		let user = ''
+		let user
 
 		if (client.users.cache.get(args[0])) user = client.users.cache.get(args[0])
 		

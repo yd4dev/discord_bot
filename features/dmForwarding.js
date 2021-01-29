@@ -7,7 +7,7 @@ module.exports = client => {
     client.on('message', async message => {
 
         if (message.channel.type != 'dm') return
-        if (message.author.bot || message.author.id == process.env.botOwnerId) return
+        if (message.author.bot || message.author.id === process.env.botOwnerId) return
 
         let MessageDMEmbed = new Discord.MessageEmbed()
             .setAuthor(message.author.tag, message.author.displayAvatarURL())

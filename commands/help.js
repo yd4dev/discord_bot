@@ -20,12 +20,12 @@ module.exports = {
             let commandHelp = new Discord.MessageEmbed()
                 .setTitle('Help ' + command.name)
                 .setAuthor(client.user.username, client.user.displayAvatarURL())
-                .setColor(Math.floor(Math.random() * 16777215).toString(16))
-                .setFooter('Use !help for a list of all available commands.')
+                .setColor('RANDOM')
+                .setFooter('Use !help for a list of all available commands.', client.user.displayAvatarURL())
             if (command.description) commandHelp.setDescription(command.description)
-            if (command.usage) commandHelp.addField('Usage', usage, 1)
-            commandHelp.addField('Required Arguments', minArgs, 1)
-            if (command.permissions) commandHelp.addField('Required Permissions', command.permissions, 1)
+            if (command.usage) commandHelp.addField('Usage', usage)
+            commandHelp.addField('Required Arguments', minArgs, true)
+            if (command.permissions) commandHelp.addField('Required Permissions', command.permissions, true)
             
             message.channel.send(commandHelp)
 
@@ -58,13 +58,17 @@ module.exports = {
                 .setTitle('Help')
                 .setAuthor(client.user.username, client.user.displayAvatarURL())
                 .setDescription(`The server's prefix is set to \`${prefix}\`.`)
-                .setColor(Math.floor(Math.random() * 16777215).toString(16))
+                .setColor('RANDOM')
                 .setFooter('Use !help (command) for detailed information.', client.user.displayAvatarURL())
 
             categories.forEach((values, key) => {
                 let commands = []
                 values.forEach(e => {
-                    commands.push(client.commands.get(e).name + ' | ' + client.commands.get(e).description)
+                    if (client.commands.get(e).permissions === 'BOT_OWNER' && message.author.id !== process.env.botOwnerId) {
+                        return
+                    } else {
+                        commands.push(client.commands.get(e).name + ' | ' + client.commands.get(e).description)
+                    }
                 })
                 HelpEmbed.addField(key, commands)
             })
