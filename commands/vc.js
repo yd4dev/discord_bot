@@ -14,7 +14,7 @@ module.exports = {
 
 			const newVC = message.guild.channels.cache.find(c => c.id == args[1])
 
-			if (!newVC || newVC.type != 'voice') return message.channel.send('Please provide a voice channel id.')
+			if (newVC?.type != 'voice') return message.channel.send('Please provide a voice channel id.')
 
 			if (!newVC.permissionsFor(message.member).has('CONNECT')) return message.channel.send('You do not have permissions to enter that channel.')
 

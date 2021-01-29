@@ -3,7 +3,7 @@ module.exports = client => {
 	client.on('voiceStateUpdate', async (oldState, newState) => {
 
 		setTimeout(async function() {
-			if (oldState.channel && oldState.channel != newState.channel && oldState.channel.members.size === 0) {
+			if (oldState?.channel !== newState.channel && oldState.channel.members.size === 0) {
 
 				const tempChannel = await client.schemas.get('tempChannel').findOne({ _id: oldState.channel.id })
 
