@@ -127,7 +127,7 @@ client.on('message', async message => {
 
 })
 
-client.on('GuildCreate', async guild => {
+client.on('guildCreate', async guild => {
 
     await client.schemas.get('guild').findOneAndUpdate({
         _id: guild.id
@@ -138,4 +138,4 @@ client.on('GuildCreate', async guild => {
     })
 })
 
-    client.login(process.env.token);
+client.login(process.env.token);
