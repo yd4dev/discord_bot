@@ -12,9 +12,14 @@ module.exports = client => {
 		})
 
 		if(!ticketCategory) return
+		let title = ''
 
-		const title = ticketCategory.title ? ticketCategory.title : ticketCategory.category_name
-
+		if(ticketCategory.title) {
+			title = ticketCategory.title
+		}
+		else {
+			title = ticketCategory.category_name
+		}
 
 		reaction.message.guild.channels.create(ticketCategory.category_name, { type: 'text' })
 			.then((channel) => {

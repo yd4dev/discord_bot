@@ -11,7 +11,7 @@ module.exports = {
 
 		case 'channel': {
 
-			const channel = message.guild.channels.cache.find(c => c.id == args[1])
+			const channel = message.guild.channels.cache.find(channel => channel.id == args[1])
 
 			if (!channel) return message.channel.send('Please provide a valid channel id.')
 			if (channel.type != 'voice') return message.channel.send('Please provide a voice channel.')

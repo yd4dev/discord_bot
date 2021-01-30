@@ -12,7 +12,7 @@ module.exports = client => {
 
 		const results = await client.schemas.get('mute').find(conditional)
 
-		if (results?.length) {
+		if (results && results.length) {
 			for (const result of results) {
 
 				const guild = client.guilds.cache.get(result.guildId)
@@ -59,9 +59,9 @@ module.exports = client => {
 		})
 
 		if (currentMute) {
-			const role = member.guild.roles.cache.find(r =>
-				r.name === 'Muted',
-			);
+			const role = member.guild.roles.cache.find(role => {
+				return role.name === 'Muted'
+			});
 
 			if (role) {
 				member.roles.add(role);

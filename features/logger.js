@@ -10,7 +10,7 @@ module.exports = client => {
 
 		const logsChannel = channel.guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if (!logs?.get('channelCreate') || !logsChannel) return
+		if (!logs || !logs.get('channelCreate') || !logsChannel) return
 
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Channel Created')
@@ -23,7 +23,7 @@ module.exports = client => {
 
 		const fetchedLog = (await channel.guild.fetchAuditLogs({ limit: 1, type: 'CHANNEL_CREATE' })).entries.first()
 
-		if (fetchedLog?.target === channel) {
+		if (fetchedLog && fetchedLog.target === channel) {
 			Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 		}
 
@@ -39,7 +39,7 @@ module.exports = client => {
 
 		const logsChannel = channel.guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if (!logs?.get('channelDelete') || !logsChannel) return
+		if (!logs || !logs.get('channelDelete') || !logsChannel) return
 
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Channel Deleted')
@@ -52,7 +52,9 @@ module.exports = client => {
 
 		const fetchedLog = (await channel.guild.fetchAuditLogs({ limit: 1, type: 'CHANNEL_DELETE' })).entries.first()
 
-		if (fetchedLog?.target.id === channel.id) {
+		console.log(fetchedLog)
+
+		if (fetchedLog && fetchedLog.target.id === channel.id) {
 			Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 		}
 
@@ -68,7 +70,7 @@ module.exports = client => {
 
 		const logsChannel = newChannel.guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if (!logs?.get('channelUpdate') || !logsChannel) return
+		if (!logs || !logs.get('channelUpdate') || !logsChannel) return
 
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Channel Updated')
@@ -103,7 +105,12 @@ module.exports = client => {
 
 			if (oldChannel.nsfw !== newChannel.nsfw) {
 
-				Embed.addField('NSFW Change', newChannel.nsfw ? 'Changed channel to be NSFW.' : 'Changed channel not to be NSFW anymore.')
+				if (newChannel.nsfw) {
+					Embed.addField('NSFW Change', 'Changed channel to be NSFW.')
+				}
+				else {
+					Embed.addField('NSFW Change', 'Changed channel not to be NSFW anymore.')
+				}
 
 			}
 
@@ -143,7 +150,7 @@ module.exports = client => {
 
 			const fetchedLog = (await newChannel.guild.fetchAuditLogs({ limit: 1, type: 'CHANNEL_UPDATE' })).entries.first()
 
-			if (fetchedLog?.target.id === newChannel.id) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
+			if (fetchedLog && fetchedLog.target.id === newChannel.id) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 
 			logsChannel.send(Embed)
 
@@ -158,7 +165,7 @@ module.exports = client => {
 
 		const logsChannel = guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if (!logs?.get('guildBanAdd') || !logsChannel) return
+		if (!logs || !logs.get('guildBanAdd') || !logsChannel) return
 
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Member Banned')
@@ -169,7 +176,7 @@ module.exports = client => {
 
 		const fetchedLog = (await guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_BAN_ADD' })).entries.first()
 
-		if (fetchedLog?.target.id === user.id) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
+		if (fetchedLog && fetchedLog.target.id === user.id) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 
 		logsChannel.send(Embed)
 
@@ -181,7 +188,7 @@ module.exports = client => {
 
 		const logsChannel = guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if (!logs?.get('guildBanRemove') || !logsChannel) return
+		if (!logs || !logs.get('guildBanRemove') || !logsChannel) return
 
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Member Unbanned')
@@ -192,7 +199,7 @@ module.exports = client => {
 
 		const fetchedLog = (await guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_BAN_REMOVE' })).entries.first()
 
-		if (fetchedLog?.target.id === user.id) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
+		if (fetchedLog && fetchedLog.target.id === user.id) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 
 		logsChannel.send(Embed)
 
@@ -204,7 +211,7 @@ module.exports = client => {
 
 		const logsChannel = member.guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if (!logs?.get('guildMemberAdd') || !logsChannel) return
+		if (!logs || !logs.get('guildMemberAdd') || !logsChannel) return
 
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Member Joined')
@@ -225,7 +232,7 @@ module.exports = client => {
 
 		const logsChannel = member.guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if ((!logs?.get('guildMemberRemove') && !logs?.get('guildMemberKick')) || !logsChannel) return
+		if (!logs || (!logs.get('guildMemberRemove') && !logs.get('guildMemberKick')) || !logsChannel) return
 
 		const Embed = new Discord.MessageEmbed()
 			.setColor('#FF2A2A')
@@ -259,7 +266,7 @@ module.exports = client => {
 
 		const logsChannel = newMember.guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if (!logs?.get('guildMemberUpdate') || !logsChannel) return
+		if (!logs || !logs.get('guildMemberUpdate') || !logsChannel) return
 
 		const Embed = new Discord.MessageEmbed()
 			.setFooter(client.user.username, client.user.displayAvatarURL())
@@ -268,8 +275,8 @@ module.exports = client => {
 
 		if (oldMember.nickname !== newMember.nickname) {
 			Embed.setTitle('Nickname changed')
-				.addField('Before:', oldMember.displayName, true)
-				.addField('Now:', newMember.displayName, true)
+				.addField('Before:', oldMember.nickname, true)
+				.addField('Now:', newMember.nickname, true)
 		}
 		else if (oldMember.user.username !== newMember.user.username) {
 
@@ -285,10 +292,6 @@ module.exports = client => {
 
 		Embed.addField('ID', `\`\`\`js\nUSER = ${newMember.id}\`\`\``)
 
-		console.log('oldMember: ' + oldMember)
-
-		console.log('newMember: ' + newMember)
-
 		logsChannel.send(Embed)
 
 	})
@@ -303,7 +306,7 @@ module.exports = client => {
 
 		const logsChannel = message.guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if (!logs?.get('messageDelete') || !logsChannel) return
+		if (!logs || !logs.get('messageDelete') || !logsChannel) return
 
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Message Deleted')
@@ -312,8 +315,10 @@ module.exports = client => {
 
 		if (message.content) Embed.addField('Inhalt:', message.content)
 
-		const writtenH = message.createdAt.getHours() / 10 < 1 ? `0${message.createdAt.getHours()}` : message.createdAt.getHours()
-		const writtenM = message.createdAt.getMinutes() / 10 < 1 ? `0${message.createdAt.getHours()}` : message.createdAt.getMinutes()
+		let writtenH = message.createdAt.getHours()
+		if(writtenH / 10 < 1) writtenH = `0${writtenH}`
+		let writtenM = message.createdAt.getMinutes()
+		if(writtenM / 10 < 1) writtenM = `0${writtenM}`
 
 		Embed.addField('Message written:', `${writtenH}:${writtenM}, ${message.createdAt.toDateString()}`)
 			.addField('Channel:', message.channel)
@@ -321,7 +326,7 @@ module.exports = client => {
 
 		const fetchedLogs = (await message.guild.fetchAuditLogs({ limit: 1, type: 'MESSAGE_DELETE' })).entries.first()
 
-		if (fetchedLogs?.target.id === message.author.id) Embed.addField('Moderator:', fetchedLogs.executor)
+		if (fetchedLogs && fetchedLogs.target.id === message.author.id) Embed.addField('Moderator:', fetchedLogs.executor)
 		if (message.attachments.size != 0) Embed.addField('Attachment:', message.attachments.first().url)
 
 		Embed.addField('ID', `\`\`\`js\nMESSAGE = ${message.id}\nAUTHOR = ${message.author.id}\`\`\``)
@@ -335,7 +340,7 @@ module.exports = client => {
 
 		const logsChannel = messages.first().guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if (!logs?.get('messageDelete') || !logsChannel) return
+		if (!logs || !logs.get('messageDelete') || !logsChannel) return
 
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Message Bulk Deleted')
@@ -356,16 +361,18 @@ module.exports = client => {
 
 		const logsChannel = newMessage.guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if (!logs?.get('messageUpdate') || !logsChannel) return
+		if (!logs || !logs.get('messageUpdate') || logsChannel) return
 
-		const writtenH = oldMessage.createdAt.getHours() / 10 < 1 ? `0${oldMessage.createdAt.getHours()}` : oldMessage.createdAt.getHours()
-		const writtenM = oldMessage.createdAt.getMinutes() / 10 < 1 ? `0${oldMessage.createdAt.getHours()}` : oldMessage.createdAt.getMinutes()
+		let writtenH = oldMessage.createdAt.getHours()
+		if(writtenH / 10 < 1) writtenH = `0${writtenH}`
+		let writtenM = oldMessage.createdAt.getMinutes()
+		if(writtenM / 10 < 1) writtenM = `0${writtenM}`
 
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Message Edited')
 			.setColor('#292b2f')
 			.setAuthor(newMessage.member.displayName, newMessage.author.displayAvatarURL({ dynamic: true }))
-			.addField('Before:', oldMessage.content ? oldMessage.content : oldMessage.attachments.first().url)
+			.addField('Before:', oldMessage.content)
 			.addField('Now:', newMessage.content)
 			.addField('Message written:', `${writtenH}:${writtenM}, ${oldMessage.createdAt.toDateString()}`)
 			.addField('Channel:', `${newMessage.channel} \n [Go To Message](${newMessage.url})`)
@@ -385,7 +392,7 @@ module.exports = client => {
 
 		const logsChannel = newState.guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if (!logs?.get('voiceStateUpdate') || !logsChannel) return
+		if (!logs || !logs.get('voiceStateUpdate') || !logsChannel) return
 
 		if(newState.channel) {
 			if(oldState.channel) {

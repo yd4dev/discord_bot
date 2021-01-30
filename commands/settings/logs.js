@@ -41,7 +41,9 @@ module.exports = {
 		if (args.length === 0) {
 
 			const logsChannel = result.logsChannelId
-			const description = logsChannel ? `The logs will be sent into ${client.channels.cache.find(c => c.id === result.logsChannelId)}` : 'You have not set a logs channel yet. Nothing will be logged.'
+			let description = ''
+			if (logsChannel) description = ` The logs will be sent into ${client.channels.cache.find(c => c.id === result.logsChannelId)}`
+			else description = ' You have not set a logs channel yet. Nothing will be logged.'
 
 			const LogsEmbed = new Discord.MessageEmbed()
 				.setTitle('Server Logs')
@@ -51,7 +53,12 @@ module.exports = {
 
 			events.forEach(e => {
 
-				LogsEmbed.addField(e, logsMap.get(e) ? '✅' : '❌', true)
+				if (logsMap.get(e)) {
+					LogsEmbed.addField(e, '✅', true)
+				}
+				else {
+					LogsEmbed.addField(e, '❌', true)
+				}
 
 			})
 
@@ -137,7 +144,7 @@ module.exports = {
 
 					const channel = message.guild.channels.cache.find(c => c.id === args[1])
 
-					if (channel?.type === 'text') {
+					if (channel && channel.type === 'text') {
 
 						await client.schemas.get('guild').findOneAndUpdate({
 							_id: message.guild.id,

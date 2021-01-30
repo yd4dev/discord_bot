@@ -87,9 +87,16 @@ module.exports = {
 		else {
 
 			const vc = message.guild.channels.cache.find(c => c.id == args[0])
-			if (vc?.type != 'voice') return message.channel.send('Please provide a valid voice channel id.')
+			if (!vc || vc.type != 'voice') return message.channel.send('Please provide a valid voice channel id.')
 
-			const role = message.mentions.roles.size ? message.mentions.roles.first() : message.guild.roles.cache.find(r => r.id == args[1])
+			let role
+
+			if (message.mentions.roles.size) {
+				role = message.mentions.roles.first()
+			}
+			else {
+				role = message.guild.roles.cache.find(r => r.id == args[1])
+			}
 
 			if (!message.guild.roles.cache.find(r => r == role)) return message.channel.send('Please provide a valid role.')
 
