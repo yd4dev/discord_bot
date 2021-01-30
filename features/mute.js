@@ -59,12 +59,10 @@ module.exports = client => {
 		})
 
 		if (currentMute) {
-			const role = member.guild.roles.cache.find(role => {
-				return role.name === 'Muted'
-			});
+			const role = member.guild.roles.cache.find(r => r.name === 'Muted')
 
 			if (role) {
-				member.roles.add(role);
+				member.roles.add(role)
 			}
 		}
 

@@ -300,7 +300,7 @@ module.exports = client => {
 
 		if (message.channel.type === 'dm') return
 
-		if (message.author.bot || message.partial) return
+		if (message.partial || message.author.bot) return
 
 		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: message.guild.id })
 
