@@ -52,9 +52,7 @@ module.exports = client => {
 
 		const fetchedLog = (await channel.guild.fetchAuditLogs({ limit: 1, type: 'CHANNEL_DELETE' })).entries.first()
 
-		console.log(fetchedLog)
-
-		if (fetchedLog && fetchedLog.target.id === channel.id) {
+		if (fetchedLog && fetchedLog.target === channel) {
 			Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 		}
 
@@ -150,7 +148,7 @@ module.exports = client => {
 
 			const fetchedLog = (await newChannel.guild.fetchAuditLogs({ limit: 1, type: 'CHANNEL_UPDATE' })).entries.first()
 
-			if (fetchedLog && fetchedLog.target.id === newChannel.id) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
+			if (fetchedLog && fetchedLog.target === newChannel) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 
 			logsChannel.send(Embed)
 
@@ -176,7 +174,7 @@ module.exports = client => {
 
 		const fetchedLog = (await guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_BAN_ADD' })).entries.first()
 
-		if (fetchedLog && fetchedLog.target.id === user.id) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
+		if (fetchedLog && fetchedLog.target === user) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 
 		logsChannel.send(Embed)
 
@@ -199,7 +197,7 @@ module.exports = client => {
 
 		const fetchedLog = (await guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_BAN_REMOVE' })).entries.first()
 
-		if (fetchedLog && fetchedLog.target.id === user.id) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
+		if (fetchedLog && fetchedLog.target === user) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 
 		logsChannel.send(Embed)
 
@@ -245,7 +243,7 @@ module.exports = client => {
 
 		const kicked = (await member.guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_KICK' })).entries.first()
 
-		if (kicked.target === member) {
+		if (kicked.target === member.user) {
 
 			Embed.setTitle('Member Kicked')
 				.setAuthor(kicked.executor.tag, kicked.executor.displayAvatarURL({ dynamic: true }))
@@ -275,8 +273,8 @@ module.exports = client => {
 
 		if (oldMember.nickname !== newMember.nickname) {
 			Embed.setTitle('Nickname changed')
-				.addField('Before:', oldMember.nickname, true)
-				.addField('Now:', newMember.nickname, true)
+				.addField('Before:', oldMember.displayName, true)
+				.addField('Now:', newMember.displayName, true)
 		}
 		else if (oldMember.user.username !== newMember.user.username) {
 
@@ -289,6 +287,10 @@ module.exports = client => {
 			Embed.setTitle('Avatar changed')
 				.setImage(newMember.user.displayAvatarURL({ dynamic: true, size: 128 }))
 		}
+		else { return }
+
+		console.log(oldMember)
+		console.log(newMember)
 
 		Embed.addField('ID', `\`\`\`js\nUSER = ${newMember.id}\`\`\``)
 
@@ -326,7 +328,7 @@ module.exports = client => {
 
 		const fetchedLogs = (await message.guild.fetchAuditLogs({ limit: 1, type: 'MESSAGE_DELETE' })).entries.first()
 
-		if (fetchedLogs && fetchedLogs.target.id === message.author.id) Embed.addField('Moderator:', fetchedLogs.executor)
+		if (fetchedLogs && fetchedLogs.target === message.author) Embed.addField('Moderator:', fetchedLogs.executor)
 		if (message.attachments.size != 0) Embed.addField('Attachment:', message.attachments.first().url)
 
 		Embed.addField('ID', `\`\`\`js\nMESSAGE = ${message.id}\nAUTHOR = ${message.author.id}\`\`\``)

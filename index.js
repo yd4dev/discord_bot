@@ -136,4 +136,4 @@ client.on('guildCreate', async guild => {
 	})
 })
 
-client.login(process.env.token);
+client.login(process.env.token)
