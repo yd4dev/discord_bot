@@ -283,10 +283,6 @@ module.exports = client => {
 				.addField('Now:', newMember.user.username, true)
 
 		}
-		else if (oldMember.user.avatar !== newMember.user.avatar) {
-			Embed.setTitle('Avatar changed')
-				.setImage(newMember.user.displayAvatarURL({ dynamic: true, size: 128 }))
-		}
 		else { return }
 
 		console.log(oldMember)
