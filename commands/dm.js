@@ -25,15 +25,28 @@ module.exports = {
 
 		if (user) {
 			if (message.attachments.size) {
-				try {
-					user.send(args.join(' '), {
-						files: [message.attachments.first()],
-					})
-					message.channel.send(`Message delivered to ${user.username}.`)
+				if (message.attachments.first().size < 8000000) {
+
+					try {
+						user.send(args.join(' '), {
+							files: [message.attachments.first()],
+						})
+						message.channel.send(`Message delivered to ${user.username}.`)
+					}
+					catch {
+						message.channel.send('Could not deliver message.')
+					}
 				}
-				catch {
-					message.channel.send('Could not deliver message.')
+				else {
+					try {
+						user.send(args.join(' ') + '\n Attached: ' + message.attachments.first().url)
+						message.channel.send(`Message delivered to ${user.username}. The attachment was too large for me to send so I sent a link to it.`)
+					}
+					catch {
+						message.channel.send('Could not deliver message.')
+					}
 				}
+
 			}
 			else {
 				try {
