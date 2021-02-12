@@ -37,7 +37,7 @@ module.exports = client => {
 			permissionOverwrites: [
 				{
 					id: newState.member.id,
-					allow: ['MANAGE_CHANNELS'],
+					allow: ['MANAGE_CHANNELS', 'MOVE_MEMBERS'],
 				},
 			],
 		}) .then(channel => {
