@@ -62,7 +62,9 @@ client.on('message', async message => {
 
 	if (message.author.bot) return;
 
-	const prefix = message.channel.type !== 'dm' && await client.schemas.get('guild').findOne({ _id: message.guild.id }).prefix ? await client.schemas.get('guild').findOne({ _id: message.guild.id }).prefix : '!'
+	console.log((await client.schemas.get('guild').findOne({ _id: message.guild.id })).prefix)
+
+	const prefix = message.channel.type !== 'dm' && (await client.schemas.get('guild').findOne({ _id: message.guild.id })).prefix ? (await client.schemas.get('guild').findOne({ _id: message.guild.id })).prefix : '!'
 
 	let slice = undefined
 	if (message.content.startsWith(prefix)) {slice = prefix.length}
