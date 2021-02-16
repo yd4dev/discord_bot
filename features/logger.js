@@ -23,7 +23,7 @@ module.exports = client => {
 
 		const fetchedLog = (await channel.guild.fetchAuditLogs({ limit: 1, type: 'CHANNEL_CREATE' })).entries.first()
 
-		if (fetchedLog && fetchedLog.target === channel) {
+		if (fetchedLog?.target === channel) {
 			Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 		}
 
@@ -52,7 +52,7 @@ module.exports = client => {
 
 		const fetchedLog = (await channel.guild.fetchAuditLogs({ limit: 1, type: 'CHANNEL_DELETE' })).entries.first()
 
-		if (fetchedLog && fetchedLog.target === channel) {
+		if (fetchedLog?.target === channel) {
 			Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 		}
 
@@ -148,7 +148,7 @@ module.exports = client => {
 
 			const fetchedLog = (await newChannel.guild.fetchAuditLogs({ limit: 1, type: 'CHANNEL_UPDATE' })).entries.first()
 
-			if (fetchedLog && fetchedLog.target === newChannel) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
+			if (fetchedLog?.target === newChannel) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 
 			logsChannel.send(Embed)
 
@@ -174,7 +174,7 @@ module.exports = client => {
 
 		const fetchedLog = (await guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_BAN_ADD' })).entries.first()
 
-		if (fetchedLog && fetchedLog.target === user) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
+		if (fetchedLog?.target === user) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 
 		logsChannel.send(Embed)
 
@@ -197,7 +197,7 @@ module.exports = client => {
 
 		const fetchedLog = (await guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_BAN_REMOVE' })).entries.first()
 
-		if (fetchedLog && fetchedLog.target === user) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
+		if (fetchedLog?.target === user) Embed.setAuthor(fetchedLog.executor.tag, fetchedLog.executor.displayAvatarURL())
 
 		logsChannel.send(Embed)
 
@@ -324,7 +324,7 @@ module.exports = client => {
 
 		const fetchedLogs = (await message.guild.fetchAuditLogs({ limit: 1, type: 'MESSAGE_DELETE' })).entries.first()
 
-		if (fetchedLogs && fetchedLogs.target === message.author) Embed.addField('Moderator:', fetchedLogs.executor)
+		if (fetchedLogs?.target === message.author) Embed.addField('Moderator:', fetchedLogs.executor)
 		if (message.attachments.size != 0) Embed.addField('Attachment:', message.attachments.first().url)
 
 		Embed.addField('ID', `\`\`\`js\nMESSAGE = ${message.id}\nAUTHOR = ${message.author.id}\`\`\``)
