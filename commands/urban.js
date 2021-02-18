@@ -16,9 +16,21 @@ module.exports = {
 
 		})
 
-		if (terms[0]) {
+		let term
 
-			ud.define(terms[0].term, (error, results) => {
+		terms.forEach(element => {
+
+			if (element.term.toLowerCase() === args.join(' ').toLowerCase()) {
+
+				term = element.term
+			}
+		})
+
+		if (!term) term = terms[0].term
+
+		if (term) {
+
+			ud.define(term, (error, results) => {
 
 				if (error?.message === 'No results founds.') return message.channel.send(`Sorry, I couldn't find: ${args.join(' ')}.`)
 
@@ -30,7 +42,6 @@ module.exports = {
 
 					results.forEach(r => {
 						if (r.thumbs_up > result.thumbs_up) {
-							console.log(r)
 							result = r
 						}
 					})
