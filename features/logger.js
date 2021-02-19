@@ -356,7 +356,7 @@ module.exports = client => {
 
 		const logsChannel = newMessage.guild.channels.cache.find(c => c.id === logsChannelId)
 
-		if (!logs || !logs.get('messageUpdate') || logsChannel) return
+		if (!logs || !logs.get('messageUpdate') || !logsChannel) return
 
 		let writtenH = oldMessage.createdAt.getHours()
 		if(writtenH / 10 < 1) writtenH = `0${writtenH}`
