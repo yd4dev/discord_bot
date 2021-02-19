@@ -14,6 +14,7 @@ const guildSchema = mongoose.Schema({
 	autoChannel_channel: { type: String },
 	autoChannel_name: { type: String },
 	voicelinks: { type: Map, of: String },
+	ignoredChannels: [String],
 }, { versionKey: false });
 
 module.exports = mongoose.model('guild', guildSchema);

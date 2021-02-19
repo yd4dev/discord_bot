@@ -60,11 +60,15 @@ client.once('ready', async () => {
 
 client.on('message', async message => {
 
-	if (message.author.bot) return;
+	if (message.author.bot) return
 
-	const dbPrefix = (await client.schemas.get('guild').findOne({ _id: message.guild?.id }))?.prefix
+	const guildresult = await client.schemas.get('guild').findOne({ _id: message.guild?.id })
+
+	const dbPrefix = guildresult?.prefix
 
 	const prefix = dbPrefix ? dbPrefix : '!'
+
+	if (guildresult?.ignoredChannels?.indexOf(message.channel.id) > -1) return
 
 	let slice = undefined
 	if (message.content.startsWith(prefix)) {slice = prefix.length}
