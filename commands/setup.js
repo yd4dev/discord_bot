@@ -31,8 +31,6 @@ module.exports = {
 
 				mutedRole = await message.guild.roles.create({ data: { name: 'Muted', permissions: 0 } })
 
-				console.log(mutedRole)
-
 				message.guild.channels.cache.forEach(element => {
 
 					if (element.type != 'text') return;

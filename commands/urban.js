@@ -30,7 +30,7 @@ module.exports = {
 
 		if (term) {
 
-			ud.define(term, (error, results) => {
+			ud.define(term, async (error, results) => {
 
 				if (error?.message === 'No results founds.') return message.channel.send(`Sorry, I couldn't find: ${args.join(' ')}.`)
 
@@ -57,7 +57,7 @@ module.exports = {
 						.setFooter(result.written_on)
 
 					try {
-						message.channel.send(Embed)
+						await message.channel.send(Embed)
 					}
 					catch (err) {
 						console.log(err)

@@ -285,9 +285,6 @@ module.exports = client => {
 		}
 		else { return }
 
-		console.log(oldMember)
-		console.log(newMember)
-
 		Embed.addField('ID', `\`\`\`js\nUSER = ${newMember.id}\`\`\``)
 
 		logsChannel.send(Embed)

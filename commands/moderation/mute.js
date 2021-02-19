@@ -49,7 +49,7 @@ module.exports = {
 				timestamp = timestamp + number * types[elementType] * 1000
 			})
 
-			if (!timestamp) return console.log('Please provide a valid duration.')
+			if (!timestamp) return message.channel.send('Please provide a valid duration.')
 
 			const expirationDate = new Date(timestamp)
 
