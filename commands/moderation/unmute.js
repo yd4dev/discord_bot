@@ -4,7 +4,7 @@ module.exports = {
 	args: 1,
 	guild: true,
 	permissions: 'MANAGE_MESSAGES',
-	usage: '%prefixunmute [@Target]',
+	usage: ['@Target'],
 	async execute(message, args, client) {
 
 		const target = message.mentions.members.first();

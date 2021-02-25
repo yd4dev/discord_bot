@@ -3,7 +3,7 @@ module.exports = {
 	description: 'A simple test command.',
 	args: true,
 	permissions: 'BOT_OWNER',
-	usage: '%prefixdm [user] [message]',
+	usage: ['[user] [message]'],
 	execute(message, args, client) {
 
 		let user

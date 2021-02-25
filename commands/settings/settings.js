@@ -6,7 +6,6 @@ module.exports = {
 	args: false,
 	guild: true,
 	permissions: 'ADMINISTRATOR',
-	usage: '%prefixsettings',
 	async execute(message, args, client, prefix) {
 
 		const settings = await client.schemas.get('guild').findOne({ _id: message.guild.id })

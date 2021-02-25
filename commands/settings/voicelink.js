@@ -5,7 +5,7 @@ module.exports = {
 	description: 'Links roles to specific voice channels.',
 	args: false,
 	guild: true,
-	usage: '%prefixvoicelink [voice channel id] [role mention / id] \n %prefixvoicelink remove [voice channel id]',
+	usage: ['[voice channel id] [role mention / id]', 'remove [voice channel id]'],
 	permissions: 'MANAGE_CHANNELS',
 	async execute(message, args, client, prefix) {
 

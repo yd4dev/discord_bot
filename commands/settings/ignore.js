@@ -4,7 +4,7 @@ module.exports = {
 	name: 'ignore',
 	description: 'Set text channels that will be ignored by the bot.',
 	args: false,
-	usage: '%prefixignore <channel mentions>',
+	usage: ['<channel mentions>'],
 	async execute(message, args, client, prefix) {
 
 		const result = await client.schemas.get('guild').findOne({

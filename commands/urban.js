@@ -5,7 +5,7 @@ module.exports = {
 	name: 'urban',
 	description: 'Search for word definitions on urban dictionary.',
 	args: true,
-	usage: '%prefixurban [word]',
+	usage: ['[word]'],
 	async execute(message, args) {
 
 		const terms = await ud.autocompleteExtra(args.join(' ')).catch(error => {

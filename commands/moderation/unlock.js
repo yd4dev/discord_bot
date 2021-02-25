@@ -4,7 +4,6 @@ module.exports = {
 	args: false,
 	guild: true,
 	permissions: 'MANAGE_MESSAGES',
-	usage: '%prefixunlock',
 	execute(message) {
 
 		if (message.channel.permissionsFor(message.guild.roles.everyone).has('SEND_MESSAGES') && message.channel.permissionsFor(message.guild.roles.everyone).has('ADD_REACTIONS')) {

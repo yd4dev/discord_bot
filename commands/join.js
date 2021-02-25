@@ -4,7 +4,6 @@ module.exports = {
 	args: false,
 	guild: true,
 	permissions: 'BOT_OWNER',
-	usage: '%prefixjoin',
 	execute(message, args) {
 
 		if(!args[0]) return message.channel.send('Please provide a voice channel id.')

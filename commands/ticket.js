@@ -6,7 +6,7 @@ module.exports = {
 	args: 2,
 	guild: true,
 	permissions: 'ADMINISTRATOR',
-	usage: '%prefixticket category create [category name] \n %prefixticket category delete [category name] \n %prefixticket category [catgeory name] edit name [new name] \n %prefixticket category [category name] embed title [title] \n %prefixticket category [category name] message [message] \n %prefixticket category [category name] react [channel id] [message id] \n %prefixticket category [category name] staff [mention roles]',
+	usage: ['category create [category name]', 'category delete [category name]', 'category [catgeory name] edit name [new name]', 'category [category name] embed title [title]', 'category [category name] message [message]', 'category [category name] react [channel id] [message id]', 'category [category name] staff [mention roles]'],
 	async execute(message, args, client, prefix) {
 		// ticket  args[0]   args[1]         args[2]                        args[3++]
 		// ticket category [category Name] [create / edit / embed / react] [args]

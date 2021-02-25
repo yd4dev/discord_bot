@@ -4,7 +4,7 @@ module.exports = {
 	args: 1,
 	guild: true,
 	permissions: 'ADMINISTRATOR',
-	usage: '%prefixsetup mute',
+	usage: ['mute'],
 	async execute(message, args) {
 
 		switch(args[0]) {

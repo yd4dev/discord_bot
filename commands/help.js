@@ -4,7 +4,7 @@ module.exports = {
 	name: 'help',
 	description: 'Shows a list of all commands.',
 	args: false,
-	usage: '%prefixhelp (command)',
+	usage: ['(command)'],
 	commandHelp(message, commandName, prefix, client) {
 
 		if (client.commands.has(commandName)) {
@@ -15,15 +15,22 @@ module.exports = {
 
 			if (minArgs == false) minArgs = 0
 
-			const usage = command.usage.replace(/%prefix/g, prefix)
-
 			const commandHelp = new Discord.MessageEmbed()
 				.setTitle('Help ' + command.name)
 				.setAuthor(client.user.username, client.user.displayAvatarURL())
 				.setColor('RANDOM')
 				.setFooter('Use !help for a list of all available commands.', client.user.displayAvatarURL())
 			if (command.description) commandHelp.setDescription(command.description)
-			if (command.usage) commandHelp.addField('Usage', usage)
+			if (command.usage) {
+
+				let usage = minArgs ? '' : `• ${prefix}${commandName}\n`
+
+				command.usage.forEach(u => {
+					usage += `• ${prefix}${commandName} ${u.trim()}\n`
+				})
+
+				commandHelp.addField('Usage', usage)
+			}
 			commandHelp.addField('Required Arguments', minArgs, true)
 			if (command.permissions) commandHelp.addField('Required Permissions', command.permissions, true)
 

@@ -4,7 +4,7 @@ module.exports = {
 	args: 1,
 	guild: true,
 	permissions: 'ADMINISTRATOR',
-	usage: '%prefixprefix [new prefix]',
+	usage: ['[new prefix]'],
 	async execute(message, args, client) {
 
 		await client.schemas.get('guild').findOneAndUpdate({

@@ -3,7 +3,7 @@ module.exports = {
 	description: 'A command to run eval.',
 	args: true,
 	permissions: 'BOT_OWNER',
-	usage: '%prefixeval [code]',
+	usage: ['[code]'],
 	execute(message, args) {
 
 		function clean(text) {

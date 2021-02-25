@@ -4,7 +4,7 @@ module.exports = {
 	args: 2,
 	guild: true,
 	permissions: 'MANAGE_CHANNELS',
-	usage: '%prefixautochannel channel [voice channel id] \n %prefixautochannel name [name] \n Use `%USER` to add the user\'s name to a channel name.',
+	usage: ['channel [voice channel id]', 'name [name] \n Use `%USER` to add the user\'s name to a channel name.'],
 	async execute(message, args, client) {
 
 		switch (args[0]) {

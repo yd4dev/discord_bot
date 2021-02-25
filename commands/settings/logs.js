@@ -6,7 +6,7 @@ module.exports = {
 	args: false,
 	guild: true,
 	permissions: 'ADMINISTRATOR',
-	usage: '%prefixlogs \n %prefixlogs toggle [event/s] \n %prefixlogs channel <text channel mention / id>',
+	usage: ['toggle [event/s]', 'channel <text channel mention / id>'],
 	async execute(message, args, client, prefix) {
 
 		// channelCreate, channelDelete, channelUpdate, guildBanAdd, guildBanRemove, guildMemberAdd, guildMemberRemove, guildMemberKick, guildMemberUpdate, messageDelete, messageDeleteBulk, messageUpdate, voiceStateUpdate

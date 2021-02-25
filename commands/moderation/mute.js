@@ -4,7 +4,7 @@ module.exports = {
 	args: 1,
 	guild: true,
 	permissions: 'MANAGE_ROLES',
-	usage: '%prefixmute [@Target] [Time]',
+	usage: ['[@Target] [Time]'],
 	async execute(message, args, client, prefix) {
 
 		const target = message.mentions.members.first()
