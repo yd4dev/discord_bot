@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-require('dotenv').config()
+require('dotenv').config();
 
 module.exports = async () => {
 	await mongoose.connect(process.env.mongoPath, {
@@ -7,6 +7,6 @@ module.exports = async () => {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 		useFindAndModify: false,
-	})
+	});
 	return mongoose;
-}
+};
