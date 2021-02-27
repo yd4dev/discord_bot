@@ -47,19 +47,19 @@ module.exports = {
 
 		const { online } = await hystatus.getStatus(UUID);
 
-		const profiles = (await this.getProfiles(name)).profiles;
+		const profiles = (await this.getProfiles(UUID)).profiles;
 
 		if (!profiles) return message.channel.send('🛑 That player has no SkyBlock profiles.');
 
-		if (!args[1] || !Object.values(profiles).some(p => p.cute_name.toLowerCase() === args[1].toLowerCase())) {
+		if (!args[1] || !profiles.some(p => p.cute_name.toLowerCase() === args[1].toLowerCase())) {
 
 			const cute_names = [];
 
 			console.log(profiles);
 
-			for (const profile in profiles) {
-				cute_names.push(emojis[profiles[profile].cute_name] + ' ' + profiles[profile].cute_name + (profiles[profile].current ? ' <ACTIVE>' : ''));
-			}
+			profiles.forEach(profile => {
+				cute_names.push(emojis[profile.cute_name] + ' ' + profile.cute_name);
+			});
 
 			const Embed = new Discord.MessageEmbed()
 				.setTitle(name)
@@ -71,14 +71,16 @@ module.exports = {
 		}
 		else {
 
-			const profile = Object.values(profiles).find(p => p.cute_name.toLowerCase() === args[1].toLowerCase());
+			const profile = profiles.find(p => p.cute_name.toLowerCase() === args[1].toLowerCase());
 
-			const balance = profile.data.bank ? profile.data.bank.toFixed(1).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'Hidden';
+			const balance = profile.banking?.balance ? profile.banking?.balance.toFixed(1).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'Hidden';
 
 			let armor = '';
 
-			profile.items.armor.forEach(a => {
-				armor += a.display_name + '\n';
+			(await this.decodeData(profile.members[UUID].inv_armor.data)).value.i.value.value.forEach(a => {
+
+				armor += (a.tag.value.display.value.Name.value.slice(2).replace(/\xA7[0-9A-FK-OR]+/g, '') + '\n');
+
 			});
 
 			const Embed = new Discord.MessageEmbed()
@@ -90,14 +92,12 @@ module.exports = {
 			message.channel.send(Embed);
 
 		}
-
-
 	},
 	getProfiles(UUID) {
 
 		return new Promise((resolve, reject) => {
 
-			https.get(`https://sky.shiiyu.moe/api/v2/profile/${UUID}`, (res) => {
+			https.get(`https://api.hypixel.net/skyblock/profiles?key=${process.env.hyAPI}&uuid=${UUID}`, (res) => {
 
 				let data = '';
 				res.on('data', (chunk) => {
@@ -114,6 +114,19 @@ module.exports = {
 					reject(error);
 
 				});
+			});
+		});
+	},
+	decodeData(string) {
+
+		return new Promise((resolve, reject) => {
+
+			const data = Buffer.from(string, 'base64');
+			nbt.parse(data, (error, json) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(json);
 			});
 		});
 	},
