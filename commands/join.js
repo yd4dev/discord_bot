@@ -6,10 +6,10 @@ module.exports = {
 	permissions: 'BOT_OWNER',
 	execute(message, args) {
 
-		if(!args[0]) return message.channel.send('Please provide a voice channel id.')
-		if(message.guild.channels.cache.find(channel => channel.id == args[0]).type != 'voice') return message.channel.send('This is not a voice channel.')
+		if(!args[0]) return message.channel.send('Please provide a voice channel id.');
+		if(message.guild.channels.cache.find(channel => channel.id == args[0]).type != 'voice') return message.channel.send('This is not a voice channel.');
 
-		message.guild.channels.cache.find(channel => channel.id == args[0]).join()
+		message.guild.channels.cache.find(channel => channel.id == args[0]).join();
 
 	},
 };

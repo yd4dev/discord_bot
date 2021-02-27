@@ -9,36 +9,36 @@ module.exports = {
 
 		if (client.commands.has(commandName)) {
 
-			const command = client.commands.get(commandName)
+			const command = client.commands.get(commandName);
 
-			let minArgs = command.args
+			let minArgs = command.args;
 
-			if (minArgs == false) minArgs = 0
+			if (minArgs == false) minArgs = 0;
 
 			const commandHelp = new Discord.MessageEmbed()
 				.setTitle('Help ' + command.name)
 				.setAuthor(client.user.username, client.user.displayAvatarURL())
 				.setColor('RANDOM')
-				.setFooter('Use !help for a list of all available commands.', client.user.displayAvatarURL())
-			if (command.description) commandHelp.setDescription(command.description)
+				.setFooter('Use !help for a list of all available commands.', client.user.displayAvatarURL());
+			if (command.description) commandHelp.setDescription(command.description);
 			if (command.usage) {
 
-				let usage = minArgs ? '' : `• ${prefix}${commandName}\n`
+				let usage = minArgs ? '' : `• ${prefix}${commandName}\n`;
 
 				command.usage.forEach(u => {
-					usage += `• ${prefix}${commandName} ${u.trim()}\n`
-				})
+					usage += `• ${prefix}${commandName} ${u.trim()}\n`;
+				});
 
-				commandHelp.addField('Usage', usage)
+				commandHelp.addField('Usage', usage);
 			}
-			commandHelp.addField('Required Arguments', minArgs, true)
-			if (command.permissions) commandHelp.addField('Required Permissions', command.permissions, true)
+			commandHelp.addField('Required Arguments', minArgs, true);
+			if (command.permissions) commandHelp.addField('Required Permissions', command.permissions, true);
 
-			message.channel.send(commandHelp)
+			message.channel.send(commandHelp);
 
 		}
 		else {
-			message.channel.send('That command does not exist.')
+			message.channel.send('That command does not exist.');
 		}
 
 	},
@@ -47,43 +47,43 @@ module.exports = {
 		if (args[0]) {
 
 			if (args[0].startsWith(prefix)) {
-				args[0].slice(0, prefix.length - 1)
+				args[0].slice(0, prefix.length - 1);
 			}
 
-			this.commandHelp(message, args[0], prefix, client)
+			this.commandHelp(message, args[0], prefix, client);
 
 		}
 		else {
 
-			const categories = new Map()
+			const categories = new Map();
 
 			client.commands.forEach(element => {
-				if (!categories.get(element.category)) categories.set(element.category, [])
-				categories.get(element.category).push(element.name)
+				if (!categories.get(element.category)) categories.set(element.category, []);
+				categories.get(element.category).push(element.name);
 
-			})
+			});
 
 			const HelpEmbed = new Discord.MessageEmbed()
 				.setTitle('Help')
 				.setAuthor(client.user.username, client.user.displayAvatarURL())
 				.setDescription(`The server's prefix is set to \`${prefix}\`.`)
 				.setColor('RANDOM')
-				.setFooter('Use !help (command) for detailed information.', client.user.displayAvatarURL())
+				.setFooter('Use !help (command) for detailed information.', client.user.displayAvatarURL());
 
 			categories.forEach((values, key) => {
-				const commands = []
+				const commands = [];
 				values.forEach(e => {
 					if (client.commands.get(e).permissions === 'BOT_OWNER' && message.author.id !== process.env.botOwnerId) {
-						return
+						return;
 					}
 					else {
-						commands.push(client.commands.get(e).name + ' | ' + client.commands.get(e).description)
+						commands.push(client.commands.get(e).name + ' | ' + client.commands.get(e).description);
 					}
-				})
-				HelpEmbed.addField(key, commands)
-			})
+				});
+				HelpEmbed.addField(key, commands);
+			});
 
-			message.channel.send(HelpEmbed)
+			message.channel.send(HelpEmbed);
 		}
 	},
-}
+};

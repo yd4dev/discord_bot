@@ -5,31 +5,31 @@ module.exports = client => {
 		setTimeout(async function() {
 			if (oldState.channel && oldState.channel != newState.channel && oldState.channel.members.size === 0) {
 
-				const tempChannel = await client.schemas.get('tempChannel').findOne({ _id: oldState.channel.id })
+				const tempChannel = await client.schemas.get('tempChannel').findOne({ _id: oldState.channel.id });
 
 				if (tempChannel) {
 
-					oldState.channel.delete()
-					await client.schemas.get('tempChannel').deleteOne({ _id: oldState.channel.id })
+					oldState.channel.delete();
+					await client.schemas.get('tempChannel').deleteOne({ _id: oldState.channel.id });
 
 				}
 			}
-		})
+		});
 
 		if(!newState.channel) return;
 
-		const result = await client.schemas.get('guild').findOne({ _id: newState.guild.id })
+		const result = await client.schemas.get('guild').findOne({ _id: newState.guild.id });
 
 		if(!result.autoChannel_channel) return;
 		if(newState.channel.id != result.autoChannel_channel) return;
 
-		let name = result.autoChannel_name
+		let name = result.autoChannel_name;
 
-		if (!name) name = '%USER'
+		if (!name) name = '%USER';
 
-		name = name.replace('%USER[0]', newState.member.displayName.split(' ')[0])
+		name = name.replace('%USER[0]', newState.member.displayName.split(' ')[0]);
 
-		name = name.replace('%USER', newState.member.displayName)
+		name = name.replace('%USER', newState.member.displayName);
 
 		newState.guild.channels.create(name, {
 			type: 'voice',
@@ -41,25 +41,25 @@ module.exports = client => {
 				},
 			],
 		}) .then(channel => {
-			newState.setChannel(channel)
-			client.schemas.get('tempChannel').create({ _id: channel.id })
-		})
-	})
+			newState.setChannel(channel);
+			client.schemas.get('tempChannel').create({ _id: channel.id });
+		});
+	});
 
 
 	client.on('channelDelete', async (channel) => {
 
-		if (channel.type !== 'voice') return
+		if (channel.type !== 'voice') return;
 
-		const ifTempChannel = await client.schemas.get('tempChannel').findOne({ _id: channel.id })
+		const ifTempChannel = await client.schemas.get('tempChannel').findOne({ _id: channel.id });
 
 		if (ifTempChannel) {
 
-			await client.schemas.get('tempChannel').deleteOne({ _id: channel.id })
+			await client.schemas.get('tempChannel').deleteOne({ _id: channel.id });
 
 		}
 
 
-	})
+	});
 
-}
+};

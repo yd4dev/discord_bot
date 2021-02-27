@@ -9,9 +9,9 @@ module.exports = {
 
 		const result = await client.schemas.get('guild').findOne({
 			_id: message.guild.id,
-		})
+		});
 
-		const ignoredChannels = result.ignoredChannels || new Array()
+		const ignoredChannels = result.ignoredChannels || new Array();
 
 		if (message.mentions.channels.size > 0) {
 
@@ -19,16 +19,16 @@ module.exports = {
 
 				if (channel.guild === message.guild) {
 
-					const index = ignoredChannels.indexOf(channel.id)
+					const index = ignoredChannels.indexOf(channel.id);
 
 					if (index > -1) {
-						ignoredChannels.splice(index, 1)
+						ignoredChannels.splice(index, 1);
 					}
 					else {
-						ignoredChannels.push(channel.id)
+						ignoredChannels.push(channel.id);
 					}
 				}
-			})
+			});
 
 			await client.schemas.get('guild').findOneAndUpdate({
 				_id: message.guild.id,
@@ -37,23 +37,23 @@ module.exports = {
 				ignoredChannels: ignoredChannels,
 			}, {
 				upsert: true,
-			})
+			});
 		}
 
-		let deletedChange = false
+		let deletedChange = false;
 
 		ignoredChannels.forEach(channel => {
 
 			if (!client.channels.cache.find(s => s.id === channel)) {
 
-				const index = ignoredChannels.indexOf(channel)
+				const index = ignoredChannels.indexOf(channel);
 
 				if (index > -1) {
-					ignoredChannels.splice(index, 1)
-					deletedChange = true
+					ignoredChannels.splice(index, 1);
+					deletedChange = true;
 				}
 			}
-		})
+		});
 
 		if (deletedChange === true) {
 
@@ -64,20 +64,20 @@ module.exports = {
 				ignoredChannels: ignoredChannels,
 			}, {
 				upsert: true,
-			})
+			});
 		}
 
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Ignored Channels')
 			.setDescription('• <#' + ignoredChannels.join('>\n• <#') + '>')
 			.setFooter(`Add and remove ignored channels using ${prefix}ignore <mention channels>`)
-			.setAuthor(client.user.username, client.user.displayAvatarURL({ dynamic: true }))
+			.setAuthor(client.user.username, client.user.displayAvatarURL({ dynamic: true }));
 
 		try {
-			await message.channel.send(Embed)
+			await message.channel.send(Embed);
 		}
 		catch (e) {
-			return message.author.send(`I could not send a response into <#${message.channel.id}>. Please make sure I have the permissions to send messages.`)
+			return message.author.send(`I could not send a response into <#${message.channel.id}>. Please make sure I have the permissions to send messages.`);
 		}
 
 	},

@@ -5,17 +5,17 @@ module.exports = client => {
 		const currentMute = await client.schemas.get('mute').findOne({
 			guildId: member.guild.id,
 			userId: member.id,
-		})
+		});
 
-		if (currentMute) return
+		if (currentMute) return;
 
-		const result = await client.schemas.get('guild').findOne({ _id: member.guild.id })
+		const result = await client.schemas.get('guild').findOne({ _id: member.guild.id });
 
 		if(result.joinRoles) {
 			result.joinRoles.forEach(role => {
-				member.roles.add(role)
-			})
+				member.roles.add(role);
+			});
 		}
 
-	})
-}
+	});
+};

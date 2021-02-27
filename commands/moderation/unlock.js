@@ -8,16 +8,16 @@ module.exports = {
 
 		if (message.channel.permissionsFor(message.guild.roles.everyone).has('SEND_MESSAGES') && message.channel.permissionsFor(message.guild.roles.everyone).has('ADD_REACTIONS')) {
 
-			message.channel.send('🔓 This channel is not locked.')
+			message.channel.send('🔓 This channel is not locked.');
 
 		}
 		else {
 
-			message.channel.updateOverwrite(message.guild.roles.everyone, { SEND_MESSAGES: null, ADD_REACTIONS: null })
+			message.channel.updateOverwrite(message.guild.roles.everyone, { SEND_MESSAGES: null, ADD_REACTIONS: null });
 
-			message.channel.send('🔓 Unlocked the channel.')
+			message.channel.send('🔓 Unlocked the channel.');
 
 		}
 
 	},
-}
+};

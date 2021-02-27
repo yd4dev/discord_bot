@@ -3,6 +3,6 @@ module.exports = {
 	description: 'A simple test command.',
 	args: false,
 	execute(message) {
-		message.reply('pong!')
+		message.reply('pong!');
 	},
-}
+};

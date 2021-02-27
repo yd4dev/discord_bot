@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const ud = require('urban-dictionary')
+const ud = require('urban-dictionary');
 
 module.exports = {
 	name: 'urban',
@@ -10,41 +10,41 @@ module.exports = {
 
 		const terms = await ud.autocompleteExtra(args.join(' ')).catch(error => {
 
-			if (error?.message === 'No results founds.') return message.channel.send(`Sorry, I couldn't find: ${args.join(' ')}.`)
+			if (error?.message === 'No results founds.') return message.channel.send(`Sorry, I couldn't find: ${args.join(' ')}.`);
 
-			else if (error) return console.log(error)
+			else if (error) return console.log(error);
 
-		})
+		});
 
-		let term
+		let term;
 
 		terms.forEach(element => {
 
 			if (element.term.toLowerCase() === args.join(' ').toLowerCase()) {
 
-				term = element.term
+				term = element.term;
 			}
-		})
+		});
 
-		if (!term) term = terms[0].term
+		if (!term) term = terms[0].term;
 
 		if (term) {
 
 			ud.define(term, async (error, results) => {
 
-				if (error?.message === 'No results founds.') return message.channel.send(`Sorry, I couldn't find: ${args.join(' ')}.`)
+				if (error?.message === 'No results founds.') return message.channel.send(`Sorry, I couldn't find: ${args.join(' ')}.`);
 
-				else if (error) return console.log(error)
+				else if (error) return console.log(error);
 
-				let result = results[0]
+				let result = results[0];
 
 				if (results) {
 
 					results.forEach(r => {
 						if (r.thumbs_up > result.thumbs_up) {
-							result = r
+							result = r;
 						}
-					})
+					});
 
 					const Embed = new Discord.MessageEmbed()
 						.setTitle(result.word)
@@ -54,16 +54,16 @@ module.exports = {
 						.addField('Example', result.example)
 						.addField('👍', result.thumbs_up, true)
 						.addField('👎', result.thumbs_down, true)
-						.setFooter(result.written_on)
+						.setFooter(result.written_on);
 
 					try {
-						await message.channel.send(Embed)
+						await message.channel.send(Embed);
 					}
 					catch (err) {
-						console.log(err)
+						console.log(err);
 					}
 				}
-			})
+			});
 		}
 	},
 };

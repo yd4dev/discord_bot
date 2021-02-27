@@ -25,11 +25,11 @@ module.exports = {
 
 				});
 
-				message.channel.send(`Successfully set up the Muted role for ${changedChannels} channels.`)
+				message.channel.send(`Successfully set up the Muted role for ${changedChannels} channels.`);
 			}
 			else {
 
-				mutedRole = await message.guild.roles.create({ data: { name: 'Muted', permissions: 0 } })
+				mutedRole = await message.guild.roles.create({ data: { name: 'Muted', permissions: 0 } });
 
 				message.guild.channels.cache.forEach(element => {
 
@@ -41,7 +41,7 @@ module.exports = {
 
 				});
 
-				message.channel.send(`Successfully created the ${mutedRole} role and set it up for ${changedChannels} channels.`)
+				message.channel.send(`Successfully created the ${mutedRole} role and set it up for ${changedChannels} channels.`);
 			}
 			break;
 		}

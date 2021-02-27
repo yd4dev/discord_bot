@@ -11,22 +11,22 @@ module.exports = {
 			else {return text;}
 		}
 
-		const code = args.join(' ')
+		const code = args.join(' ');
 
-		let evaled = ''
+		let evaled = '';
 
 		try {
 			evaled = eval(code);
 		}
 		catch (err) {
-			message.channel.send(err.name + ': ' + err.message)
-			console.log(err)
+			message.channel.send(err.name + ': ' + err.message);
+			console.log(err);
 		}
 
 
 		if (typeof evaled !== 'string') {evaled = require('util').inspect(evaled);}
 
-		if (clean(evaled).length > 2000) return message.channel.send('Return value is greater than 2000 chars.')
+		if (clean(evaled).length > 2000) return message.channel.send('Return value is greater than 2000 chars.');
 
 		message.channel.send(clean(evaled), { code:'xl' });
 

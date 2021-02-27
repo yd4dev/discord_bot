@@ -11,10 +11,10 @@ module.exports = {
 
 		case 'channel': {
 
-			const channel = message.guild.channels.cache.find(c => c.id == args[1])
+			const channel = message.guild.channels.cache.find(c => c.id == args[1]);
 
-			if (!channel) return message.channel.send('Please provide a valid channel id.')
-			if (channel.type != 'voice') return message.channel.send('Please provide a voice channel.')
+			if (!channel) return message.channel.send('Please provide a valid channel id.');
+			if (channel.type != 'voice') return message.channel.send('Please provide a voice channel.');
 
 			await client.schemas.get('guild').findOneAndUpdate({
 				_id: message.guild.id,
@@ -23,19 +23,19 @@ module.exports = {
 				autoChannel_channel: channel.id,
 			}, {
 				upsert: true,
-			})
+			});
 
-			message.channel.send(`Auto Channels can now be created by joining into \`${channel.name}\`.`)
+			message.channel.send(`Auto Channels can now be created by joining into \`${channel.name}\`.`);
 
 			break;
 		}
 
 		case 'name': {
 
-			args.shift()
-			const name = args.join(' ').trim()
+			args.shift();
+			const name = args.join(' ').trim();
 
-			if (name == '') return message.channel.send('Please provide a channel name. Use `%USER` to add the username.')
+			if (name == '') return message.channel.send('Please provide a channel name. Use `%USER` to add the username.');
 
 			await client.schemas.get('guild').findOneAndUpdate({
 				_id: message.guild.id,
@@ -44,9 +44,9 @@ module.exports = {
 				autoChannel_name: name,
 			}, {
 				upsert: true,
-			})
+			});
 
-			message.channel.send(`Auto Channels will now be named \`${name}\`.`)
+			message.channel.send(`Auto Channels will now be named \`${name}\`.`);
 
 			break;
 		}

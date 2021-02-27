@@ -10,8 +10,8 @@ module.exports = {
 		switch (args[0]) {
 		case 'join': {
 
-			const mentionedRoles = message.mentions.roles.array()
-			if (mentionedRoles.length == 0) return message.channel.send('Please mention roles you want to assign.')
+			const mentionedRoles = message.mentions.roles.array();
+			if (mentionedRoles.length == 0) return message.channel.send('Please mention roles you want to assign.');
 			await client.schemas.get('guild').findOneAndUpdate({
 				_id: message.guild.id,
 			}, {
@@ -19,9 +19,9 @@ module.exports = {
 				joinRoles: mentionedRoles,
 			}, {
 				upsert: true,
-			})
+			});
 
-			message.channel.send(`${mentionedRoles} will now be assigned on join.`)
+			message.channel.send(`${mentionedRoles} will now be assigned on join.`);
 
 			break;
 		}
