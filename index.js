@@ -50,7 +50,7 @@ client.once('ready', async () => {
 	await mongo();
 
 	client.guilds.cache.forEach(async guild => {
-		console.log(guild.name)
+		console.log(guild.name);
 		await client.schemas.get('guild').findOneAndUpdate(
 			{
 				_id: guild.id,
