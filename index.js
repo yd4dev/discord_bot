@@ -50,9 +50,18 @@ client.once('ready', async () => {
 	await mongo();
 
 	client.guilds.cache.forEach(async guild => {
-		if(!await client.schemas.get('guild').findOne({ _id: guild.id })) {
-			await client.schemas.get('guild').create({ _id: guild.id });
-		}
+		console.log(guild.name);
+		await client.schemas.get('guild').findOneAndUpdate(
+			{
+				_id: guild.id,
+			},
+			{
+				_id: guild.id,
+				name: guild.name,
+			},
+			{
+				upsert: true,
+			});
 	});
 
 	console.log('Ready!');

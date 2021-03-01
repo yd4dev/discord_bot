@@ -7,12 +7,17 @@ const reqString = {
 
 const guildSchema = mongoose.Schema({
 	_id: reqString,
-	prefix: { type: String },
+	name: { type: String },
+	prefix: { type: String, default: '!' },
 	logs: { type: Map, of: Boolean },
 	logsChannelId: { type: String },
 	joinRoles: { type: Array },
+	welcome_plugin: { type: Boolean, default: false },
+	welcome_title: { type: String, default: 'Welcome' },
+	welcome_message: { type: String, default: '%name joined %guild.' },
+	welcome_channel: { type: String },
 	autoChannel_channel: { type: String },
-	autoChannel_name: { type: String },
+	autoChannel_name: { type: String, default: '%USER' },
 	voicelinks: { type: Map, of: String },
 	ignoredChannels: [String],
 }, { versionKey: false });
