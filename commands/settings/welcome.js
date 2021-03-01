@@ -6,7 +6,7 @@ module.exports = {
 	args: false,
 	guild: true,
 	permissions: 'ADMINISTRATOR',
-	usage: ['toggle', 'roles [mention roles]', 'title [title]', 'message [message]'],
+	usage: ['toggle', 'roles [mention roles]', 'title [title]', 'message [message]', 'channel [text channel]'],
 	async execute(message, args, client, prefix) {
 
 		const settings = await client.schemas.get('guild').findOne({
@@ -23,6 +23,7 @@ module.exports = {
 								**Welcome Title**: ${settings.welcome_title}
 								**Welcome Message**: ${settings.welcome_message.replace('%name', '`%name`').replace('%guild', '`%guild`')}
 								\`Use %name and %guild to replace user and guild names.\`
+								**Welcome Channel**: ${message.guild.channels.cache.find(c => c.id === settings.welcome_channel) || 'None Set'}
 								Welcome Messages are turned ${settings.welcome_plugin ? 'on' : 'off'}`);
 
 			message.channel.send(Embed);
@@ -55,6 +56,8 @@ module.exports = {
 			}
 
 			case 'toggle': {
+
+				if (!settings.welcome_channel) return message.channel.send('Please provide a welcome channel first.');
 
 				await client.schemas.get('guild').findOneAndUpdate({
 					_id: message.guild.id,
@@ -108,6 +111,44 @@ module.exports = {
 
 				break;
 
+			}
+
+			case 'channel': {
+
+				if (!args[1] && message.mentions.channel.size === 0) return message.channel.send('Please provide a text channel.');
+
+				let channel;
+
+				if (message.mentions.channels.size === 0) {
+
+					channel = message.guild.channels.cache.find(c => c.id === args[1]);
+				}
+				else {
+
+					channel = message.mentions.channels.first();
+				}
+
+				if (!channel || channel.type !== 'text') {
+					return message.channel.send('Please provide a valid text channel.');
+				}
+
+				else {
+					await client.schemas.get('guild').findOneAndUpdate({
+						_id: message.guild.id,
+					}, {
+						welcome_channel: channel.id,
+					}, {
+						upsert: true,
+					});
+				}
+
+				try {
+					message.channel.send(`Welcome Message will now be sent into ${channel}`);
+				}
+				catch {
+					message.author.send(`Welcome Message will now be sent into ${channel}`);
+				}
+				break;
 			}
 
 			default: {
