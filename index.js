@@ -136,6 +136,7 @@ client.on('guildCreate', async guild => {
 		_id: guild.id,
 	}, {
 		_id: guild.id,
+		name: guild.name,
 	}, {
 		upsert: true,
 	});
