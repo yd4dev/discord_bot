@@ -19,7 +19,7 @@ module.exports = {
 			userId: target.id,
 		});
 
-		if (currentlyMuted.length) return message.reply('that user is already muted.');
+		if (currentlyMuted.length) return message.channel.send('That user is already muted' + (currentlyMuted[0].moderatorId ? ` by <@${currentlyMuted[0].moderatorId}>.` : '.'));
 
 		if (target.roles.highest.comparePositionTo(message.guild.member(client.user).roles.highest) >= 0) return message.channel.send('It seems that my highest role is not high enough to mute that member.');
 		if (target.roles.highest.comparePositionTo(message.member.roles.highest) >= 0) return message.channel.send('You cannot mute members that are higher than you.');

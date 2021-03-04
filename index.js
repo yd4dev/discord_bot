@@ -80,7 +80,9 @@ client.on('message', async message => {
 	if (guildresult?.ignoredChannels?.indexOf(message.channel.id) > -1) return;
 
 	let slice = undefined;
-	if (message.content.startsWith(prefix)) {slice = prefix.length;}
+	if (message.content.startsWith(prefix)) {
+		slice = prefix.length;
+	}
 	else if (message.content.startsWith(`<@${client.user.id}>`)) {
 		slice = `<@${client.user.id}>`.length;
 	}
@@ -111,10 +113,6 @@ client.on('message', async message => {
 			else if (command.permissions == 'BOT_OWNER' && message.author.id != process.env.botOwnerId) return message.channel.send('This command can only be used by the bot\'s owner.');
 		}
 
-		if (command.permissions == 'BOT_OWNER' && message.author.id != process.env.botOwnerId) {
-			return message.channel.send('This command can only be used by the bot\'s owner.');
-		}
-
 		if (args.length < command.args) {
 			return client.commands.get('help').commandHelp(message, commandName, prefix, client);
 		}
@@ -124,7 +122,7 @@ client.on('message', async message => {
 		}
 		catch (err) {
 			console.error(err);
-			message.reply('there was an error trying to execute that command.');
+			message.channel.send(`<@${message.author.id}>there was an error trying to execute that command.`);
 		}
 	}
 

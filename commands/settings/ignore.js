@@ -69,7 +69,7 @@ module.exports = {
 
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Ignored Channels')
-			.setDescription('• <#' + ignoredChannels.join('>\n• <#') + '>')
+			.setDescription(ignoredChannels.length ? '• <#' + ignoredChannels.join('>\n• <#') + '>' : 'No channels ignored.')
 			.setFooter(`Add and remove ignored channels using ${prefix}ignore <mention channels>`)
 			.setAuthor(client.user.username, client.user.displayAvatarURL({ dynamic: true }));
 
