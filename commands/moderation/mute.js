@@ -90,7 +90,5 @@ module.exports = {
 		else {
 			return message.channel.send('Please provide a duration.');
 		}
-
-
 	},
 };

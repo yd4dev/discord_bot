@@ -49,7 +49,8 @@ module.exports = {
 				.setTitle('Server Logs')
 				.setAuthor(client.user.username, client.user.displayAvatarURL())
 				.setColor('AQUA')
-				.setDescription(description);
+				.setDescription(description)
+				.setFooter(`Toggle events using ${prefix}logs toggle, Set a logs channel with ${prefix}logs channel`);
 
 			events.forEach(e => {
 
