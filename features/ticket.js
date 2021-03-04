@@ -34,7 +34,6 @@ module.exports = client => {
 						channel.updateOverwrite(element, { VIEW_CHANNEL: true });
 
 					});
-
 				}
 				else {channel.send('I am missing `ADMINISTRATOR` permission to overwrite channel permissions.');}
 
@@ -52,7 +51,6 @@ module.exports = client => {
 				channel.send(`<@${user.id}>`);
 
 			}).catch(err => reaction.message.channel.send(`Couldn't create new channel. **Error**: \`${err}\``));
-
 	});
 
 };
