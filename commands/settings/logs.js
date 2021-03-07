@@ -9,15 +9,11 @@ module.exports = {
 	usage: ['toggle [event/s]', 'channel <text channel mention / id>'],
 	async execute(message, args, client, prefix) {
 
-		// channelCreate, channelDelete, channelUpdate, guildBanAdd, guildBanRemove, guildMemberAdd, guildMemberRemove, guildMemberKick, guildMemberUpdate, messageDelete, messageDeleteBulk, messageUpdate, voiceStateUpdate
-		// 'channelCreate', 'channelDelete', 'channelUpdate', 'guildBanAdd', 'guildBanRemove', 'guildMemberAdd', 'guildMemberRemove', 'guildMemberKick', 'guildMemberUpdate', 'messageDelete', 'messageDeleteBulk', 'messageUpdate', 'voiceStateUpdate'
-
 		const result = (await client.schemas.get('guild').findOne({ _id: message.guild.id }));
 
 		const logsMap = new Map(result.logs);
 
 		const events = ['channelCreate', 'channelDelete', 'channelUpdate', 'guildBanAdd', 'guildBanRemove', 'guildMemberAdd', 'guildMemberRemove', 'guildMemberKick', 'guildMemberUpdate', 'messageDelete', 'messageDeleteBulk', 'messageUpdate', 'voiceStateUpdate'];
-
 
 		let undefChanged = false;
 		events.forEach(async e => {
@@ -37,13 +33,8 @@ module.exports = {
 			});
 		}
 
-
 		if (args.length === 0) {
-
-			const logsChannel = result.logsChannelId;
-			let description = '';
-			if (logsChannel) description = ` The logs will be sent into ${client.channels.cache.find(c => c.id === result.logsChannelId)}`;
-			else description = ' You have not set a logs channel yet. Nothing will be logged.';
+			const description = result.logsChannelId ? ` The logs will be sent into ${client.channels.cache.find(c => c.id === result.logsChannelId)}` : '** You have not set a logs channel yet. Nothing will be logged.**';
 
 			const LogsEmbed = new Discord.MessageEmbed()
 				.setTitle('Server Logs')
@@ -60,11 +51,9 @@ module.exports = {
 				else {
 					LogsEmbed.addField(e, '❌', true);
 				}
-
 			});
 
 			message.channel.send(LogsEmbed);
-
 		}
 		else {
 			switch (args[0]) {
@@ -87,9 +76,7 @@ module.exports = {
 						else {
 							success = '`' + a + '`';
 						}
-
 					}
-
 				});
 
 				if (success.length) {
@@ -108,7 +95,6 @@ module.exports = {
 				else {
 
 					message.channel.send('Please provide events to toggle.');
-
 				}
 				break;
 			}
@@ -125,27 +111,13 @@ module.exports = {
 						upsert: true,
 					});
 
-					message.channel.send(`Set events to be logged in ${message.channel}`);
-
-				}
-				else if (message.mentions.channels.size > 0 && message.mentions.channels.first().type === 'text' && message.mentions.first().guild === message.guild) {
-
-					await client.schemas.get('guild').findOneAndUpdate({
-						_id: message.guild.id,
-					}, {
-						logsChannelId: message.mentions.channels.first().id,
-					}, {
-						upsert: true,
-					});
-
-					message.channel.send(`Set events to be logged in ${message.mentions.channels.first()}`);
-
+					message.channel.send(`Events will now be logged in ${message.channel}`);
 				}
 				else {
 
-					const channel = message.guild.channels.cache.find(c => c.id === args[1]);
+					const channel = message.guild.channels.cache.find(c => c.id === args[1]) || message.mentions.channels.first();
 
-					if (channel && channel.type === 'text') {
+					if (channel && channel.type === 'text' && channel.guild === message.guild) {
 
 						await client.schemas.get('guild').findOneAndUpdate({
 							_id: message.guild.id,
@@ -155,16 +127,14 @@ module.exports = {
 							upsert: true,
 						});
 
-						message.channel.send(`Set events to be logged in ${channel}`);
-
+						message.channel.send(`Events will now be logged in ${channel}`);
 					}
-					else if (client.channels.cache.find(c => c.id === args[1]) && client.channels.cache.find(c => c.id === args[1]).guild !== message.guild) {
+					else if (channel && channel.guild !== message.guild) {
 						message.channel.send('Did you just try to select another server\'s channel?');
 					}
 					else {
 						message.channel.send('Please provide a valid text channel mention / id.');
 					}
-
 				}
 
 				break;
@@ -176,6 +146,5 @@ module.exports = {
 				break;
 			}
 		}
-
 	},
 };
