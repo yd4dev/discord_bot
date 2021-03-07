@@ -8,7 +8,7 @@ module.exports = {
 
 		if (!message.channel.permissionsFor(message.guild.roles.everyone).has('SEND_MESSAGES') || !message.channel.permissionsFor(message.guild.roles.everyone).has('ADD_REACTIONS')) {
 
-			if (message.guild.members.cache.get(client.user.id).permissionsIn(message.channel).has('MANAGE_CHANNELS')) {
+			if (message.guild.member(client.user).permissionsIn(message.channel).has('MANAGE_CHANNELS')) {
 
 				message.channel.updateOverwrite(message.guild.roles.everyone, { SEND_MESSAGES: null, ADD_REACTIONS: null });
 
