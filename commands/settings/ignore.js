@@ -4,7 +4,8 @@ module.exports = {
 	name: 'ignore',
 	description: 'Set text channels that will be ignored by the bot.',
 	args: false,
-	usage: ['<channel mentions>'],
+	guild: true,
+	usage: ['<mention channels>'],
 	async execute(message, args, client, prefix) {
 
 		const result = await client.schemas.get('guild').findOne({
@@ -73,12 +74,6 @@ module.exports = {
 			.setFooter(`Add and remove ignored channels using ${prefix}ignore <mention channels>`)
 			.setAuthor(client.user.username, client.user.displayAvatarURL({ dynamic: true }));
 
-		try {
-			await message.channel.send(Embed);
-		}
-		catch (e) {
-			return message.author.send(`I could not send a response into <#${message.channel.id}>. Please make sure I have the permissions to send messages.`);
-		}
-
+		message.channel.send(Embed);
 	},
 };
