@@ -77,10 +77,16 @@ client.on('message', async message => {
 
 	const prefix = dbPrefix ? dbPrefix : '!';
 
-	if (guildresult?.ignoredChannels?.indexOf(message.channel.id) > -1) return;
+	if (guildresult?.ignoredChannels?.indexOf(message.channel.id) > -1) {
+
+		return await message.channel.send(`${message.channel} is ignored.`)
+			.then(msg => msg.delete({ timeout: 3000 }));
+	}
 
 	let slice = undefined;
-	if (message.content.startsWith(prefix)) {slice = prefix.length;}
+	if (message.content.startsWith(prefix)) {
+		slice = prefix.length;
+	}
 	else if (message.content.startsWith(`<@${client.user.id}>`)) {
 		slice = `<@${client.user.id}>`.length;
 	}
@@ -101,6 +107,13 @@ client.on('message', async message => {
 			return;
 		}
 
+		if (!message.channel.permissionsFor(message.guild.members.cache.find(m => m.id === client.user.id)).has('SEND_MESSAGES')) {
+			return message.author.send(`I do not have enough permissions to write into ${message.channel}.`)
+				.catch(() => {
+					return;
+				});
+		}
+
 		if (command.guild && message.channel.type != 'text') {
 			return message.channel.send('You can only use this command in a guild.');
 		}
@@ -109,10 +122,6 @@ client.on('message', async message => {
 
 			if (command.permissions != 'BOT_OWNER' && !message.member.hasPermission(command.permissions) && message.member.id != process.env.botOwnerId) return message.channel.send('You do not have the required permissions to execute that command, <@' + message.author + '>');
 			else if (command.permissions == 'BOT_OWNER' && message.author.id != process.env.botOwnerId) return message.channel.send('This command can only be used by the bot\'s owner.');
-		}
-
-		if (command.permissions == 'BOT_OWNER' && message.author.id != process.env.botOwnerId) {
-			return message.channel.send('This command can only be used by the bot\'s owner.');
 		}
 
 		if (args.length < command.args) {
@@ -124,7 +133,7 @@ client.on('message', async message => {
 		}
 		catch (err) {
 			console.error(err);
-			message.reply('there was an error trying to execute that command.');
+			message.channel.send(`<@${message.author.id}>there was an error trying to execute that command.`);
 		}
 	}
 

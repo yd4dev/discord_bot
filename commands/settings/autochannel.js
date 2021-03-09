@@ -4,16 +4,18 @@ module.exports = {
 	args: 2,
 	guild: true,
 	permissions: 'MANAGE_CHANNELS',
-	usage: ['channel [voice channel id]', 'name [name] \n Use `%USER` to add the user\'s name to a channel name.'],
+	usage: ['channel [voice channel name / id]', 'name [name] \n Use `%USER` to add the user\'s name to a channel name.'],
 	async execute(message, args, client) {
 
 		switch (args[0]) {
 
 		case 'channel': {
 
-			const channel = message.guild.channels.cache.find(c => c.id == args[1]);
+			args.shift();
 
-			if (!channel) return message.channel.send('Please provide a valid channel id.');
+			const channel = message.guild.channels.cache.find(c => c.id == args[0]) || message.guild.channels.cache.find(c => c.name.toLowerCase() === args.join(' ').toLowerCase());
+
+			if (!channel) return message.channel.send('Please provide a valid channel name / id.');
 			if (channel.type != 'voice') return message.channel.send('Please provide a voice channel.');
 
 			await client.schemas.get('guild').findOneAndUpdate({

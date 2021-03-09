@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 module.exports = {
 	name: 'settings',
 	description: 'An administrator command to show server settings.',
-	args: false,
+	args: true,
 	guild: true,
 	permissions: 'ADMINISTRATOR',
 	async execute(message, args, client, prefix) {
@@ -21,8 +21,8 @@ module.exports = {
 			.setDescription(`These settings can be changed by using \`${prefix}set\``);
 		if (settings.prefix) settingsEmbed.addField('Prefix:', settings.prefix);
 		if (settings.logsChannelId) settingsEmbed.addField('Logs Channel:', `<#${settings.logsChannelId}>`);
-		if (settings.bannedWords.length != 0) settingsEmbed.addField('Banned Words:', settings.bannedWords);
 		if (joinRoles.length != 0) settingsEmbed.addField('Join Roles:', joinRoles);
+		if (settings.ignoredChannels) settingsEmbed.addField('Ignored Channels:', `<#${settings.ignoredChannels.join('>', '<#')}>`);
 
 		message.channel.send(settingsEmbed);
 

@@ -16,7 +16,6 @@ module.exports = {
 			upsert: true,
 		});
 
-		message.channel.send(`I have changed the server's prefix to \`${args[0]}\``);
-
+		message.channel.send(`Changed the server's prefix to \`${args[0]}\``);
 	},
 };

@@ -17,6 +17,8 @@ module.exports = client => {
 
 				const guild = client.guilds.cache.get(result.guildId);
 
+				if (!guild) return;
+
 				const member = await guild.members.fetch(result.userId);
 
 				const joinRoles = await client.schemas.get('guild').findOne({ _id: guild.id });
