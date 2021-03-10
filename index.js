@@ -77,12 +77,6 @@ client.on('message', async message => {
 
 	const prefix = dbPrefix ? dbPrefix : '!';
 
-	if (guildresult?.ignoredChannels?.indexOf(message.channel.id) > -1) {
-
-		return await message.channel.send(`${message.channel} is ignored.`)
-			.then(msg => msg.delete({ timeout: 3000 }));
-	}
-
 	let slice = undefined;
 	if (message.content.startsWith(prefix)) {
 		slice = prefix.length;
@@ -112,6 +106,12 @@ client.on('message', async message => {
 				.catch(() => {
 					return;
 				});
+		}
+
+		if (guildresult?.ignoredChannels?.indexOf(message.channel.id) > -1) {
+
+			return await message.channel.send(`${message.channel} is ignored.`)
+				.then(msg => msg.delete({ timeout: 3000 }));
 		}
 
 		if (command.guild && message.channel.type != 'text') {
