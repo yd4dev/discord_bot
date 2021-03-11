@@ -4,7 +4,7 @@ module.exports = {
 	args: true,
 	permissions: 'BOT_OWNER',
 	usage: ['[code]'],
-	execute(message, args, client, prefix) {
+	async execute(message, args, client, prefix) {
 
 		function clean(text) {
 			if (typeof (text) === 'string') {return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));}
