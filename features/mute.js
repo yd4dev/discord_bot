@@ -29,7 +29,7 @@ module.exports = client => {
 					});
 				}
 
-				if(result.userRoles) {
+				if(result.userRoles.length > 0) {
 
 					const previousRoleIDs = result.userRoles;
 
