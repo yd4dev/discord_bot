@@ -133,7 +133,7 @@ client.on('message', async message => {
 		}
 		catch (err) {
 			console.error(err);
-			message.channel.send(`<@${message.author.id}>there was an error trying to execute that command.`);
+			message.channel.send(`<@${message.author.id}>there was an error while executing that command.`);
 		}
 	}
 

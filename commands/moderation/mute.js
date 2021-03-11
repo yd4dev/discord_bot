@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 module.exports = {
 	name: 'mute',
 	description: 'Restrict users from writing into text channels.',
@@ -19,7 +21,14 @@ module.exports = {
 			userId: target.id,
 		});
 
-		if (currentlyMuted.length) return message.reply('that user is already muted.');
+		if (currentlyMuted.length) {
+			const Embed = new Discord.MessageEmbed()
+				.setAuthor(client.user.username, client.user.displayAvatarURL({ dynamic: true }))
+				.setDescription(`That user is already muted by <@${currentlyMuted[0].moderatorId}>.`)
+				.setFooter('Expires: ')
+				.setTimestamp(currentlyMuted.expires);
+			return message.channel.send(Embed);
+		}
 
 		if (target.roles.highest.comparePositionTo(message.guild.member(client.user).roles.highest) >= 0) return message.channel.send('It seems that my highest role is not high enough to mute that member.');
 		if (target.roles.highest.comparePositionTo(message.member.roles.highest) >= 0) return message.channel.send('You cannot mute members that are higher than you.');
