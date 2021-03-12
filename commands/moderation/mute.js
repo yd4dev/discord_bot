@@ -9,102 +9,130 @@ module.exports = {
 	usage: ['[@User / User ID] [Time]', 'setup'],
 	async execute(message, args, client, prefix) {
 
+		let { mutedRole } = await client.schemas.get('guild').findOne({
+			_id: message.guild.id,
+		});
+
 		if (args[0].toLowerCase() === 'setup') {
 
-			message.channel.send('You have no Muted Role set. Please tag a role you want to use or react with ✍️ to create one.')
-				.then(m => {
-					m.react('✍️');
-					const Rfilter = (reaction, user) => reaction.emoji.name === '✍️' && user.id === message.author.id;
-					const Rcollector = m.createReactionCollector(Rfilter, { time: 30000 });
-					let changedChannels = 0;
-					let response = false;
-					let failedChannels = 0;
-					Rcollector.on('collect', async (r) => {
-						response = true;
-						Rcollector.stop();
-						Mcollector.stop();
+			let changedChannels = 0;
+			let failedChannels = 0;
 
-						try {
-							const mutedRole = await message.guild.roles.create({ data: { name: 'Muted', permissions: 0 } });
-						}
-						catch (err) {
-							message.channel.send('Could not create role. ' + err.name + ': ' + err.message);
-						}
+			if (!mutedRole || !message.guild.roles.cache.find(r => r.id === mutedRole)) {
 
-						if (!mutedRole) return;
-
-						message.guild.channels.cache.forEach(element => {
-
-							if (element.type !== 'text' && element.type !== 'category') return;
+				message.channel.send('You have no Muted Role set. Please tag a role you want to use or react with ✍️ to create one.')
+					.then(m => {
+						m.react('✍️');
+						const Rfilter = (reaction, user) => reaction.emoji.name === '✍️' && user.id === message.author.id;
+						const Rcollector = m.createReactionCollector(Rfilter, { time: 30000 });
+						let response = false;
+						Rcollector.on('collect', async (r) => {
+							response = true;
+							Rcollector.stop();
+							Mcollector.stop();
 
 							try {
+								mutedRole = await message.guild.roles.create({ data: { name: 'Muted', permissions: 0 } });
+							}
+							catch (err) {
+								message.channel.send('Could not create role. ' + err.name + ': ' + err.message);
+							}
+
+							if (!mutedRole) return;
+
+							message.guild.channels.cache.forEach(element => {
+
+								if (element.type !== 'text' && element.type !== 'category') return;
+
+								try {
+
+									element.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false });
+									changedChannels++;
+								}
+								catch {
+									failedChannels++;
+								}
+							});
+
+							await client.schemas.get('guild').findOneAndUpdate({
+								_id: message.guild.id,
+							}, {
+								mutedRole: mutedRole.id,
+							}, {
+								upsert: true,
+							});
+
+							const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
+
+							message.channel.send(`Successfully created the ${mutedRole} role and set it up for ${changedChannels} channels (and categories).` + add);
+						});
+						Rcollector.on('end', () => {
+							Mcollector.stop();
+							if (!response) message.channel.send('No response. Exiting setup..');
+						});
+
+
+						const Mfilter = msg => msg.mentions.roles.size === 1 && msg.author.id === message.author.id;
+						const Mcollector = m.channel.createMessageCollector(Mfilter, { time: 30000 });
+						Mcollector.on('collect', async (msg) => {
+							response = true;
+							Mcollector.stop();
+							Rcollector.stop();
+
+							mutedRole = message.guild.roles.cache.find(role => role === msg.mentions.roles.first());
+
+							if (!mutedRole) return message.channel.send('Please provide a valid role.');
+							if (message.guild.member(client.user.id).roles.highest.comparePositionTo(mutedRole) <= 0) return message.channel.send('Please move my highest role over the role you want to use first.');
+
+							message.guild.channels.cache.forEach(element => {
+
+								if (element.type !== 'text' && element.type !== 'category') return;
 
 								element.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false });
+
 								changedChannels++;
-							}
-							catch {
-								failedChannels++;
-							}
+							});
+
+							await client.schemas.get('guild').findOneAndUpdate({
+								_id: message.guild.id,
+							}, {
+								mutedRole: mutedRole.id,
+							}, {
+								upsert: true,
+							});
+
+							const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
+
+							message.channel.send(`Successfully set ${mutedRole} as the Muted Role and set it up for ${changedChannels} channels (and categories).` + add);
 						});
-
-						await client.schemas.get('guild').findOneAndUpdate({
-							_id: message.guild.id,
-						}, {
-							mutedRole: mutedRole.id,
-						}, {
-							upsert: true,
+						Mcollector.on('end', () => {
+							Rcollector.stop();
 						});
-
-						const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
-
-						message.channel.send(`Successfully created the ${mutedRole} role and set it up for ${changedChannels} channels (and categories).` + add);
 					});
-					Rcollector.on('end', () => {
-						Mcollector.stop();
-						if (!response) message.channel.send('No response. Exiting setup..');
-					});
+			}
+			else {
 
+				message.guild.channels.cache.forEach(element => {
 
-					const Mfilter = msg => msg.mentions.roles.size === 1 && msg.author.id === message.author.id;
-					const Mcollector = m.channel.createMessageCollector(Mfilter, { time: 30000 });
-					Mcollector.on('collect', async (msg) => {
-						response = true;
-						Mcollector.stop();
-						Rcollector.stop();
+					if (element.type !== 'text' && element.type !== 'category') return;
 
-						const mutedRole = message.guild.roles.cache.find(role => role === msg.mentions.roles.first());
+					try {
 
-						if (!mutedRole) return message.channel.send('Please provide a valid role.');
-						if (message.guild.member(client.user.id).roles.highest.comparePositionTo(mutedRole) <= 0) return message.channel.send('Please move my highest role over the role you want to use first.');
-
-						message.guild.channels.cache.forEach(element => {
-
-							if (element.type !== 'text' && element.type !== 'category') return;
-
-							element.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false });
-
-							changedChannels++;
-						});
-
-						await client.schemas.get('guild').findOneAndUpdate({
-							_id: message.guild.id,
-						}, {
-							mutedRole: mutedRole.id,
-						}, {
-							upsert: true,
-						});
-
-						const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
-
-						message.channel.send(`Successfully created the ${mutedRole} role and set it up for ${changedChannels} channels (and categories).` + add);
-					});
-					Mcollector.on('end', () => {
-						Rcollector.stop();
-					});
+						element.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false });
+						changedChannels++;
+					}
+					catch {
+						failedChannels++;
+					}
 				});
 
+				const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
+
+				message.channel.send(`Successfully set <@&${mutedRole}> up for ${changedChannels} channels (and categories).` + add);
+			}
 			return;
 		}
+
 
 		if (args.length < 2) return client.commands.get('help').commandHelp(message, 'mute', prefix, client);
 
@@ -121,10 +149,6 @@ module.exports = {
 		const currentlyMuted = await client.schemas.get('mute').findOne({
 			guildId: message.guild.id,
 			userId: target.id,
-		});
-
-		const { mutedRole } = await client.schemas.get('guild').findOne({
-			_id: message.guild.id,
 		});
 
 		if (currentlyMuted) {
