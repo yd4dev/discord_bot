@@ -12,7 +12,7 @@ module.exports = client => {
 
 		const results = await client.schemas.get('mute').find(conditional);
 
-		if (results && results.length) {
+		if (results?.length) {
 			for (const result of results) {
 
 				const guild = client.guilds.cache.get(result.guildId);
@@ -21,10 +21,10 @@ module.exports = client => {
 
 				const member = await guild.members.fetch(result.userId);
 
-				const joinRoles = await client.schemas.get('guild').findOne({ _id: guild.id });
+				const { joinRoles, mutedRole } = await client.schemas.get('guild').findOne({ _id: guild.id });
 
-				if(joinRoles.joinRoles) {
-					joinRoles.joinRoles.forEach(role => {
+				if(joinRoles) {
+					joinRoles.forEach(role => {
 						member.roles.add(role);
 					});
 				}
@@ -37,8 +37,6 @@ module.exports = client => {
 						member.roles.add(guild.roles.cache.find(role => role.id === element));
 					});
 				}
-
-				const mutedRole = guild.roles.cache.find(role => role.name === 'Muted');
 
 				member.roles.remove(mutedRole);
 
@@ -61,24 +59,21 @@ module.exports = client => {
 		});
 
 		if (currentMute) {
-			const role = member.guild.roles.cache.find(r => r.name === 'Muted');
+			const { mutedRole } = await client.schemas.get('guild').findOne({ _id: member.guild.id });
 
-			if (role) {
-				member.roles.add(role);
+			if (mutedRole) {
+				member.roles.add(mutedRole);
 			}
 		}
-
 	});
 
-	client.on('channelCreate', channel => {
-		if (channel.type != 'TextChannel') return;
+	client.on('channelCreate', async channel => {
+		if (channel.type !== 'text') return;
 
-		const mutedRole = channel.guild.roles.cache.find(role => role.name === 'Muted');
+		const { mutedRole } = await client.schemas.get('guild').findOne({ _id: channel.guild.id });
 
 		if(mutedRole) {
-			channel.updateOverwrite(mutedRole, { SEND_MESSAGES: false });
+			channel.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false });
 		}
-
 	});
-
 };

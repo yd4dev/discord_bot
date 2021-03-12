@@ -8,14 +8,13 @@ module.exports = {
 	async execute(message, args, client) {
 
 		const target = message.mentions.members.first();
-		const mutedRole = message.guild.roles.cache.find(role => role.name === 'Muted');
 
 		const result = await client.schemas.get('mute').findOne({
 			guildId: message.guild.id,
 			userId: target.id,
 		});
 
-		const { joinRoles } = await client.schemas.get('guild').findOne({
+		const { joinRoles, mutedRole } = await client.schemas.get('guild').findOne({
 			_id: message.guild.id,
 		});
 
@@ -38,7 +37,7 @@ module.exports = {
 
 			return message.channel.send(`Successfully unmuted ${target}.`);
 		}
-		else if (target.roles.cache.has(mutedRole.id)) {
+		else if (target.roles.cache.has(mutedRole)) {
 
 			target.roles.remove(mutedRole);
 
