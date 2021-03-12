@@ -65,7 +65,6 @@ client.once('ready', async () => {
 	});
 
 	console.log('Ready!');
-	client.users.cache.find(u => u.id === process.env.botOwnerId).send('Bot restart complete-');
 });
 
 client.on('message', async message => {
