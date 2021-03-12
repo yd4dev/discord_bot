@@ -38,7 +38,7 @@ module.exports = {
 		if (settings.logsChannelId) settingsEmbed.addField(`Logs Channel: \`${prefix}logs\``, `<#${settings.logsChannelId}>`, isTrue());
 		if (joinRoles.length != 0) settingsEmbed.addField(`Join Roles: \`${prefix}welcome\``, joinRoles, isTrue());
 		if (settings.mutedRole) settingsEmbed.addField(`Muted Role: \`${prefix}mute\``, `<@&${settings.mutedRole}>`, isTrue());
-		if (settings.ignoredChannels) settingsEmbed.addField(`Ignored Channels: \`${prefix}ignore\``, `<#${settings.ignoredChannels.join('>', '<#')}>`, isTrue());
+		if (settings.ignoredChannels) settingsEmbed.addField(`Ignored Channels: \`${prefix}ignore\``, `<#${settings.ignoredChannels.join('>, <#')}>`, isTrue());
 		if (voicelinks.length != 0) settingsEmbed.addField(`Voicelinks: \`${prefix}voicelink\``, voicelinks.join('\n'), isTrue());
 		if (settings.welcome_channel) settingsEmbed.addField(`Welcome Channel: \`${prefix}welcome\``, `<#${settings.welcome_channel}>`);
 
