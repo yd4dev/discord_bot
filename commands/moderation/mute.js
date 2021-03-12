@@ -121,11 +121,9 @@ module.exports = {
 			userId: target.id,
 		});
 
-		const { mutedRole: mutedRoleId } = await client.schemas.get('guild').findOne({
+		const { mutedRole } = await client.schemas.get('guild').findOne({
 			_id: message.guild.id,
 		});
-
-		const mutedRole = message.guild.roles.cache.find(r => r.id === mutedRoleId);
 
 		if (currentlyMuted) {
 			const Embed = new Discord.MessageEmbed()
