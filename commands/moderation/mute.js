@@ -165,7 +165,7 @@ module.exports = {
 
 		const expirationDate = new Date(timestamp);
 
-		const everyoneRole = message.guild.roles.cache.find(role => role.name === '@everyone');
+		const everyoneRole = message.guild.roles.everyone;
 
 		const userRoles = target.roles.cache.array();
 
