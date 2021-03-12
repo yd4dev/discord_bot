@@ -106,6 +106,8 @@ module.exports = {
 			return;
 		}
 
+		if (args.length < 2) return client.commands.get('help').commandHelp(message, 'mute', prefix, client);
+
 		const target = message.mentions.members.first() || message.guild.members.cache.find(m => m.id === args[0]);
 
 		if (args[0].search(target?.id) > -1) args.shift();
