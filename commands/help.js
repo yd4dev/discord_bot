@@ -66,18 +66,19 @@ module.exports = {
 			const HelpEmbed = new Discord.MessageEmbed()
 				.setTitle('Help')
 				.setAuthor(client.user.username, client.user.displayAvatarURL())
-				.setDescription(`The server's prefix is set to \`${prefix}\`.`)
+				.setDescription(`The server's prefix is set to \`${prefix}\`.\n 📠 - Can be used inside DMs\n🎖️ - Need extra permissions to run`)
 				.setColor('RANDOM')
 				.setFooter('Use !help (command) for detailed information.', client.user.displayAvatarURL());
 
 			categories.forEach((values, key) => {
 				const commands = [];
 				values.forEach(e => {
-					if (client.commands.get(e).permissions === 'BOT_OWNER' && message.author.id !== process.env.botOwnerId) {
+					const command = client.commands.get(e);
+					if (command.permissions === 'BOT_OWNER' && message.author.id !== process.env.botOwnerId) {
 						return;
 					}
 					else {
-						commands.push(client.commands.get(e).name + ' | ' + client.commands.get(e).description);
+						commands.push(command.name + ' | ' + command.description + (command.guild ? '' : ' 📠') + (command.permissions ? ' 🎖️' : ''));
 					}
 				});
 				HelpEmbed.addField(key, commands);
