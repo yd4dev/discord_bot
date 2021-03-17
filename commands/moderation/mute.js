@@ -151,15 +151,6 @@ module.exports = {
 			userId: target.id,
 		});
 
-		if (currentlyMuted) {
-			const Embed = new Discord.MessageEmbed()
-				.setAuthor(client.user.username, client.user.displayAvatarURL({ dynamic: true }))
-				.setDescription(`That user is already muted by <@${currentlyMuted.moderatorId}>.`)
-				.setFooter('Expires: ')
-				.setTimestamp(currentlyMuted.expires);
-			return message.channel.send(Embed);
-		}
-
 		if (target.roles.highest.comparePositionTo(message.guild.member(client.user).roles.highest) >= 0) return message.channel.send('It seems that my highest role is not high enough to mute that member.');
 		if (target.roles.highest.comparePositionTo(message.member.roles.highest) >= 0) return message.channel.send('You cannot mute members that are higher than you.');
 
@@ -186,6 +177,37 @@ module.exports = {
 		});
 
 		if (!timestamp) return message.channel.send('Please provide a valid duration. Valid duration types are minutes `m`, hours `h`, days `d`.\n' + `Example: \`${prefix}mute @${target.displayName} 1h30m\``);
+
+		if (currentlyMuted) {
+			const Embed = new Discord.MessageEmbed()
+				.setAuthor(client.user.username, client.user.displayAvatarURL({ dynamic: true }))
+				.setDescription(`That user is already muted by <@${currentlyMuted.moderatorId}>. \n React with ➕ to add time to the mute.`)
+				.setFooter('Mute Expires: ')
+				.setTimestamp(currentlyMuted.expires);
+			message.channel.send(Embed).then(msg => {
+				msg.react('➕');
+				const RCollector = msg.createReactionCollector(((reaction, user) => { return reaction.emoji.name === '➕' && user === message.author; }), { time: 30000 });
+				RCollector.on('collect', async () => {
+					timestamp += currentlyMuted.expires - Date.now();
+
+					await client.schemas.get('mute').findOneAndUpdate({
+
+						guildId: message.guild.id,
+						userId: target.id,
+					}, {
+						moderatorId: message.author.id,
+						expires: timestamp,
+					}, {
+						upsert: true,
+					});
+
+					console.log(timestamp);
+
+					message.channel.send(`${target} is now muted until ${new Date(timestamp).toDateString()}, ${new Date(timestamp).toTimeString()}`);
+				});
+			});
+			return;
+		}
 
 		const expirationDate = new Date(timestamp);
 
