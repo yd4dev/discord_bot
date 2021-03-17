@@ -28,7 +28,8 @@ module.exports = {
 				}
 			});
 		}
-		else { term = terms[0].term; }
+
+		if (!term) term = terms[0].term;
 
 		if (term) {
 
@@ -52,9 +53,9 @@ module.exports = {
 						.setTitle(result.word)
 						.setURL(result.permalink)
 						.setAuthor(result.author)
-						.setDescription(result.definition)
-						.addField('Example', result.example)
-						.addField('👍', result.thumbs_up, true)
+						.setDescription(result.definition);
+					if (result.example) Embed.addField('Example', result.example);
+					Embed.addField('👍', result.thumbs_up, true)
 						.addField('👎', result.thumbs_down, true)
 						.setFooter(result.written_on);
 
