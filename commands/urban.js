@@ -18,15 +18,17 @@ module.exports = {
 
 		let term;
 
-		terms.forEach(element => {
+		if (terms) {
 
-			if (element.term.toLowerCase() === args.join(' ').toLowerCase()) {
+			terms.forEach(element => {
 
-				term = element.term;
-			}
-		});
+				if (element.term.toLowerCase() === args.join(' ').toLowerCase()) {
 
-		if (!term) term = terms[0].term;
+					term = element.term;
+				}
+			});
+		}
+		else { term = terms[0].term; }
 
 		if (term) {
 
