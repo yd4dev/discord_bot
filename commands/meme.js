@@ -1,6 +1,9 @@
 const Discord = require('discord.js');
 const snoowrap = require('snoowrap');
+const fs = require('fs');
 require('dotenv').config();
+
+const cache = [];
 
 module.exports = {
 	name: 'meme',
@@ -19,9 +22,23 @@ module.exports = {
 
 		const memes = r.getSubreddit('memes');
 
-		const posts = await memes.getNew();
+		const posts = await memes.getHot();
 
-		message.channel.send(posts[0].url);
+		for (let i = 0; ; i++) {
 
+			const post = posts[i];
+
+			if (!cache.includes(post.id) && post.url && !post.stickied) {
+				cache.push(post.id);
+				const Embed = new Discord.MessageEmbed()
+					.setTitle(post.title)
+					.setURL(`https://reddit.com${post.permalink}`)
+					.setAuthor(post.author.name)
+					.setFooter('Uploaded')
+					.setTimestamp(post.created_utc * 1000)
+					.setImage(post.url);
+				return message.channel.send(Embed);
+			}
+		}
 	},
 };
