@@ -82,7 +82,7 @@ module.exports = {
 							mutedRole = message.guild.roles.cache.find(role => role === msg.mentions.roles.first());
 
 							if (!mutedRole) return message.channel.send('Please provide a valid role.');
-							if (message.guild.member(client.user.id).roles.highest.comparePositionTo(mutedRole) <= 0) return message.channel.send('Please move my highest role over the role you want to use first.');
+							if (message.guild.member.resolve(client.user.id).roles.highest.comparePositionTo(mutedRole) <= 0) return message.channel.send('Please move my highest role over the role you want to use first.');
 
 							message.guild.channels.cache.forEach(element => {
 
@@ -151,7 +151,7 @@ module.exports = {
 			userId: target.id,
 		});
 
-		if (target.roles.highest.comparePositionTo(message.guild.member(client.user).roles.highest) >= 0) return message.channel.send('It seems that my highest role is not high enough to mute that member.');
+		if (target.roles.highest.comparePositionTo(message.guild.members.resolve(client.user).roles.highest) >= 0) return message.channel.send('It seems that my highest role is not high enough to mute that member.');
 		if (target.roles.highest.comparePositionTo(message.member.roles.highest) >= 0) return message.channel.send('You cannot mute members that are higher than you.');
 
 		const time = args[0].split(/(?<=[A-Za-z])/);

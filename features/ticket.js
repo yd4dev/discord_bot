@@ -24,7 +24,7 @@ module.exports = client => {
 		reaction.message.guild.channels.create(ticketCategory.category_name, { type: 'text' })
 			.then((channel) => {
 
-				if(channel.guild.member(client.user).hasPermission('ADMINISTRATOR')) {
+				if(channel.guild.members.resolve(client.user).hasPermission('ADMINISTRATOR')) {
 
 					channel.updateOverwrite(reaction.message.guild.everyone, { VIEW_CHANNEL: false });
 
