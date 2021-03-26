@@ -101,7 +101,7 @@ client.on('message', async message => {
 			return;
 		}
 
-		if (!message.channel.permissionsFor(message.guild.members.resolve(client.user)).has('SEND_MESSAGES')) {
+		if (!message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES')) {
 			return message.author.send(`I do not have enough permissions to write into ${message.channel}.`)
 				.catch(() => {
 					return;
@@ -111,7 +111,7 @@ client.on('message', async message => {
 		if (guildresult?.ignoredChannels?.indexOf(message.channel.id) > -1) {
 
 			return await message.channel.send(`${message.channel} is ignored.`)
-				.then(msg => msg.delete({ timeout: 3000 }));
+				.then(msg => setTimeout(() => msg.delete(), 3000));
 		}
 
 		if (command.guild && message.channel.type != 'text') {
@@ -120,7 +120,7 @@ client.on('message', async message => {
 
 		if (command.permissions) {
 
-			if (command.permissions != 'BOT_OWNER' && !message.member.hasPermission(command.permissions) && message.member.id != process.env.botOwnerId) return message.channel.send('You do not have the required permissions to execute that command, <@' + message.author + '>');
+			if (command.permissions != 'BOT_OWNER' && !message.member.permissions.has(command.permissions) && message.member.id != process.env.botOwnerId) return message.channel.send('You do not have the required permissions to execute that command, <@' + message.author + '>');
 			else if (command.permissions == 'BOT_OWNER' && message.author.id != process.env.botOwnerId) return message.channel.send('This command can only be used by the bot\'s owner.');
 		}
 

@@ -46,7 +46,7 @@ module.exports = client => {
 				try { member.guild.channels.cache.find(c => c.id === result.welcome_channel).send(Embed); }
 				catch {
 
-					member.guild.channels.cache.some(c => c.type === 'text' && c.permissionsFor(member.guild.members.resolve(client.user)).has('SEND_MESSAGES')).send(`Could not send welcome message into ${member.guild.channels.cache.find(c => c.id === result.welcome_channel)}`);
+					member.guild.channels.cache.some(c => c.type === 'text' && c.permissionsFor(member.guild.me).has('SEND_MESSAGES')).send(`Could not send welcome message into ${member.guild.channels.cache.find(c => c.id === result.welcome_channel)}`);
 				}
 			}
 		}
