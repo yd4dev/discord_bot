@@ -18,7 +18,7 @@ module.exports = {
 			_id: message.guild.id,
 		});
 
-		if(target.roles.highest.comparePositionTo(message.guild.member(client.user).roles.highest) > 0) return message.channel.send('It seems that I am not high enough in the role hierarchy to unmute that member.');
+		if(target.roles.highest.comparePositionTo(message.guild.members.resolve(client.user).roles.highest) > 0) return message.channel.send('It seems that I am not high enough in the role hierarchy to unmute that member.');
 		if (target.roles.highest.comparePositionTo(message.member.roles.highest) >= 0) return message.channel.send('You cannot unmute members that are higher than you.');
 
 		if(!result && !target.roles.cache.has(mutedRole.id)) return message.channel.send('That user is not muted.');

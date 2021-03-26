@@ -101,7 +101,7 @@ client.on('message', async message => {
 			return;
 		}
 
-		if (!message.channel.permissionsFor(message.guild.members.cache.find(m => m.id === client.user.id)).has('SEND_MESSAGES')) {
+		if (!message.channel.permissionsFor(message.guild.members.resolve(client.user)).has('SEND_MESSAGES')) {
 			return message.author.send(`I do not have enough permissions to write into ${message.channel}.`)
 				.catch(() => {
 					return;
