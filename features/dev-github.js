@@ -51,5 +51,5 @@ module.exports = () => {
 	}
 	updateBio();
 	/* Update bio every 15 minutes */
-	setTimeout(updateBio, 900000);
+	setInterval(updateBio, 900000);
 };
