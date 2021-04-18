@@ -29,7 +29,7 @@ module.exports = {
 					usage += `• ${prefix}${commandName} ${u.trim()}\n`;
 				});
 
-				commandHelp.addField('Usage', usage);
+				commandHelp.addField('\u200B', '```Usage```\n' + usage);
 			}
 			commandHelp.addField('Required Arguments', minArgs, true);
 			if (command.permissions) commandHelp.addField('Required Permissions', command.permissions, true);
