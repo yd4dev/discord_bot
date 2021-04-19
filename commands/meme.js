@@ -30,14 +30,20 @@ module.exports = {
 
 			if (!cache.includes(post.id) && post.url && !post.stickied) {
 				cache.push(post.id);
-				const Embed = new Discord.MessageEmbed()
-					.setTitle(post.title)
-					.setURL(`https://reddit.com${post.permalink}`)
-					.setAuthor(post.author.name)
-					.setFooter('Uploaded')
-					.setTimestamp(post.created_utc * 1000)
-					.setImage(post.url);
-				return message.channel.send(Embed);
+				if (post.media?.reddit_video?.fallback_url) {
+					return message.channel.send(post.url + '\n' + post.media?.reddit_video?.fallback_url);
+				}
+				else {
+					const Embed = new Discord.MessageEmbed()
+						.setTitle(post.title)
+						.setURL(`https://reddit.com${post.permalink}`)
+						.setAuthor(post.author.name)
+						.setFooter('Uploaded')
+						.setTimestamp(post.created_utc * 1000)
+						.setImage(post.url);
+
+					return message.channel.send(Embed);
+				}
 			}
 		}
 	},
