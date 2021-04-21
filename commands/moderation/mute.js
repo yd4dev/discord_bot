@@ -201,9 +201,7 @@ module.exports = {
 						upsert: true,
 					});
 
-					console.log(timestamp);
-
-					message.channel.send(`${target} is now muted until ${new Date(timestamp).toDateString()}, ${new Date(timestamp).toTimeString()}`);
+					message.channel.send(`${target} is now muted until ${new Date(timestamp).toLocaleString({ timeZone: 'UTC' })} UTC`);
 				});
 			});
 			return;
@@ -240,6 +238,6 @@ module.exports = {
 
 		target.roles.add(mutedRole);
 
-		message.channel.send(`I have muted ${target} until ${expirationDate.toDateString()}, ${expirationDate.toTimeString()}`);
+		message.channel.send(`I have muted ${target} until ${expirationDate.toLocaleString({ timeZone: 'UTC' })} UTC`);
 	},
 };
