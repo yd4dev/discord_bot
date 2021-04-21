@@ -352,6 +352,8 @@ module.exports = client => {
 
 		if (newMessage.channel.type === 'dm' || newMessage.author.bot) return;
 
+		if (oldMessage.content === newMessage.content) return;
+
 		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: newMessage.member.guild.id });
 
 		const logsChannel = newMessage.guild.channels.cache.find(c => c.id === logsChannelId);
