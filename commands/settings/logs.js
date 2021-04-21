@@ -66,7 +66,9 @@ module.exports = {
 
 				args.forEach(a => {
 
-					if (events.find(e => e === a) && success.search(a) === -1) {
+					a = events.find(e => e.toLowerCase() === a.toLowerCase());
+
+					if (a && success.search(a) === -1) {
 
 						logsMap.set(a, !logsMap.get(a));
 
@@ -94,7 +96,7 @@ module.exports = {
 				}
 				else {
 
-					message.channel.send('Please provide events to toggle.');
+					message.channel.send('Please provide valid events to toggle.');
 				}
 				break;
 			}

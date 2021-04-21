@@ -18,7 +18,7 @@ module.exports = client => {
 			.addField('Name', channel.name, true)
 			.addField('Type', channel.type, true)
 			.addField('ID', `\`\`\`js\nCHANNEL = ${channel.id}\`\`\``)
-			.setFooter(client.user.username, client.user.displayAvatarURL())
+			.setFooter('channelCreate', client.user.displayAvatarURL())
 			.setTimestamp(Date.now());
 
 		const fetchedLog = (await channel.guild.fetchAuditLogs({ limit: 1, type: 'CHANNEL_CREATE' })).entries.first();
@@ -47,7 +47,7 @@ module.exports = client => {
 			.addField('Name', channel.name, true)
 			.addField('Type', channel.type, true)
 			.addField('ID', `\`\`\`js\nCHANNEL = ${channel.id}\`\`\``)
-			.setFooter(client.user.username, client.user.displayAvatarURL())
+			.setFooter('channelDelete', client.user.displayAvatarURL())
 			.setTimestamp(Date.now());
 
 		const fetchedLog = (await channel.guild.fetchAuditLogs({ limit: 1, type: 'CHANNEL_DELETE' })).entries.first();
@@ -73,7 +73,7 @@ module.exports = client => {
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Channel Updated')
 			.setColor('YELLOW')
-			.setFooter(client.user.username, client.user.displayAvatarURL())
+			.setFooter('channelUpdate', client.user.displayAvatarURL())
 			.setTimestamp(Date.now());
 
 		if (oldChannel.name !== newChannel.name) {
@@ -139,7 +139,7 @@ module.exports = client => {
 
 		}
 
-		// How the fuck do I print the permission changes of a channel. pls help
+		// How do I print the permission changes of a channel. pls help
 
 
 		if (Embed.fields.length > 1) {
@@ -169,7 +169,7 @@ module.exports = client => {
 			.setTitle('Member Banned')
 			.setColor('RED')
 			.addField('User', user.tag)
-			.setFooter(client.user.username, client.user.displayAvatarURL())
+			.setFooter('guildBanAdd', client.user.displayAvatarURL())
 			.setTimestamp(Date.now());
 
 		const fetchedLog = (await guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_BAN_ADD' })).entries.first();
@@ -192,7 +192,7 @@ module.exports = client => {
 			.setTitle('Member Unbanned')
 			.setColor('GREEN')
 			.addField('User', user.tag)
-			.setFooter(client.user.username, client.user.displayAvatarURL())
+			.setFooter('guildBanRemove', client.user.displayAvatarURL())
 			.setTimestamp(Date.now());
 
 		const fetchedLog = (await guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_BAN_REMOVE' })).entries.first();
@@ -218,7 +218,7 @@ module.exports = client => {
 			.setDescription(`${member.displayName} joined the server.`)
 			.addField('Account Created:', member.user.createdAt.toDateString())
 			.addField('ID', `\`\`\`js\nUSER = ${member.id}\`\`\``)
-			.setFooter(client.user.username, client.user.displayAvatarURL())
+			.setFooter('guildMemberAdd', client.user.displayAvatarURL())
 			.setTimestamp(Date.now());
 
 		logsChannel.send(Embed);
@@ -237,13 +237,13 @@ module.exports = client => {
 			.setImage(member.user.displayAvatarURL({ dynamic : true, size: 128 }))
 			.setDescription(`${member.displayName} left the server.`)
 			.addField('Joined Server:', member.joinedAt.toDateString())
-			.setFooter(client.user.username, client.user.displayAvatarURL())
+			.setFooter('guildMemberRemove', client.user.displayAvatarURL())
 			.setTimestamp(Date.now());
 
 
 		const kicked = (await member.guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_KICK' })).entries.first();
 
-		if (kicked.target === member.user) {
+		if (kicked.target === member.user && logs.get('guildMemberKick')) {
 
 			Embed.setTitle('Member Kicked')
 				.setAuthor(kicked.executor.tag, kicked.executor.displayAvatarURL({ dynamic: true }));
@@ -267,7 +267,7 @@ module.exports = client => {
 		if (!logs || !logs.get('guildMemberUpdate') || !logsChannel) return;
 
 		const Embed = new Discord.MessageEmbed()
-			.setFooter(client.user.username, client.user.displayAvatarURL())
+			.setFooter('guildMemberUpdate', client.user.displayAvatarURL())
 			.setTimestamp(Date.now())
 			.setAuthor(newMember.user.tag, newMember.user.displayAvatarURL({ dynamic : true, size: 128 }));
 
@@ -306,7 +306,8 @@ module.exports = client => {
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Message Deleted')
 			.setColor('#5B0000')
-			.setAuthor(message.member.displayName, message.author.displayAvatarURL({ dynamic: true }));
+			.setAuthor(message.member.displayName, message.author.displayAvatarURL({ dynamic: true }))
+			.setFooter('messageDelete', client.user.displayAvatarURL());
 
 		if (message.content) Embed.addField('Inhalt:', message.content);
 
@@ -340,7 +341,8 @@ module.exports = client => {
 		const Embed = new Discord.MessageEmbed()
 			.setTitle('Message Bulk Deleted')
 			.addField('Channel:', messages.first().channel.name)
-			.addField('Amount:', messages.size);
+			.addField('Amount:', messages.size)
+			.setFooter('messageDeleteBulk', client.user.displayAvatarURL());
 
 		logsChannel.send(Embed);
 
@@ -373,7 +375,7 @@ module.exports = client => {
 			.addField('Now:', newMessage.content)
 			.addField('Message written:', `${writtenH}:${writtenM}, ${oldMessage.createdAt.toDateString()}`)
 			.addField('Channel:', `${newMessage.channel} \n [Go To Message](${newMessage.url})`)
-			.setFooter(client.user.username, client.user.displayAvatarURL())
+			.setFooter('messageUpdate', client.user.displayAvatarURL())
 			.setTimestamp(Date.now());
 
 		Embed.addField('ID', `\`\`\`js\nMESSAGE = ${newMessage.id}\nAUTHOR = ${newMessage.author.id}\`\`\``);
@@ -400,7 +402,7 @@ module.exports = client => {
 					.setAuthor(newState.member.displayName, newState.member.user.displayAvatarURL({ dynamic : true }))
 					.addField('Before:', oldState.channel.name, true)
 					.addField('Now:', newState.channel.name, true)
-					.setFooter(client.user.username, client.user.displayAvatarURL())
+					.setFooter('voiceStateUpdate', client.user.displayAvatarURL())
 					.setTimestamp(Date.now());
 
 				logsChannel.send(Embed);
@@ -412,7 +414,7 @@ module.exports = client => {
 					.setColor('#292b2f')
 					.setAuthor(newState.member.displayName, newState.member.user.displayAvatarURL({ dynamic : true }))
 					.addField('Channel:', newState.channel.name)
-					.setFooter(client.user.username, client.user.displayAvatarURL())
+					.setFooter('voiceStateUpdate', client.user.displayAvatarURL())
 					.setTimestamp(Date.now());
 
 				logsChannel.send(Embed);
@@ -425,7 +427,7 @@ module.exports = client => {
 				.setColor('#292b2f')
 				.setAuthor(oldState.member.displayName, oldState.member.user.displayAvatarURL({ dynamic : true }))
 				.addField('Channel:', oldState.channel.name)
-				.setFooter(client.user.username, client.user.displayAvatarURL())
+				.setFooter('voiceStateUpdate', client.user.displayAvatarURL())
 				.setTimestamp(Date.now());
 
 			logsChannel.send(Embed);
