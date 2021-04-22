@@ -275,6 +275,14 @@ module.exports = client => {
 			Embed.setTitle('Nickname changed')
 				.addField('Before:', oldMember.displayName, true)
 				.addField('Now:', newMember.displayName, true);
+
+			const auditLog = (await newMember.guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_UPDATE' })).entries.first();
+
+			console.log(auditLog.executor);
+
+			if (auditLog.target === newMember.user && auditLog.changes[0].old === oldMember.nickname && auditLog.changes[0].new === newMember.nickname) {
+				Embed.addField('Moderator:', auditLog.executor.username + '#' + auditLog.executor.discriminator);
+			}
 		}
 		else if (oldMember.user.username !== newMember.user.username) {
 
