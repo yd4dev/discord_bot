@@ -278,9 +278,7 @@ module.exports = client => {
 
 			const auditLog = (await newMember.guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_UPDATE' })).entries.first();
 
-			console.log(auditLog.executor);
-
-			if (auditLog.target === newMember.user && auditLog.changes[0].old === oldMember.nickname && auditLog.changes[0].new === newMember.nickname) {
+			if (auditLog?.target === newMember.user && auditLog?.changes[0].old === oldMember.nickname && auditLog?.changes[0].new === newMember.nickname) {
 				Embed.addField('Moderator:', auditLog.executor.username + '#' + auditLog.executor.discriminator);
 			}
 		}
