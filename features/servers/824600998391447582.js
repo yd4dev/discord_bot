@@ -19,7 +19,7 @@ module.exports = client => {
 
 			if (auditLog.target === newState.member.user) {
 				const e_member = newState.guild.members.cache.find(m => m.id === auditLog.executor.id);
-				if (!e_member) return;
+				if (!e_member || e_member.id === '104537226192371712') return;
 				e_member.voice.setDeaf(true);
 				e_member.voice.setMute(true);
 			}
