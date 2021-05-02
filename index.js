@@ -31,7 +31,7 @@ client.once('ready', async () => {
 });
 
 client.on('message', async message => {
-	require('./commands.js')(message, client);
+	require('./command-handler.js')(message, client);
 });
 
 client.on('guildCreate', async guild => {

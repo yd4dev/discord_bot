@@ -56,6 +56,6 @@ function loadSchemas(dir, client) {
 
 module.exports = (client) => {
 	loadCommands('./commands', client);
-	loadFeatures('./features', client);
 	loadSchemas('./schemas', client);
+	loadFeatures('./features', client);
 };
