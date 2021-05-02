@@ -60,7 +60,6 @@ module.exports = {
 			client.commands.forEach(element => {
 				if (!categories.get(element.category)) categories.set(element.category, []);
 				categories.get(element.category).push(element.name);
-
 			});
 
 			const HelpEmbed = new Discord.MessageEmbed()
