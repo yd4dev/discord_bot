@@ -1,11 +1,16 @@
 module.exports = async (message, client) => {
 	if (message.author.bot) return;
 
-	const guildresult = await client.schemas.get('guild').findOne({ _id: message.guild?.id });
+	let prefix = client.cache.guilds.get(message.guild.id)?.prefix;
 
-	const dbPrefix = guildresult?.prefix;
+	if (!prefix) {
+		console.log('Database Request');
+		const guildresult = await client.schemas.get('guild').findOne({ _id: message.guild?.id });
 
-	const prefix = dbPrefix ? dbPrefix : '!';
+		prefix = guildresult?.prefix || '!';
+
+		client.cache.guilds.get(message.guild.id).prefix = prefix;
+	}
 
 	let slice = undefined;
 	if (message.content.startsWith(prefix)) {
@@ -38,7 +43,17 @@ module.exports = async (message, client) => {
 				});
 		}
 
-		if (guildresult?.ignoredChannels?.indexOf(message.channel.id) > -1) {
+		let ignoredChannels = client.cache.guilds.get(message.guild.id)?.ignoredChannels;
+
+		if (!ignoredChannels) {
+			const guildresult = await client.schemas.get('guild').findOne({ _id: message.guild?.id });
+
+			ignoredChannels = guildresult?.ignoredChannels || [];
+
+			client.cache.guilds.get(message.guild.id).ignoredChannels = ignoredChannels;
+		}
+
+		if (ignoredChannels?.indexOf(message.channel.id) > -1) {
 
 			return await message.channel.send(`${message.channel} is ignored.`)
 				.then(msg => setTimeout(() => msg.delete(), 3000));

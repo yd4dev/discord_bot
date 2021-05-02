@@ -4,6 +4,8 @@ require('dotenv').config();
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
+client.cache = new Object();
+client.cache.guilds = new Discord.Collection();
 client.commands = new Discord.Collection();
 client.schemas = new Discord.Collection();
 
@@ -25,6 +27,7 @@ client.once('ready', async () => {
 			{
 				upsert: true,
 			});
+		client.cache.guilds.set(guild.id, new Object());
 	});
 
 	console.log('Ready!');
