@@ -9,7 +9,7 @@ module.exports = {
 	usage: ['toggle [event/s]', 'channel <text channel mention / id>'],
 	async execute(message, args, client, prefix) {
 
-		const result = (await client.schemas.get('guild').findOne({ _id: message.guild.id }));
+		const result = client.data.guilds.get(message.guild.id);
 
 		const logsMap = new Map(result.logs);
 
@@ -24,13 +24,7 @@ module.exports = {
 			}
 		});
 		if (undefChanged === true) {
-			await client.schemas.get('guild').findOneAndUpdate({
-				_id: message.guild.id,
-			}, {
-				logs: logsMap,
-			}, {
-				upsert: true,
-			});
+			await client.data.save(message.guild.id, client, { logs: logsMap });
 		}
 
 		if (args.length === 0) {
@@ -83,13 +77,7 @@ module.exports = {
 
 				if (success.length) {
 
-					await client.schemas.get('guild').findOneAndUpdate({
-						_id: message.guild.id,
-					}, {
-						logs: logsMap,
-					}, {
-						upsert: true,
-					});
+					await client.data.save(message.guild.id, client, { logs: logsMap });
 
 					message.channel.send(`Successfully changed ${success}.`);
 
@@ -105,13 +93,7 @@ module.exports = {
 
 				if (!args[1]) {
 
-					await client.schemas.get('guild').findOneAndUpdate({
-						_id: message.guild.id,
-					}, {
-						logsChannelId: message.channel.id,
-					}, {
-						upsert: true,
-					});
+					await client.data.save(message.guild.id, client, { logsChannelId: message.channel.id });
 
 					message.channel.send(`Events will now be logged in ${message.channel}`);
 				}
@@ -121,13 +103,7 @@ module.exports = {
 
 					if (channel && channel.type === 'text' && channel.guild === message.guild) {
 
-						await client.schemas.get('guild').findOneAndUpdate({
-							_id: message.guild.id,
-						}, {
-							logsChannelId: channel.id,
-						}, {
-							upsert: true,
-						});
+						await client.data.save(message.guild.id, client, { logsChannelId: channel.id });
 
 						message.channel.send(`Events will now be logged in ${channel}`);
 					}

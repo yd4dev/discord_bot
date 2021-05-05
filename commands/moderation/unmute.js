@@ -14,20 +14,18 @@ module.exports = {
 			userId: target.id,
 		});
 
-		const { joinRoles, mutedRole } = await client.schemas.get('guild').findOne({
-			_id: message.guild.id,
-		});
+		const { joinRoles, mutedRole } = client.data.guilds.get(message.guild.id);
 
-		if(target.roles.highest.comparePositionTo(message.guild.me.roles.highest) > 0) return message.channel.send('It seems that I am not high enough in the role hierarchy to unmute that member.');
+		if (target.roles.highest.comparePositionTo(message.guild.me.roles.highest) > 0) return message.channel.send('It seems that I am not high enough in the role hierarchy to unmute that member.');
 		if (target.roles.highest.comparePositionTo(message.member.roles.highest) >= 0) return message.channel.send('You cannot unmute members that are higher than you.');
 
-		if(!result && !target.roles.cache.has(mutedRole.id)) return message.channel.send('That user is not muted.');
+		if (!result && !target.roles.cache.has(mutedRole.id)) return message.channel.send('That user is not muted.');
 
-		if(result) {
+		if (result) {
 
-			const previousRoles = result.userRoles;
+			const { userRoles } = result;
 
-			previousRoles.forEach(element => {
+			userRoles.forEach(element => {
 				target.roles.add(message.guild.roles.cache.find(role => role.id === element));
 			});
 

@@ -8,11 +8,7 @@ module.exports = {
 	usage: ['<mention channels>'],
 	async execute(message, args, client, prefix) {
 
-		const result = await client.schemas.get('guild').findOne({
-			_id: message.guild.id,
-		});
-
-		const ignoredChannels = result.ignoredChannels || new Array();
+		const ignoredChannels = client.data.guilds.get(message.guild.id).ignoredChannels || new Array();
 
 		if (message.mentions.channels.size > 0) {
 
@@ -31,14 +27,7 @@ module.exports = {
 				}
 			});
 
-			await client.schemas.get('guild').findOneAndUpdate({
-				_id: message.guild.id,
-			}, {
-				_id: message.guild.id,
-				ignoredChannels: ignoredChannels,
-			}, {
-				upsert: true,
-			});
+			await client.data.save(message.guild.id, client, { ignoredChannels: ignoredChannels });
 		}
 
 		let deletedChange = false;
@@ -58,14 +47,7 @@ module.exports = {
 
 		if (deletedChange === true) {
 
-			await client.schemas.get('guild').findOneAndUpdate({
-				_id: message.guild.id,
-			}, {
-				_id: message.guild.id,
-				ignoredChannels: ignoredChannels,
-			}, {
-				upsert: true,
-			});
+			await client.data.save(message.guild.id, client, { ignoredChannels: ignoredChannels });
 		}
 
 		const Embed = new Discord.MessageEmbed()

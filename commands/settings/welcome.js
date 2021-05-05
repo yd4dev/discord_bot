@@ -9,9 +9,7 @@ module.exports = {
 	usage: ['toggle', 'roles [mention roles]', 'title [title]', 'message [message]', 'channel [text channel]'],
 	async execute(message, args, client, prefix) {
 
-		const settings = await client.schemas.get('guild').findOne({
-			_id: message.guild.id,
-		});
+		const settings = client.data.guilds.get(message.guild.id);
 
 		if (!args.length) {
 
@@ -44,11 +42,7 @@ module.exports = {
 					}
 				});
 
-				await client.schemas.get('guild').findOneAndUpdate({ _id: message.guild.id }, {
-					joinRoles: roles,
-				}, {
-					upsert: true,
-				});
+				await client.data.save(message.guild.id, client, { joinRoles: roles });
 
 				message.channel.send(`<@&${roles.join('>, <@&')}> will now be assigned on join.`);
 
@@ -59,13 +53,7 @@ module.exports = {
 
 				if (!settings.welcome_channel) return message.channel.send('Please provide a welcome channel first.');
 
-				await client.schemas.get('guild').findOneAndUpdate({
-					_id: message.guild.id,
-				}, {
-					welcome_plugin: !settings.welcome_plugin,
-				}, {
-					upsert: true,
-				});
+				await client.data.save(message.guild.id, client, { welcome_plugin: !settings.welcome_plugin });
 
 				message.channel.send(`Turned the Welcome Message ${!settings.welcome_plugin ? 'on' : 'off'}`);
 
@@ -78,19 +66,11 @@ module.exports = {
 
 				args.shift();
 
-				await client.schemas.get('guild').findOneAndUpdate({
-					_id: message.guild.id,
-				}, {
-					welcome_title: args.join(' '),
-				}, {
-					upsert: true,
-				});
+				await client.data.save(message.guild.id, client, { welcome_title: args.join(' ') });
 
 				message.channel.send(`Set the Welcome Title to ${args.join(' ')}`);
 
 				break;
-
-
 			}
 
 			case 'message': {
@@ -99,18 +79,11 @@ module.exports = {
 
 				args.shift();
 
-				await client.schemas.get('guild').findOneAndUpdate({
-					_id: message.guild.id,
-				}, {
-					welcome_message: args.join(' '),
-				}, {
-					upsert: true,
-				});
+				await client.data.save(message.guild.id, client, { welcome_message: args.join(' ') });
 
 				message.channel.send(`Set the Welcome Message to ${args.join(' ').replace('%name', '`%name`').replace('%guild', '`%guild`')}`);
 
 				break;
-
 			}
 
 			case 'channel': {
@@ -133,13 +106,7 @@ module.exports = {
 				}
 
 				else {
-					await client.schemas.get('guild').findOneAndUpdate({
-						_id: message.guild.id,
-					}, {
-						welcome_channel: channel.id,
-					}, {
-						upsert: true,
-					});
+					await client.data.save(message.guild.id, client, { welcome_channel: channel.id });
 				}
 
 				try {

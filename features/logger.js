@@ -6,7 +6,7 @@ module.exports = client => {
 
 		if (channel.type === 'dm') return;
 
-		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: channel.guild.id });
+		const { logs, logsChannelId } = client.data.guilds.get(channel.guild.id);
 
 		const logsChannel = channel.guild.channels.cache.find(c => c.id === logsChannelId);
 
@@ -35,7 +35,7 @@ module.exports = client => {
 
 		if (channel.type === 'dm') return;
 
-		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: channel.guild.id });
+		const { logs, logsChannelId } = client.data.guilds.get(channel.guild.id);
 
 		const logsChannel = channel.guild.channels.cache.find(c => c.id === logsChannelId);
 
@@ -64,7 +64,7 @@ module.exports = client => {
 
 		if (oldChannel.type === 'dm' || newChannel.type === 'dm') return;
 
-		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: newChannel.guild.id });
+		const { logs, logsChannelId } = client.data.guilds.get(newChannel.guild.id);
 
 		const logsChannel = newChannel.guild.channels.cache.find(c => c.id === logsChannelId);
 
@@ -159,7 +159,7 @@ module.exports = client => {
 
 	client.on('guildBanAdd', async (guild, user) => {
 
-		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: guild.id });
+		const { logs, logsChannelId } = client.data.guilds.get(guild.id);
 
 		const logsChannel = guild.channels.cache.find(c => c.id === logsChannelId);
 
@@ -182,7 +182,7 @@ module.exports = client => {
 
 	client.on('guildBanRemove', async (guild, user) => {
 
-		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: guild.id });
+		const { logs, logsChannelId } = client.data.guilds.get(guild.id);
 
 		const logsChannel = guild.channels.cache.find(c => c.id === logsChannelId);
 
@@ -205,7 +205,7 @@ module.exports = client => {
 
 	client.on('guildMemberAdd', async member => {
 
-		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: member.guild.id });
+		const { logs, logsChannelId } = client.data.guilds.get(member.guild.id);
 
 		const logsChannel = member.guild.channels.cache.find(c => c.id === logsChannelId);
 
@@ -226,7 +226,7 @@ module.exports = client => {
 
 	client.on('guildMemberRemove', async member => {
 
-		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: member.guild.id });
+		const { logs, logsChannelId } = client.data.guilds.get(member.guild.id);
 
 		const logsChannel = member.guild.channels.cache.find(c => c.id === logsChannelId);
 
@@ -260,7 +260,7 @@ module.exports = client => {
 
 	client.on('guildMemberUpdate', async (oldMember, newMember) => {
 
-		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: newMember.guild.id });
+		const { logs, logsChannelId } = client.data.guilds.get(newMember.guild.id);
 
 		const logsChannel = newMember.guild.channels.cache.find(c => c.id === logsChannelId);
 
@@ -303,7 +303,7 @@ module.exports = client => {
 
 		if (message.partial || message.author.bot) return;
 
-		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: message.guild.id });
+		const { logs, logsChannelId } = client.data.guilds.get(message.guild.id);
 
 		const logsChannel = message.guild.channels.cache.find(c => c.id === logsChannelId);
 
@@ -338,7 +338,7 @@ module.exports = client => {
 
 	client.on('messageDeleteBulk', async messages => {
 
-		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: messages.first().guild.id });
+		const { logs, logsChannelId } = client.data.guilds.get(messages.first().guild.id);
 
 		const logsChannel = messages.first().guild.channels.cache.find(c => c.id === logsChannelId);
 
@@ -362,7 +362,7 @@ module.exports = client => {
 
 		if (oldMessage.content === newMessage.content) return;
 
-		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: newMessage.member.guild.id });
+		const { logs, logsChannelId } = client.data.guilds.get(newMessage.member.guild.id);
 
 		const logsChannel = newMessage.guild.channels.cache.find(c => c.id === logsChannelId);
 
@@ -393,7 +393,7 @@ module.exports = client => {
 
 		if (oldState.channel === newState.channel) return;
 
-		const { logs, logsChannelId } = await client.schemas.get('guild').findOne({ _id: newState.member.guild.id });
+		const { logs, logsChannelId } = client.data.guilds.get(newState.member.guild.id);
 
 		const logsChannel = newState.guild.channels.cache.find(c => c.id === logsChannelId);
 

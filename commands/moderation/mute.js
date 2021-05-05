@@ -9,9 +9,9 @@ module.exports = {
 	usage: ['[@User / User ID] [Time]', 'setup'],
 	async execute(message, args, client, prefix) {
 
-		let { mutedRole } = await client.schemas.get('guild').findOne({
-			_id: message.guild.id,
-		});
+		/* Load Muted Role from Cache */
+
+		let { mutedRole } = client.data.guilds.get(message.guild.id);
 
 		if (args[0].toLowerCase() === 'setup') {
 
@@ -19,6 +19,11 @@ module.exports = {
 			let failedChannels = 0;
 
 			if (!mutedRole || !message.guild.roles.cache.find(r => r.id === mutedRole)) {
+
+				/*
+				 * Create Role and Create Channel Overrides
+				 * Or Use Existing One if tagged in message
+				*/
 
 				message.channel.send('You have no Muted Role set. Please tag a role you want to use or react with ✍️ to create one.')
 					.then(m => {
@@ -45,7 +50,6 @@ module.exports = {
 								if (element.type !== 'text' && element.type !== 'category') return;
 
 								try {
-
 									element.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false });
 									changedChannels++;
 								}
@@ -54,13 +58,7 @@ module.exports = {
 								}
 							});
 
-							await client.schemas.get('guild').findOneAndUpdate({
-								_id: message.guild.id,
-							}, {
-								mutedRole: mutedRole.id,
-							}, {
-								upsert: true,
-							});
+							await client.data.save(message.guild.id, client, { mutedRole: mutedRole.id });
 
 							const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
 
@@ -70,7 +68,6 @@ module.exports = {
 							Mcollector.stop();
 							if (!response) message.channel.send('No response. Exiting setup..');
 						});
-
 
 						const Mfilter = msg => msg.mentions.roles.size === 1 && msg.author.id === message.author.id;
 						const Mcollector = m.channel.createMessageCollector(Mfilter, { time: 30000 });
@@ -82,7 +79,7 @@ module.exports = {
 							mutedRole = message.guild.roles.cache.find(role => role === msg.mentions.roles.first());
 
 							if (!mutedRole) return message.channel.send('Please provide a valid role.');
-							if (message.guild.member.resolve(client.user.id).roles.highest.comparePositionTo(mutedRole) <= 0) return message.channel.send('Please move my highest role over the role you want to use first.');
+							if (message.guild.member.resolve(client.user.id).roles.highest.comparePositionTo(mutedRole) <= 0) return message.channel.send('Please move my highest role over the role you want to use and try again.');
 
 							message.guild.channels.cache.forEach(element => {
 
@@ -93,13 +90,7 @@ module.exports = {
 								changedChannels++;
 							});
 
-							await client.schemas.get('guild').findOneAndUpdate({
-								_id: message.guild.id,
-							}, {
-								mutedRole: mutedRole.id,
-							}, {
-								upsert: true,
-							});
+							await client.data.save(message.guild.id, client, { mutedRole: mutedRole.id });
 
 							const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
 
@@ -111,6 +102,11 @@ module.exports = {
 					});
 			}
 			else {
+
+				/*
+				 * Mute Setup with already existing Role
+				 * Channel Overrides will be set
+				*/
 
 				message.guild.channels.cache.forEach(element => {
 
@@ -132,7 +128,6 @@ module.exports = {
 			}
 			return;
 		}
-
 
 		if (args.length < 2) return client.commands.get('help').commandHelp(message, 'mute', prefix, client);
 

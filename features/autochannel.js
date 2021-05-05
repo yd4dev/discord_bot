@@ -18,7 +18,7 @@ module.exports = client => {
 
 		if(!newState.channel) return;
 
-		const result = await client.schemas.get('guild').findOne({ _id: newState.guild.id });
+		const result = client.data.guilds.get(newState.guild.id);
 
 		if(!result.autoChannel_channel) return;
 		if(newState.channel.id != result.autoChannel_channel) return;
