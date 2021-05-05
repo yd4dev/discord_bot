@@ -1,21 +1,18 @@
 /* eslint-disable max-nested-callbacks */
-const Discord = require('discord.js');
-
 module.exports = {
 	name: 'race',
 	description: 'Start a horse race (with rockets).',
 	guild: true,
 	args: false,
-	execute(message, args, client, prefix) {
+	execute(message) {
 
 		const emotes = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'];
-
 		const horses = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 		const raceLength = 20;
 		const raceSize = 5;
 		const raceSpeed = 1;
 
-		function printRace(arr) {
+		function printRace() {
 			let string = '';
 			for (let i = 0; i < raceSize; i++) {
 				string += ('▫️'.repeat(horses[i]) + '🚀' + '▫️'.repeat(raceLength - 1 - horses[i] < 0 ? 0 : raceLength - 1 - horses[i]) + (raceLength - horses[i] > 0 ? '🏁\n' : '\n'));
@@ -26,7 +23,7 @@ module.exports = {
 		message.channel.send('A horse race is about to start. Choose which horse you think will win.')
 			.then(betsMessage => {
 
-				message.channel.send(printRace(horses))
+				message.channel.send(printRace())
 					.then((raceMessage) => {
 
 						for (let i = 0; i < raceSize; i++) {
@@ -79,7 +76,7 @@ module.exports = {
 											if (horses[horse] >= raceLength) horses[horse] = raceLength;
 										}
 									});
-									raceMessage.edit(printRace(horses));
+									raceMessage.edit(printRace());
 									if (!horses.some(e => e >= raceLength)) {
 										myLoop();
 									}
@@ -104,4 +101,3 @@ module.exports = {
 			});
 	},
 };
-//

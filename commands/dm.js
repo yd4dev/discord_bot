@@ -18,7 +18,6 @@ module.exports = {
 			if (string.startsWith('!')) string = string.slice(1);
 
 			if (client.users.cache.get(string)) user = client.users.cache.get(string);
-
 		}
 
 		args.shift();
@@ -26,7 +25,6 @@ module.exports = {
 		if (user) {
 			if (message.attachments.size) {
 				if (message.attachments.first().size < 8000000) {
-
 					try {
 						user.send(args.join(' '), {
 							files: [message.attachments.first()],
@@ -46,7 +44,6 @@ module.exports = {
 						message.channel.send('Could not deliver message.');
 					}
 				}
-
 			}
 			else {
 				try {
@@ -56,13 +53,10 @@ module.exports = {
 				catch {
 					message.channel.send('Could not deliver message.');
 				}
-
 			}
-
 		}
 		else {
 			message.channel.send('I couldn\'t find that user.');
 		}
-
 	},
 };
