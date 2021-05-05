@@ -12,7 +12,7 @@ module.exports = client => {
 		// Mute role reassigning is handled in mute.js
 		if (currentMute) return;
 
-		const result = await client.schemas.get('guild').findOne({ _id: member.guild.id });
+		const result = client.data.guilds.get(member.guild.id);
 
 		if(result.joinRoles) {
 			result.joinRoles.forEach(role => {
@@ -24,13 +24,9 @@ module.exports = client => {
 
 			if (!member.guild.channels.cache.find(c => c.id === result.welcome_channel)) {
 
-				client.schemas.get('guild').findOneAndUpdate({
-					_id: member.guild.id,
-				}, {
+				client.data.save(member.guild.id, client, {
 					welcome_toggle: false,
 					welcome_channel: '',
-				}, {
-					upsert: true,
 				});
 			}
 			else {

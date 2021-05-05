@@ -10,20 +10,12 @@ module.exports = {
 	async execute(message, args, client, prefix) {
 
 		async function saveMap(map) {
-
-			await client.schemas.get('guild').findOneAndUpdate({
-				_id: message.guild.id,
-			}, {
-				voicelinks: map,
-			}, {
-				upsert: true,
-			});
-
+			client.data.save(message.guild.id, client, { voicelinks: map });
 		}
 
 		// Clear Database entries if channel or role does not exist anymore.
 
-		const { voicelinks } = await client.schemas.get('guild').findOne({ _id: message.guild.id });
+		const { voicelinks } = await client.data.guilds.get(message.guild.id);
 
 		const VLMap = new Map(voicelinks);
 
@@ -32,16 +24,13 @@ module.exports = {
 			if (!client.channels.cache.find(c => c.id === k) || !message.guild.roles.cache.find(r => r.id === v)) {
 
 				VLMap.delete(k);
-
 			}
 		});
 
 		if (VLMap !== voicelinks) {
 
 			saveMap(VLMap);
-
 		}
-
 
 		// Voicelink List
 

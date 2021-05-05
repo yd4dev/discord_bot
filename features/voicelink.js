@@ -4,7 +4,7 @@ module.exports = client => {
 
 		if (oldState.channel === newState.channel) return;
 
-		const { voicelinks } = await client.schemas.get('guild').findOne({ _id: newState.guild.id });
+		const { voicelinks } = client.data.guilds.get(newState.guild.id);
 
 		if (!voicelinks) return;
 

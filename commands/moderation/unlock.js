@@ -1,10 +1,10 @@
 module.exports = {
 	name: 'unlock',
-	description: 'Unlocks a channel.',
+	description: 'Unlock a text channel.',
 	args: false,
 	guild: true,
 	permissions: 'MANAGE_CHANNELS',
-	execute(message, args, client) {
+	execute(message) {
 
 		if (!message.channel.permissionsFor(message.guild.roles.everyone).has('SEND_MESSAGES') || !message.channel.permissionsFor(message.guild.roles.everyone).has('ADD_REACTIONS')) {
 

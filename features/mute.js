@@ -21,7 +21,7 @@ module.exports = client => {
 
 				const member = await guild.members.fetch(result.userId);
 
-				const { joinRoles, mutedRole } = await client.schemas.get('guild').findOne({ _id: guild.id });
+				const { joinRoles, mutedRole } = client.data.guilds.get(guild.id);
 
 				if(joinRoles) {
 					joinRoles.forEach(role => {
@@ -59,7 +59,7 @@ module.exports = client => {
 		});
 
 		if (currentMute) {
-			const { mutedRole } = await client.schemas.get('guild').findOne({ _id: member.guild.id });
+			const { mutedRole } = client.data.guilds.get(member.guild.id);
 
 			if (mutedRole) {
 				member.roles.add(mutedRole);
@@ -70,7 +70,7 @@ module.exports = client => {
 	client.on('channelCreate', async channel => {
 		if (channel.type !== 'text') return;
 
-		const { mutedRole } = await client.schemas.get('guild').findOne({ _id: channel.guild.id });
+		const { mutedRole } = client.data.guilds.get(channel.guild.id);
 
 		if(mutedRole) {
 			channel.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false });

@@ -1,16 +1,7 @@
 module.exports = async (message, client) => {
 	if (message.author.bot) return;
 
-	let prefix = client.cache.guilds.get(message.guild.id)?.prefix;
-
-	if (!prefix) {
-		console.log('Database Request');
-		const guildresult = await client.schemas.get('guild').findOne({ _id: message.guild?.id });
-
-		prefix = guildresult?.prefix || '!';
-
-		client.cache.guilds.get(message.guild.id).prefix = prefix;
-	}
+	const prefix = client.data.guilds.get(message.guild.id)?.prefix || '!';
 
 	let slice = undefined;
 	if (message.content.startsWith(prefix)) {
@@ -43,15 +34,7 @@ module.exports = async (message, client) => {
 				});
 		}
 
-		let ignoredChannels = client.cache.guilds.get(message.guild.id)?.ignoredChannels;
-
-		if (!ignoredChannels) {
-			const guildresult = await client.schemas.get('guild').findOne({ _id: message.guild?.id });
-
-			ignoredChannels = guildresult?.ignoredChannels || [];
-
-			client.cache.guilds.get(message.guild.id).ignoredChannels = ignoredChannels;
-		}
+		const ignoredChannels = client.data.guilds.get(message.guild.id).ignoredChannels || new Array();
 
 		if (ignoredChannels?.indexOf(message.channel.id) > -1) {
 

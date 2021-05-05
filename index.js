@@ -1,33 +1,23 @@
 const Discord = require('discord.js');
+const guildData = require('./guildData');
 
 require('dotenv').config();
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
-client.cache = new Object();
-client.cache.guilds = new Discord.Collection();
+client.data = new Object();
+client.data.guilds = new Discord.Collection();
+client.data.save = guildData.save;
 client.commands = new Discord.Collection();
 client.schemas = new Discord.Collection();
 
 client.once('ready', async () => {
 	require('./load.js')(client);
-
 	await require('./mongo.js')();
 
 	client.guilds.cache.forEach(async guild => {
 		console.log(guild.name);
-		await client.schemas.get('guild').findOneAndUpdate(
-			{
-				_id: guild.id,
-			},
-			{
-				_id: guild.id,
-				name: guild.name,
-			},
-			{
-				upsert: true,
-			});
-		client.cache.guilds.set(guild.id, new Object());
+		await guildData.load(guild.id, client);
 	});
 
 	console.log('Ready!');
@@ -38,15 +28,7 @@ client.on('message', async message => {
 });
 
 client.on('guildCreate', async guild => {
-
-	await client.schemas.get('guild').findOneAndUpdate({
-		_id: guild.id,
-	}, {
-		_id: guild.id,
-		name: guild.name,
-	}, {
-		upsert: true,
-	});
+	client.cache.guilds.set(guild.id, await client.schemas.get('guild').findOne({ _id: guild.id }) || new Object());
 });
 
 client.login(process.env.token);

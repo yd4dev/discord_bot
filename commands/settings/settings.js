@@ -8,7 +8,7 @@ module.exports = {
 	permissions: 'ADMINISTRATOR',
 	async execute(message, args, client, prefix) {
 
-		const settings = await client.schemas.get('guild').findOne({ _id: message.guild.id });
+		const settings = await client.data.guilds.get(message.guild.id);
 
 		const joinRoles = [];
 		settings.joinRoles.forEach(role => {
@@ -21,7 +21,6 @@ module.exports = {
 				voicelinks.push(`${message.guild.channels.cache.find(c => c.id === key)} => ${message.guild.roles.cache.find(r => r.id === value)}`);
 			}
 		});
-
 
 		let isTrueVar = 0;
 		function isTrue() {

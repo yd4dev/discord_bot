@@ -18,14 +18,7 @@ module.exports = {
 			if (!channel) return message.channel.send('Please provide a valid channel name / id.');
 			if (channel.type != 'voice') return message.channel.send('Please provide a voice channel.');
 
-			await client.schemas.get('guild').findOneAndUpdate({
-				_id: message.guild.id,
-			}, {
-				_id: message.guild.id,
-				autoChannel_channel: channel.id,
-			}, {
-				upsert: true,
-			});
+			await client.data.save(message.guild.id, client, { autoChannel_channel: channel.id });
 
 			message.channel.send(`Auto Channels can now be created by joining into \`${channel.name}\`.`);
 
@@ -39,20 +32,12 @@ module.exports = {
 
 			if (name == '') return message.channel.send('Please provide a channel name. Use `%USER` to add the username.');
 
-			await client.schemas.get('guild').findOneAndUpdate({
-				_id: message.guild.id,
-			}, {
-				_id: message.guild.id,
-				autoChannel_name: name,
-			}, {
-				upsert: true,
-			});
+			await client.data.save(message.guild.id, client, { autoChannel_name: name });
 
 			message.channel.send(`Auto Channels will now be named \`${name}\`.`);
 
 			break;
 		}
 		}
-
 	},
 };
