@@ -22,7 +22,6 @@ module.exports = async (message, client) => {
 
 		const command = client.commands.get(commandName);
 
-
 		if (!client.commands.has(commandName)) {
 			return;
 		}
@@ -34,7 +33,7 @@ module.exports = async (message, client) => {
 				});
 		}
 
-		const ignoredChannels = client.data.guilds.get(message.guild.id).ignoredChannels || new Array();
+		const ignoredChannels = client.data.guilds.get(message.guild.id).ignoredChannels;
 
 		if (ignoredChannels?.indexOf(message.channel.id) > -1) {
 

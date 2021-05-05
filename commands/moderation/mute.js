@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const loadGuild = require('../../guildData');
 
 module.exports = {
 	name: 'mute',
@@ -12,7 +11,7 @@ module.exports = {
 
 		/* Load Muted Role from Cache */
 
-		let mutedRole = client.data.guilds.get(message.guild.id).mutedRole;
+		let { mutedRole } = client.data.guilds.get(message.guild.id);
 
 		if (args[0].toLowerCase() === 'setup') {
 
@@ -59,7 +58,7 @@ module.exports = {
 								}
 							});
 
-							client.data.save(message.guild.id, client, { mutedRole: mutedRole.id });
+							await client.data.save(message.guild.id, client, { mutedRole: mutedRole.id });
 
 							const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
 
@@ -91,7 +90,7 @@ module.exports = {
 								changedChannels++;
 							});
 
-							client.data.save(message.guild.id, client, { mutedRole: mutedRole.id });
+							await client.data.save(message.guild.id, client, { mutedRole: mutedRole.id });
 
 							const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
 

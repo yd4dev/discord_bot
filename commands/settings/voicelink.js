@@ -10,7 +10,7 @@ module.exports = {
 	async execute(message, args, client, prefix) {
 
 		async function saveMap(map) {
-			client.data.save(message.guild.id, client, { voicelinks: map });
+			await client.data.save(message.guild.id, client, { voicelinks: map });
 		}
 
 		// Clear Database entries if channel or role does not exist anymore.

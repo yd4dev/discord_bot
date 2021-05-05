@@ -24,7 +24,7 @@ module.exports = client => {
 
 			if (!member.guild.channels.cache.find(c => c.id === result.welcome_channel)) {
 
-				client.data.save(member.guild.id, client, {
+				await client.data.save(member.guild.id, client, {
 					welcome_toggle: false,
 					welcome_channel: '',
 				});

@@ -5,13 +5,11 @@
 
 module.exports = {
 	async load(guildId, client) {
-		console.log('Database Load');
 		client.data.guilds.set(guildId, await client.schemas.get('guild').findOne(
 			{ _id: guildId },
 		) || new Object());
 	},
 	async save(guildId, client, data) {
-		console.log('Database Save');
 		await client.schemas.get('guild').findOneAndUpdate({
 			_id: guildId,
 		}, data, {

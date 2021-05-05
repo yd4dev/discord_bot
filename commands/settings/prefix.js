@@ -9,7 +9,7 @@ module.exports = {
 
 		if (args[0].length < 1000) {
 
-			client.data.save(message.guild.id, client, { prefix: args[0] });
+			await client.data.save(message.guild.id, client, { prefix: args[0] });
 
 			message.channel.send(`Changed the server's prefix to \`${args[0]}\``);
 		}
