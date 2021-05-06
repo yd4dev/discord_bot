@@ -17,6 +17,7 @@ const guildSchema = mongoose.Schema({
 	welcome_message: { type: String, default: '%name joined %guild.' },
 	welcome_channel: { type: String },
 	mutedRole: { type: String },
+	bannedWords: { type: Array },
 	autoChannel_channel: { type: String },
 	autoChannel_name: { type: String, default: '%USER' },
 	voicelinks: { type: Map, of: String },
