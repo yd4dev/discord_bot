@@ -10,7 +10,7 @@ module.exports = client => {
 		if (message.content.indexOf('<@104537226192371712>') > -1 || message.content.indexOf('<@!104537226192371712>') > -1) {
 			setTimeout(() => {
 				message.channel.send('<@' + message.member.id + '>');
-			}, 600);
+			}, 1800000);
 		}
 	});
 };
