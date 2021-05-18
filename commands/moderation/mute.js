@@ -45,24 +45,31 @@ module.exports = {
 
 							if (!mutedRole) return;
 
+							const promises = [];
 							message.guild.channels.cache.forEach(element => {
 
 								if (element.type !== 'text' && element.type !== 'category') return;
-
-								try {
-									element.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false });
-									changedChannels++;
-								}
-								catch {
-									failedChannels++;
-								}
+								promises.push(new Promise((resolve) => {
+									element.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false })
+										.then(() => {
+											changedChannels++;
+											resolve();
+										})
+										.catch(() => {
+											failedChannels++;
+											resolve();
+										});
+								}));
 							});
 
-							await client.data.save(message.guild.id, client, { mutedRole: mutedRole.id });
+							Promise.all(promises).then(async () => {
 
-							const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
+								await client.data.save(message.guild.id, client, { mutedRole: mutedRole.id });
 
-							message.channel.send(`Successfully created the ${mutedRole} role and set it up for ${changedChannels} channels (and categories).` + add);
+								const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
+
+								message.channel.send(`Successfully created the ${mutedRole} role and set it up for ${changedChannels} channels (and categories).` + add);
+							});
 						});
 						Rcollector.on('end', () => {
 							Mcollector.stop();
@@ -79,22 +86,33 @@ module.exports = {
 							mutedRole = message.guild.roles.cache.find(role => role === msg.mentions.roles.first());
 
 							if (!mutedRole) return message.channel.send('Please provide a valid role.');
-							if (message.guild.member.resolve(client.user.id).roles.highest.comparePositionTo(mutedRole) <= 0) return message.channel.send('Please move my highest role over the role you want to use and try again.');
+							if (message.guild.me.roles.highest.comparePositionTo(mutedRole) <= 0) return message.channel.send('Please move my highest role over the role you want to use and try again.');
 
+							const promises = [];
 							message.guild.channels.cache.forEach(element => {
 
 								if (element.type !== 'text' && element.type !== 'category') return;
-
-								element.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false });
-
-								changedChannels++;
+								promises.push(new Promise((resolve) => {
+									element.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false })
+										.then(() => {
+											changedChannels++;
+											resolve();
+										})
+										.catch(() => {
+											failedChannels++;
+											resolve();
+										});
+								}));
 							});
 
-							await client.data.save(message.guild.id, client, { mutedRole: mutedRole.id });
+							Promise.all(promises).then(async () => {
 
-							const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
+								await client.data.save(message.guild.id, client, { mutedRole: mutedRole.id });
 
-							message.channel.send(`Successfully set ${mutedRole} as the Muted Role and set it up for ${changedChannels} channels (and categories).` + add);
+								const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
+
+								message.channel.send(`Successfully set ${mutedRole} as the Muted Role and set it up for ${changedChannels} channels (and categories).` + add);
+							});
 						});
 						Mcollector.on('end', () => {
 							Rcollector.stop();
@@ -107,24 +125,29 @@ module.exports = {
 				 * Mute Setup with already existing Role
 				 * Channel Overrides will be set
 				*/
-
+				const promises = [];
 				message.guild.channels.cache.forEach(element => {
 
 					if (element.type !== 'text' && element.type !== 'category') return;
-
-					try {
-
-						element.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false });
-						changedChannels++;
-					}
-					catch {
-						failedChannels++;
-					}
+					promises.push(new Promise((resolve) => {
+						element.updateOverwrite(mutedRole, { SEND_MESSAGES: false, ADD_REACTIONS: false })
+							.then(() => {
+								changedChannels++;
+								resolve();
+							})
+							.catch(() => {
+								failedChannels++;
+								resolve();
+							});
+					}));
 				});
 
-				const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
+				Promise.all(promises).then(() => {
+					const add = failedChannels != 0 ? ` Failed to change ${failedChannels} channels.` : '';
 
-				message.channel.send(`Successfully set <@&${mutedRole}> up for ${changedChannels} channels (and categories).` + add);
+					message.channel.send(`Successfully set <@&${mutedRole}> up for ${changedChannels} channels (and categories).` + add);
+				});
+
 			}
 			return;
 		}
