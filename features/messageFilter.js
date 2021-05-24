@@ -11,15 +11,18 @@ module.exports = client => {
 
 		// Remove any whitespace characters and look for banned words. Delete message if found.
 		if (bannedWords.some(word => message.content.toLowerCase().replace(/\s+/g, '').includes(word.replace(/\s+/g, '')))) {
-			message.delete();
+			message.delete()
+				.catch(err => {
+					//
+				});
 		}
 	}
 
-	client.on('message', async message => {
+	client.on('message', message => {
 		checkMessage(message);
 	});
 
-	client.on('messageUpdate', async (oldMessage, message) => {
+	client.on('messageUpdate', (oldMessage, message) => {
 		checkMessage(message);
 	});
 };
