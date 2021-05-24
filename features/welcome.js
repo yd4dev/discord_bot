@@ -14,10 +14,15 @@ module.exports = client => {
 
 		const result = client.data.guilds.get(member.guild.id);
 
-		if(result.joinRoles) {
-			result.joinRoles.forEach(role => {
-				member.roles.add(role);
-			});
+		if (result.joinRoles) {
+			try {
+				result.joinRoles.forEach(role => {
+					member.roles.add(role);
+				});
+			}
+			catch {
+				member.guild.channels.cache.some(c => c.type === 'text' && c.permissionsFor(member.guild.me).has('SEND_MESSAGES'))?.send(`Could not add join role to <@${member.id}>`);
+			}
 		}
 
 		if (result.welcome_plugin) {
@@ -39,10 +44,11 @@ module.exports = client => {
 					.setColor('GREEN')
 					.setTimestamp(Date.now());
 
-				try { member.guild.channels.cache.find(c => c.id === result.welcome_channel).send(Embed); }
+				try {
+					member.guild.channels.cache.find(c => c.id === result.welcome_channel).send(Embed);
+				}
 				catch {
-
-					member.guild.channels.cache.some(c => c.type === 'text' && c.permissionsFor(member.guild.me).has('SEND_MESSAGES')).send(`Could not send welcome message into ${member.guild.channels.cache.find(c => c.id === result.welcome_channel)}`);
+					member.guild.channels.cache.some(c => c.type === 'text' && c.permissionsFor(member.guild.me).has('SEND_MESSAGES'))?.send(`Could not send welcome message into ${member.guild.channels.cache.find(c => c.id === result.welcome_channel)}`);
 				}
 			}
 		}
