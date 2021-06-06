@@ -17,8 +17,7 @@ module.exports = {
 			const Embed = new Discord.MessageEmbed()
 				.setTitle(titles[day].innerHTML + ' | ' + klasse)
 				.setURL(timetables.data[0].url)
-				.setFooter(timetables.data[0].date)
-				.setImage('https://dsbmobile.de/data/' + timetables.data[0].preview);
+				.setFooter('Zuletzt aktualisiert: ' + timetables.data[0].date);
 
 			const tableData = await scraper.get(timetables.data[0].url);
 
@@ -28,6 +27,9 @@ module.exports = {
 						`St. ${entry['St.']} | Raum: ${entry['(Raum)']} ${(entry['(Raum)'] === entry['Raum'] ? '' : (' => ' + entry['Raum']))} \n ${entry['Art']} \n` + (entry['Hinweis'] !== '' ? 'Hinweis: ' + entry['Hinweis'] : ''));
 				}
 			});
+			if (Embed.fields.length < 1) {
+				Embed.setDescription('Keine Einträge für ' + klasse + ' gefunden.');
+			}
 			return Embed;
 		}
 
@@ -49,14 +51,12 @@ module.exports = {
 				else if (args[0] === '1') {
 					message.channel.send(await getPlan(timetables, 'E1/2', titles, 1));
 				}
-				else if (new Date().getUTCHours() > 13) {
-					message.channel.send(await getPlan(timetables, 'E1/2', titles, 1));
-				}
-				else {
+				else if (new Date().getUTCHours() < 13 && titles[0].innerHTML.startsWith(new Date().toLocaleDateString())) {
 					message.channel.send(await getPlan(timetables, 'E1/2', titles, 0));
 				}
-
-
+				else {
+					message.channel.send(await getPlan(timetables, 'E1/2', titles, 1));
+				}
 			})
 			.catch(e => {
 				// An error occurred :(
