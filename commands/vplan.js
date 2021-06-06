@@ -8,6 +8,7 @@ module.exports = {
 	name: 'vplan',
 	description: 'Redacted',
 	args: false,
+	usage: ['0', '1'],
 	execute(message, args, client, prefix) {
 
 		if (message.guild.id != 623904281837305869 && message.guild.id != 658323643629174784) return;
@@ -42,12 +43,19 @@ module.exports = {
 				const titles = dom.window.document.querySelectorAll('.mon_title');
 				// titles[0].innerHTML
 
-				if (new Date().getUTCHours() > 13) {
+				if (args[0] === '0') {
+					message.channel.send(await getPlan(timetables, 'E1/2', titles, 0));
+				}
+				else if (args[0] === '1') {
+					message.channel.send(await getPlan(timetables, 'E1/2', titles, 1));
+				}
+				else if (new Date().getUTCHours() > 13) {
 					message.channel.send(await getPlan(timetables, 'E1/2', titles, 1));
 				}
 				else {
 					message.channel.send(await getPlan(timetables, 'E1/2', titles, 0));
 				}
+
 
 			})
 			.catch(e => {
