@@ -10,7 +10,7 @@ module.exports = {
 	args: false,
 	execute(message, args, client, prefix) {
 
-		if (![623904281837305869, 658323643629174784].includes(message.guild.id)) return;
+		if (message.guild.id != 623904281837305869 && message.guild.id != 658323643629174784) return;
 
 		async function getPlan(timetables, klasse, titles, day) {
 			const Embed = new Discord.MessageEmbed()
