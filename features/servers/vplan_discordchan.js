@@ -33,7 +33,7 @@ module.exports = client => {
 					}
 				});
 		}
-		setInterval(checkForUpdate(), 90000);
+		setTimeout(checkForUpdate(), 90000);
 	})();
 
 };
