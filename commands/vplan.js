@@ -10,9 +10,14 @@ module.exports = {
 	args: false,
 	execute(message, args, client, prefix) {
 
+		if (![623904281837305869, 658323643629174784].includes(message.guild.id)) return;
+
 		async function getPlan(timetables, klasse, titles, day) {
 			const Embed = new Discord.MessageEmbed()
-				.setTitle(titles[day].innerHTML + ' | ' + klasse);
+				.setTitle(titles[day].innerHTML + ' | ' + klasse)
+				.setURL(timetables.data[0].url)
+				.setFooter(timetables.data[0].date)
+				.setImage('https://dsbmobile.de/data/' + timetables.data[0].preview);
 
 			const tableData = await scraper.get(timetables.data[0].url);
 
@@ -37,8 +42,12 @@ module.exports = {
 				const titles = dom.window.document.querySelectorAll('.mon_title');
 				// titles[0].innerHTML
 
-				message.channel.send(await getPlan(timetables, 'Q1/2', titles, 0));
-				message.channel.send(await getPlan(timetables, 'Q1/2', titles, 1));
+				if (new Date().getUTCHours() > 13) {
+					message.channel.send(await getPlan(timetables, 'E1/2', titles, 1));
+				}
+				else {
+					message.channel.send(await getPlan(timetables, 'E1/2', titles, 0));
+				}
 
 			})
 			.catch(e => {
