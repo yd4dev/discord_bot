@@ -50,7 +50,7 @@ module.exports = {
 				else if (args[0] === '1') {
 					message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 1));
 				}
-				else if (new Date().getUTCHours() < 13 && titles[0].innerHTML.startsWith(new Date().toLocaleDateString())) {
+				else if (new Date().getUTCHours() < 13 && titles[0].innerHTML.startsWith(new Date().toLocaleDateString('de-DE'))) {
 					message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 0));
 				}
 				else {
