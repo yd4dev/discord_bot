@@ -243,7 +243,7 @@ module.exports = client => {
 
 		const kicked = (await member.guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_KICK' })).entries.first();
 
-		if (kicked.target === member.user && logs.get('guildMemberKick')) {
+		if (kicked?.target === member.user && logs.get('guildMemberKick')) {
 
 			Embed.setTitle('Member Kicked')
 				.setAuthor(kicked.executor.tag, kicked.executor.displayAvatarURL({ dynamic: true }));
@@ -255,7 +255,6 @@ module.exports = client => {
 		Embed.addField('ID', `\`\`\`js\nUSER = ${member.id}\`\`\``);
 
 		logsChannel.send(Embed);
-
 	});
 
 	client.on('guildMemberUpdate', async (oldMember, newMember) => {

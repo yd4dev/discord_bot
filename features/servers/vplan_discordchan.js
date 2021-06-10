@@ -9,7 +9,7 @@ module.exports = client => {
 
 	const channel = client.guilds.cache.get('623904281837305869').channels.cache.get('851159334930481224');
 
-	(function checkForUpdate() {
+	function checkForUpdate() {
 		console.log('Running Function checkForUpdate() in vplan_discordchan');
 		const lastUpdate = new Date(parseInt(channel.topic));
 		if ((lastUpdate.getDay() < new Date().getDay() || lastUpdate.getMonth() < new Date().getMonth() || lastUpdate.getYear() < new Date().getYear()) && new Date().getUTCHours() > 4) {
@@ -33,6 +33,6 @@ module.exports = client => {
 					}
 				});
 		}
-		setTimeout(checkForUpdate, 900000);
-	})();
+	}
+	setInterval(checkForUpdate, 900000);
 };
