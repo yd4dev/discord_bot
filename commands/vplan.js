@@ -44,18 +44,24 @@ module.exports = {
 				const titles = dom.window.document.querySelectorAll('.mon_title');
 				// titles[0].innerHTML
 
-				if (args[0] === '0') {
-					message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 0));
-				}
-				else if (args[0] === '1') {
-					message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 1));
-				}
-				else if (new Date().getUTCHours() < 13 && titles[0].innerHTML.startsWith(new Date().toLocaleDateString('de-DE'))) {
-					message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 0));
+				if (titles[0]) {
+					if (args[0] === '0') {
+						message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 0));
+					}
+					else if (args[0] === '1') {
+						message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 1));
+					}
+					else if (new Date().getUTCHours() < 13 && titles[0].innerHTML.startsWith(new Date().toLocaleDateString('de-DE'))) {
+						message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 0));
+					}
+					else {
+						message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 1));
+					}
 				}
 				else {
-					message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 1));
+					message.channel.send('Could not fetch data from\n' + timetables.data[0].url);
 				}
+
 			})
 			.catch(e => {
 				// An error occurred :(

@@ -27,7 +27,7 @@ module.exports = client => {
 
 					const titles = dom.window.document.querySelectorAll('.mon_title');
 
-					if (titles[0].innerHTML.startsWith(new Date().toLocaleDateString('de-DE'))) {
+					if (titles[0]?.innerHTML?.startsWith(new Date().toLocaleDateString('de-DE'))) {
 						channel.send(await require('../../commands/vplan').getPlan(timetables, 'E1/2', titles, 0));
 						channel.setTopic(Date.now());
 					}

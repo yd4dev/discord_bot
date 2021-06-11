@@ -12,8 +12,8 @@ client.commands = new Discord.Collection();
 client.schemas = new Discord.Collection();
 
 client.once('ready', async () => {
-	require('./load.js')(client);
 	await require('./mongo.js')();
+	require('./load.js')(client);
 
 	client.guilds.cache.forEach(async guild => {
 		console.log(guild.name);
