@@ -71,18 +71,26 @@ module.exports = {
 
 				const vplanUsers = client.data.guilds.get(message.guild.id).vplanUsers;
 
+				console.log(vplanUsers.get(message.author.id));
+
+				let day = 1;
+
 				if (titles[0]) {
 					if (args[0] === '0') {
-						message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 0, vplanUsers));
+						day = 0;
 					}
 					else if (args[0] === '1') {
-						message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 1, vplanUsers));
+						day = 1;
 					}
 					else if (new Date().getUTCHours() < 13 && titles[0].innerHTML.startsWith(new Date().toLocaleDateString('de-DE'))) {
-						message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 0, vplanUsers));
+						day = 0;
+					}
+
+					if (vplanUsers.get(message.author.id).length) {
+						message.channel.send(`Your courses: ${vplanUsers.get(message.author.id).join(' ,')}`, { embed: await this.getPlan(timetables, 'E1/2', titles, day, vplanUsers) });
 					}
 					else {
-						message.channel.send(await this.getPlan(timetables, 'E1/2', titles, 1, vplanUsers));
+						message.channel.send(await this.getPlan(timetables, 'E1/2', titles, day, vplanUsers));
 					}
 				}
 				else {
