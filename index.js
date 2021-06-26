@@ -28,7 +28,7 @@ client.on('message', async message => {
 });
 
 client.on('guildCreate', async guild => {
-	client.cache.guilds.get(guild.id, await client.schemas.get('guild').findOne({ _id: guild.id }) || new Object());
+	guildData.save(guild.id, client, { name: guild.name });
 });
 
 client.login(process.env.token);
