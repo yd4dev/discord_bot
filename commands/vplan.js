@@ -17,17 +17,16 @@ module.exports = {
 
 		const tableData = await scraper.get(timetables.data[0].url);
 
-		tableData[day].forEach(entry => {
+		tableData[day].forEach((entry, index) => {
 			if (entry['Klasse(n)'] == klasse) {
 				const users = [];
 
-				vplanUsers.forEach(user => {
-					console.log(user);
-					if (user.some(fach => fach == klasse.replace(/\s+/g, '').toLowerCase())) console.log(user);
-				});
+				for (const [id, array] of vplanUsers) {
+					if (array.includes(entry['(Fach)'].replace(/\s+/g, '').toLowerCase())) users.push(id);
+				}
 
 				Embed.addField('__' + entry['(Fach)'] + (entry['(Fach)'] !== entry['Fach'] && entry['Fach'] != '' ? (' => ' + entry['Fach']) : '') + '__',
-					`St. ${entry['St.']} | Raum: ${entry['(Raum)']} ${(entry['(Raum)'] === entry['Raum'] ? '' : (' => ' + entry['Raum']))} \n ${entry['Art']} \n` + (entry['Hinweis'] !== '' ? 'Hinweis: ' + entry['Hinweis'] : ''));
+					`${(users.length ? '<@' : '')}${users.join('> <@')}${(users.length ? '>' : '')} \n St. ${entry['St.']} | Raum: ${entry['(Raum)']} ${(entry['(Raum)'] === entry['Raum'] ? '' : (' => ' + entry['Raum']))} \n ${entry['Art']} \n` + (entry['Hinweis'] !== '' ? 'Hinweis: ' + entry['Hinweis'] : ''));
 			}
 		});
 		if (Embed.fields.length < 1) {
