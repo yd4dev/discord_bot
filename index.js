@@ -12,8 +12,8 @@ client.commands = new Discord.Collection();
 client.schemas = new Discord.Collection();
 
 client.once('ready', async () => {
-	await require('./mongo.js')();
 	require('./load.js')(client);
+	await require('./mongo.js')();
 
 	client.guilds.cache.forEach(async guild => {
 		console.log(guild.name);
@@ -28,7 +28,7 @@ client.on('message', async message => {
 });
 
 client.on('guildCreate', async guild => {
-	client.cache.guilds.set(guild.id, await client.schemas.get('guild').findOne({ _id: guild.id }) || new Object());
+	guildData.save(guild.id, client, { name: guild.name });
 });
 
 client.login(process.env.token);
