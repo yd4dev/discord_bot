@@ -71,8 +71,6 @@ module.exports = {
 
 				const vplanUsers = client.data.guilds.get(message.guild.id).vplanUsers;
 
-				console.log(vplanUsers.get(message.author.id));
-
 				let day = 1;
 
 				if (titles[0]) {
@@ -86,7 +84,7 @@ module.exports = {
 						day = 0;
 					}
 
-					if (vplanUsers.get(message.author.id).length) {
+					if (vplanUsers?.get(message.author.id)?.length) {
 						message.channel.send(`Your courses: ${vplanUsers.get(message.author.id).join(' ,')}`, { embed: await this.getPlan(timetables, 'E1/2', titles, day, vplanUsers) });
 					}
 					else {
