@@ -17,7 +17,10 @@ module.exports = {
 
 		const tableData = await scraper.get(timetables.data[0].url);
 
+		if (tableData[day][0]['Nachrichten zum Tag']) day++;
+
 		tableData[day].forEach((entry, index) => {
+			console.log(entry['Klasse(n)']);
 			if (entry['Klasse(n)'] == klasse) {
 				const users = [];
 
