@@ -1,15 +1,15 @@
-const Discord = require('discord.js');
+const { Client, Collection, Intents } = require('discord.js');
 const guildData = require('./guildData');
 
 require('dotenv').config();
 
-const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const client = new Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 client.data = new Object();
-client.data.guilds = new Discord.Collection();
+client.data.guilds = new Collection();
 client.data.save = guildData.save;
-client.commands = new Discord.Collection();
-client.schemas = new Discord.Collection();
+client.commands = new Collection();
+client.schemas = new Collection();
 
 client.once('ready', async () => {
 	require('./load.js')(client);
