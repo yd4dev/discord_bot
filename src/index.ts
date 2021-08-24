@@ -1,28 +1,47 @@
-const fs = require('fs');
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
-const { Client, Collection, Intents } = require('discord.js');
+import fs from 'fs';
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v9';
+import { Client, Collection, Intents } from 'discord.js';
 
 require('dotenv').config();
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-
-const commands = [];
-client.commands = new Collection();
-
-const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	// set a new item in the Collection
-	// with the key as the command name and the value as the exported module
-	client.commands.set(command.data.name, command);
-	commands.push(command.data.toJSON());
+export class DataClient extends Client {
+	commands: Record<string, any> = new Collection();
+	db: Record<string, Collection<any, any>> = {};
 }
 
-const rest = new REST({ version: '9' }).setToken(process.env.token);
+const client = new DataClient({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+
+const commands: {}[] = [];
+client.commands = new Collection();
+
+(async function loadCommands(dir) {
+	for (const file of fs.readdirSync(`./src/${dir}`)) {
+		if (file.endsWith('.ts')) {
+			const command = require(`./${dir}/${file}`);
+			// set a new item in the Collection
+			// with the key as the command name and the value as the exported module
+			client.commands.set(command.data.name, command);
+			commands.push(command.data.toJSON());
+		}
+		else {
+			fs.stat(`./src/${dir}/${file}`, (err, stats) => {
+				if (err) return console.log(err);
+				if (stats.isDirectory()) {
+					loadCommands(`${dir}/${file}`);
+				}
+			});
+		}
+	}
+})('commands');
+
+const rest = new REST({ version: '9' }).setToken(process.env.token!);
 
 client.on('ready', async () => {
+
+	if (!client.user) return;
+
+	require('./db.ts').connect(client);
 
 	if (process.env.devServer) {
 		try {
@@ -49,6 +68,7 @@ client.on('ready', async () => {
 
 		console.log('Successfully reloaded global application (/) commands.');
 	}
+
 });
 
 client.on('interactionCreate', async interaction => {
