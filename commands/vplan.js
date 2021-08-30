@@ -91,7 +91,7 @@ module.exports = {
 						message.channel.send(`Your courses: ${vplanUsers.get(message.author.id).join(' ,')}`, { embed: await this.getPlan(timetables, 'E1/2', titles, day, vplanUsers) });
 					}
 					else {
-						message.channel.send(await this.getPlan(timetables, 'E1/2', titles, day, vplanUsers));
+						message.channel.send(await this.getPlan(timetables, 'Q1/2', titles, day, vplanUsers));
 					}
 				}
 				else {
