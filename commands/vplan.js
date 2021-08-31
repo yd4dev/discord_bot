@@ -4,7 +4,7 @@ const Discord = require('discord.js');
 const axios = require('axios');
 const { JSDOM } = require('jsdom');
 
-const class = 'Q1/2';
+const c = 'Q1/2';
 
 module.exports = {
 	name: 'vplan',
@@ -90,10 +90,10 @@ module.exports = {
 					}
 
 					if (vplanUsers?.get(message.author.id)?.length) {
-						message.channel.send(`Your courses: ${vplanUsers.get(message.author.id).join(' ,')}`, { embed: await this.getPlan(timetables, class, titles, day, vplanUsers) });
+						message.channel.send(`Your courses: ${vplanUsers.get(message.author.id).join(' ,')}`, { embed: await this.getPlan(timetables, c, titles, day, vplanUsers) });
 					}
 					else {
-						message.channel.send(await this.getPlan(timetables, class, titles, day, vplanUsers));
+						message.channel.send(await this.getPlan(timetables, c, titles, day, vplanUsers));
 					}
 				}
 				else {
