@@ -21,6 +21,11 @@ module.exports = {
 		switch (interaction.options.getSubcommand()) {
 		case 'user':
 			console.log(interaction.options.getUser('user', true));
+
+			// Check if user is on server pls
+
+
+			break;
 		}
 	},
 };
