@@ -9,6 +9,7 @@ const mutesSchema = mongoose.Schema({
 	guildId: reqString,
 	userId: reqString,
 	moderatorId: reqString,
+	reason: String,
 	userRoles: { type: Array, required: false },
 	expires: { type: Date, required: true },
 }, {
@@ -16,4 +17,4 @@ const mutesSchema = mongoose.Schema({
 	versionKey: false,
 });
 
-module.exports = mongoose.model('mutes', mutesSchema);
+module.exports = mongoose.model('mute', mutesSchema);

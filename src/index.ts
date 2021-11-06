@@ -79,7 +79,7 @@ client.on('interactionCreate', async interaction => {
 	if (!client.commands.has(commandName)) return;
 
 	try {
-		await client.commands.get(commandName).execute(interaction);
+		await client.commands.get(commandName).execute(interaction, client);
 	}
 	catch (error) {
 		console.error(error);
