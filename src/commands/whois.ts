@@ -1,8 +1,8 @@
-import { CommandInteraction, Message, MessageEmbed } from 'discord.js';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { DataClient } from '..';
 import { SlashCommandUserOption } from '../../node_modules/@discordjs/builders/dist';
 
-const { SlashCommandBuilder } = require('@discordjs/builders');
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 module.exports = {
 	data: new SlashCommandBuilder()
