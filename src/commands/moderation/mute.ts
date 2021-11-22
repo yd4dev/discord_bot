@@ -2,10 +2,8 @@ import { CommandInteraction, GuildMember, Message, MessageActionRow, MessageButt
 import { SlashCommandSubcommandBuilder } from '@discordjs/builders';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { DataClient } from '../../index';
-import { Model } from 'mongoose';
 
-const guildSchema: Model<any> = require('../../schemas/guild');
-const muteSchema: Model<any> = require('../../schemas/mute');
+import muteSchema from '../../schemas/mute';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -95,8 +93,10 @@ module.exports = {
 				});
 			}
 			else {
+				const mutedRole: string = (await client.db.loadGuild(interaction.guild.id)).mutedRole;
+				if (!mutedRole) return interaction.reply({ content: 'There is no muted role set up for this server. Use `/mute setup` to set one up.', ephemeral: true });
 
-				// Take user's current roles, save their ids into an array and add the muted role
+				// Take user's current roles, save their ids into an array
 
 				const roles = member.roles.cache.entries();
 				const roleIds = [];
@@ -106,8 +106,10 @@ module.exports = {
 						member.roles.remove(role[1]);
 					}
 				}
+				member.roles.add(mutedRole);
 
 				// Create mute
+
 				const mute = new muteSchema({
 					guildId: interaction.guild.id,
 					userId: interaction.options.getUser('user', true).id,

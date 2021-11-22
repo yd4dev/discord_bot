@@ -5,12 +5,18 @@ import { Client, Collection, Intents } from 'discord.js';
 
 require('dotenv').config();
 
+import { guildLoad, guildSave } from './db';
 export class DataClient extends Client {
 	commands: Record<string, any> = new Collection();
-	db: Record<string, Collection<any, any>> = {};
+	db = {
+		loadGuild: guildLoad,
+		saveGuild: guildSave,
+	};
 }
 
-const client = new DataClient({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new DataClient({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+
+require('./db.ts').connect(client);
 
 const commands: {}[] = [];
 client.commands = new Collection();
@@ -35,13 +41,27 @@ client.commands = new Collection();
 	}
 })('commands');
 
+(async function loadFeatures(dir) {
+	for (const file of fs.readdirSync(`./src/${dir}`)) {
+		if (file.endsWith('.ts')) {
+			require(`./${dir}/${file}`)(client);
+		}
+		else {
+			fs.stat(`./src/${dir}/${file}`, (err, stats) => {
+				if (err) return console.log(err);
+				if (stats.isDirectory()) {
+					loadFeatures(`${dir}/${file}`);
+				}
+			});
+		}
+	}
+})('features');
+
 const rest = new REST({ version: '9' }).setToken(process.env.token!);
 
 client.on('ready', async () => {
 
 	if (!client.user) return;
-
-	require('./db.ts').connect(client);
 
 	if (process.env.devServer) {
 		try {
@@ -65,10 +85,8 @@ client.on('ready', async () => {
 			Routes.applicationCommands(client.user.id),
 			{ body: commands },
 		);
-
 		console.log('Successfully reloaded global application (/) commands.');
 	}
-
 });
 
 client.on('interactionCreate', async interaction => {
@@ -81,10 +99,11 @@ client.on('interactionCreate', async interaction => {
 	try {
 		await client.commands.get(commandName).execute(interaction, client);
 	}
-	catch (error) {
+	catch (error: any) {
 		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		const botOwner = interaction.guild?.members.cache.get(process.env.botOwner || '');
+		if (botOwner) await botOwner.send(`Error while executing command ${commandName}: ${error.message}`);
 	}
 });
-
 client.login(process.env.token);

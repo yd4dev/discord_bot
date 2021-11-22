@@ -1,9 +1,11 @@
 import { Collection } from 'discord.js';
 import { DataClient } from '.';
 
-const mongoose = require('mongoose');
-const guildSchema = require('./schemas/guild');
+import mongoose from 'mongoose';
+import guildSchema from './schemas/guild';
 require('dotenv').config();
+
+const guilds = new Collection<string, any>();
 
 module.exports = {
 	async connect(client: DataClient) {
@@ -11,9 +13,8 @@ module.exports = {
 		// Initialize client database cache and set load and save function
 
 		client.db = {
-			guilds: new Collection()
-				.set('load', guildLoad)
-				.set('save', guildSave),
+			loadGuild: guildLoad,
+			saveGuild: guildSave,
 		};
 
 		await mongoose.connect(process.env.mongoPath!, {
@@ -26,12 +27,12 @@ module.exports = {
 	},
 };
 
-async function guildLoad(client: DataClient, guildId: string) {
-	const data = client.db.guilds.get(guildId) || await guildSchema.findOne({ _id: guildId });
-	client.db.guilds.set(guildId, data);
+export async function guildLoad(guildId: string): Promise<Record<string, any>> {
+	const data = guilds.get(guildId) || await guildSchema.findOne({ _id: guildId });
+	guilds.set(guildId, data);
 	return data;
 }
-async function guildSave(client: DataClient, guildId: string, data: Record<string, any>) {
+export async function guildSave(guildId: string, data: Record<string, any>): Promise<void> {
 	await guildSchema.findOneAndUpdate({ _id: guildId }, data, { upsert: true });
-	client.db.guilds.set(guildId, data);
+	guilds.set(guildId, data);
 }
