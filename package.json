@@ -5,9 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "nodemon",
-    "start": "node src/index.js",
-    "build": "tsc",
-    "postinstall": "npm run build"
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
