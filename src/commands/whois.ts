@@ -37,7 +37,7 @@ module.exports = {
 				])
 				.setFooter(`ID: ${user.id}` + (client && client.user ? ` | Information brought to you by ${client.user.username}` : ''));
 
-			if (user.flags) {
+			if (user.flags && user.flags.toArray().length > 0) {
 				Embed.addField('`Flags`', user.flags.toArray().join(',\n'), true);
 			}
 			interaction.reply({ embeds: [Embed] });
