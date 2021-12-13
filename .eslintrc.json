@@ -1,13 +1,32 @@
 {
-	"extends": "eslint:recommended",
+	"root": true,
+  	"parser": "@typescript-eslint/parser",
+  	"plugins": [
+    	"@typescript-eslint"
+  	],
+  	"extends": [
+    	"eslint:recommended",
+    	"plugin:@typescript-eslint/eslint-recommended",
+    	"plugin:@typescript-eslint/recommended"
+  	],
 	"env": {
 		"node": true,
 		"es6": true
 	},
 	"parserOptions": {
-		"ecmaVersion": 2020
+		"ecmaVersion": 2021
 	},
 	"rules": {
+		"@typescript-eslint/ban-types": ["error",
+			{"extendDefaults": true,
+			  "types": {
+				"{}": false
+			  }
+			}
+		],
+		"@typescript-eslint/no-var-requires": "off",
+		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-non-null-assertion": "off",
 		"brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
 		"comma-dangle": ["error", "always-multiline"],
 		"comma-spacing": "error",
@@ -25,15 +44,13 @@
 		"no-lonely-if": "error",
 		"no-multi-spaces": "error",
 		"no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1, "maxBOF": 0 }],
-		"no-prototype-builtins": "off",
 		"no-shadow": ["error", { "allow": ["err", "resolve", "reject"] }],
 		"no-trailing-spaces": ["error"],
-		"no-unused-vars": "off",
 		"no-var": "error",
 		"object-curly-spacing": ["error", "always"],
 		"prefer-const": "error",
-		"semi": "error",
 		"quotes": ["error", "single"],
+		"semi": ["error", "always"],
 		"space-before-blocks": "error",
 		"space-before-function-paren": ["error", {
 			"anonymous": "never",

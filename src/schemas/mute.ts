@@ -1,14 +1,14 @@
-const mongoose = require('mongoose');
-
+import mongoose from 'mongoose';
 const reqString = {
 	type: String,
 	required: true,
 };
 
-const mutesSchema = mongoose.Schema({
+const mutesSchema = new mongoose.Schema({
 	guildId: reqString,
 	userId: reqString,
 	moderatorId: reqString,
+	reason: String,
 	userRoles: { type: Array, required: false },
 	expires: { type: Date, required: true },
 }, {
@@ -16,4 +16,4 @@ const mutesSchema = mongoose.Schema({
 	versionKey: false,
 });
 
-module.exports = mongoose.model('mutes', mutesSchema);
+export default mongoose.model('mute', mutesSchema);
