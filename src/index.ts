@@ -14,7 +14,7 @@ export class DataClient extends Client {
 	};
 }
 
-const client = new DataClient({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const client = new DataClient({ intents: new Intents(32767), partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
 require('./db.ts').connect(client);
 
@@ -70,6 +70,11 @@ client.on('ready', async () => {
 			await rest.put(
 				Routes.applicationGuildCommands(client.user.id, process.env.devServer),
 				{ body: commands },
+			);
+
+			await rest.put(
+				Routes.applicationCommands(client.user.id),
+				{ body: {} },
 			);
 
 			console.log('Successfully reloaded dev server application (/) commands.');
