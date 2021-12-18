@@ -1,4 +1,4 @@
-import { CommandInteraction } from 'discord.js';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from '@discordjs/builders';
 import { DataClient } from '../..';
 
@@ -24,7 +24,10 @@ module.exports = {
 				const role = interaction.options.getRole('role');
 				if (!role || !interaction.guild.roles.cache.get(role.id)) return interaction.reply('You must specify a valid role.');
 				await client.db.saveGuild(interaction.guild.id, { welcome_role: role.id });
-				return interaction.reply('The default role has been set to ' + role.name + '.');
+				const Embed = new MessageEmbed()
+					.setDescription('The default role has been set to ' + role.toString() + '.')
+					.setColor(role.color);
+				return interaction.reply({ embeds: [Embed] });
 			}
 			}
 		}
