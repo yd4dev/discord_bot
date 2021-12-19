@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
-import { Client, Collection, Intents } from 'discord.js';
+import { Client, Collection, Intents, MessageEmbed, TextChannel } from 'discord.js';
 
 require('dotenv').config();
 
@@ -103,6 +103,19 @@ client.on('interactionCreate', async interaction => {
 
 	try {
 		await client.commands.get(commandName).execute(interaction, client);
+		if (interaction.guild) {
+			const data = await client.db.loadGuild(interaction.guild.id);
+			if (data.logs_channel) {
+				const channel = interaction.guild.channels.cache.get(data.logs_channel);
+				if (channel && channel instanceof TextChannel) {
+					const embed = new MessageEmbed()
+						.setTitle('Command executed')
+						.setDescription(interaction.toString())
+						.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }));
+					channel.send({ embeds: [embed] });
+				}
+			}
+		}
 	}
 	catch (error: any) {
 		console.error(error);
