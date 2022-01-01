@@ -1,4 +1,4 @@
-import { CommandInteraction, TextChannel } from 'discord.js';
+import { CommandInteraction, GuildMember, TextChannel } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 
 module.exports = {
@@ -29,8 +29,13 @@ module.exports = {
 		}
 
 		if (channel && channel instanceof TextChannel) {
-			await channel.send(message);
-			return interaction.reply({ content: 'Message sent to <#' + channel.id + '>!', ephemeral: true });
+			if (interaction.member instanceof GuildMember && interaction.member.permissions.has('MANAGE_MESSAGES')) {
+				await channel.send(message);
+				return interaction.reply({ content: 'Message sent to <#' + channel.id + '>!', ephemeral: true });
+			}
+			else {
+				return interaction.reply({ content: 'You do not have permission to send messages in this server!', ephemeral: true });
+			}
 		}
 		else if (user) {
 			if (interaction.user.id === process.env.botOwner) {
