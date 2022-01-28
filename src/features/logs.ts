@@ -42,6 +42,24 @@ module.exports = (client: DataClient) => {
 					.setColor(0x00AE86);
 				logs.send({ embeds: [Embed] });
 			}
+			else if (oldMember.communicationDisabledUntil !== newMember.communicationDisabledUntil) {
+				if (newMember.isCommunicationDisabled()) {
+					const Embed = new MessageEmbed()
+						.setTitle('Member timed-out')
+						.setDescription(`${oldMember.user.tag} (${oldMember.id}) has been timed-out until <t:${Math.floor((newMember.communicationDisabledUntilTimestamp || 0) / 1000)}:f>`)
+						.setThumbnail(newMember.user.displayAvatarURL({ dynamic: true }))
+						.setColor(0xFFFF99);
+					logs.send({ embeds: [Embed] });
+				}
+				else {
+					const Embed = new MessageEmbed()
+						.setTitle('Member un-timed-out')
+						.setDescription(`${oldMember.user.tag} (${oldMember.id}) has been un-timed-out`)
+						.setThumbnail(newMember.user.displayAvatarURL({ dynamic: true }))
+						.setColor(0x00AE86);
+					logs.send({ embeds: [Embed] });
+				}
+			}
 		}
 	});
 	client.on('messageDelete', async (message) => {
@@ -53,7 +71,7 @@ module.exports = (client: DataClient) => {
 					.setTitle('Message Deleted')
 					.addField('Content', message.content)
 					.addField('Channel', message.channel.toString())
-					.setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
+					.setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
 					.setColor(0xFF0000);
 				logs.send({ embeds: [Embed] });
 			}
@@ -72,7 +90,7 @@ module.exports = (client: DataClient) => {
 
 				Embed.addField('New Content', newMessage.content)
 					.addField('Channel', newMessage.channel.toString(), true)
-					.setAuthor(newMessage.author.tag, newMessage.author.displayAvatarURL({ dynamic: true }))
+					.setAuthor({ name: newMessage.author.tag, iconURL: newMessage.author.displayAvatarURL({ dynamic: true }) })
 					.setURL(newMessage.url)
 					.setColor(0x00AE86);
 				logs.send({ embeds: [Embed] });
@@ -87,7 +105,7 @@ module.exports = (client: DataClient) => {
 					const Embed = new MessageEmbed()
 						.setTitle('User Profile Updated')
 						.setColor(0x00AE86)
-						.setAuthor(newUser.tag, newUser.displayAvatarURL({ dynamic: true }));
+						.setAuthor({ name: newUser.tag, iconURL: newUser.displayAvatarURL({ dynamic: true }) });
 
 					if (oldUser.tag !== newUser.tag) {
 						Embed.addField('Tag', `${oldUser.tag} => ${newUser.tag}`);

@@ -111,7 +111,7 @@ client.on('interactionCreate', async interaction => {
 					const embed = new MessageEmbed()
 						.setTitle('Command executed')
 						.setDescription(interaction.toString())
-						.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }));
+						.setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) });
 					channel.send({ embeds: [embed] });
 				}
 			}

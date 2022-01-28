@@ -24,5 +24,6 @@
     "MSG_DEFAULT_ROLE_SET_TO": "The default role has been set to %VAR%.",
     "MSG_MUST_SPECIFY_CHANNEL": "You must specify a valid channel.",
     "MSG_LOGS_CHANNEL_SET_TO": "The logs channel has been set to %VAR%.",
-    "MSG_MUST_BE_ADMIN": "You must be an administrator to use this command."
+    "MSG_MUST_BE_ADMIN": "You must be an administrator to use this command.",
+    "UNTIL": "Until %VAR%"
 }

@@ -25,7 +25,7 @@ module.exports = {
 
 					.addField(`\`${getLocale('JOINED', interaction)}\``, member.joinedTimestamp ? '<t:' + Math.floor(member.joinedTimestamp / 1000) + ':f>' : getLocale('UNKNOWN', interaction), true)
 					.addField(`\`${getLocale('NICKNAME', interaction)}\``, member.nickname || getLocale('NONE', interaction), true)
-					.addField(`\`${getLocale('TIMED_OUT', interaction)}\``, member.roles.cache.some(role => role.name === 'Muted') ? getLocale('YES', interaction) : getLocale('NO', interaction), true)
+					.addField(`\`${getLocale('TIMED_OUT', interaction)}\``, member.isCommunicationDisabled() ? getLocale('UNTIL', interaction, ['<t:' + Math.floor(member.communicationDisabledUntilTimestamp / 1000) + ':f>']) : getLocale('NO', interaction), true)
 					.addField(`\`${getLocale('BOOSTING_SINCE', interaction)}\``, member.premiumSinceTimestamp ? '<t:' + Math.floor(member.premiumSinceTimestamp / 1000) + ':f>' : getLocale('NEVER', interaction), true);
 			}
 			else {
