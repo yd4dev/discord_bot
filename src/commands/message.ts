@@ -1,6 +1,8 @@
 import { CommandInteraction, GuildMember, TextChannel } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 
+import getLocale from '../locales/locales';
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('message')
@@ -22,28 +24,28 @@ module.exports = {
 		const message = interaction.options.getString('message');
 		const user = interaction.options.getUser('user');
 
-		if (!message) return interaction.reply({ content:'You must provide a message!', ephemeral:true });
+		if (!message) return interaction.reply({ content:getLocale('MSG_MUST_PROVIDE_MESSAGE', interaction), ephemeral:true });
 
 		if (!channel && !user) {
-			return interaction.reply({ content: 'You must specify a ' + interaction.options.getSubcommand() + '.', ephemeral: true });
+			return interaction.reply({ content: getLocale('MSG_MUST_SPECIFY', interaction, [interaction.options.getSubcommand()]), ephemeral: true });
 		}
 
 		if (channel && channel instanceof TextChannel) {
 			if (interaction.member instanceof GuildMember && interaction.member.permissions.has('MANAGE_MESSAGES')) {
 				await channel.send(message);
-				return interaction.reply({ content: 'Message sent to <#' + channel.id + '>!', ephemeral: true });
+				return interaction.reply({ content: getLocale('MSG_MSG_SENT_TO', interaction, ['<#' + channel.id + '>']), ephemeral: true });
 			}
 			else {
-				return interaction.reply({ content: 'You do not have permission to send messages in this server!', ephemeral: true });
+				return interaction.reply({ content: getLocale('MSG_NO_PERMISSION_SEND_MESSAGES_IN_GUILD', interaction), ephemeral: true });
 			}
 		}
 		else if (user) {
 			if (interaction.user.id === process.env.botOwner) {
 				await user.send(message);
-				return interaction.reply({ content: 'Message sent to <@' + user.id + '>!', ephemeral: true });
+				return interaction.reply({ content: getLocale('MSG_MSG_SENT_TO', interaction, ['<#' + user.id + '>']), ephemeral: true });
 			}
 			else {
-				await interaction.reply('You are not allowed to use that command.');
+				await interaction.reply(getLocale('MSG_NOT_ALLOWED_USE_COMMAND', interaction));
 			}
 		}
 	},

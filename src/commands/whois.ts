@@ -4,6 +4,8 @@ import { SlashCommandUserOption } from '../../node_modules/@discordjs/builders/d
 
 import { SlashCommandBuilder } from '@discordjs/builders';
 
+import getLocale from '../locales/locales';
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('whois')
@@ -21,10 +23,10 @@ module.exports = {
 				Embed.setTitle(`${member.displayName} (${member.user.tag})`)
 					.setColor(member.displayColor)
 
-					.addField('`Joined`', member.joinedTimestamp ? '<t:' + Math.floor(member.joinedTimestamp / 1000) + ':f>' : 'Unknown', true)
-					.addField('`Nickname`', member.nickname || 'None', true)
-					.addField('`Muted`', member.roles.cache.some(role => role.name === 'Muted') ? 'Yes' : 'No', true)
-					.addField('`Boosting since`', member.premiumSinceTimestamp ? '<t:' + Math.floor(member.premiumSinceTimestamp / 1000) + ':f>' : 'None', true);
+					.addField(`\`${getLocale('JOINED', interaction)}\``, member.joinedTimestamp ? '<t:' + Math.floor(member.joinedTimestamp / 1000) + ':f>' : getLocale('UNKNOWN', interaction), true)
+					.addField(`\`${getLocale('NICKNAME', interaction)}\``, member.nickname || getLocale('NONE', interaction), true)
+					.addField(`\`${getLocale('TIMED_OUT', interaction)}\``, member.roles.cache.some(role => role.name === 'Muted') ? getLocale('YES', interaction) : getLocale('NO', interaction), true)
+					.addField(`\`${getLocale('BOOSTING_SINCE', interaction)}\``, member.premiumSinceTimestamp ? '<t:' + Math.floor(member.premiumSinceTimestamp / 1000) + ':f>' : getLocale('NEVER', interaction), true);
 			}
 			else {
 				Embed.setTitle(user.tag)
@@ -32,13 +34,13 @@ module.exports = {
 			}
 			Embed.setThumbnail(user.displayAvatarURL({ dynamic: true }))
 				.addFields([
-					{ name: '`Bot`', value: user.bot ? 'Yes' : 'No', inline: true },
-					{ name: '`Account Created`', value: '<t:' + Math.floor(user.createdTimestamp / 1000) + ':f>', inline: true },
+					{ name: `\`${getLocale('BOT', interaction)}\``, value: user.bot ? getLocale('YES', interaction) : getLocale('NO', interaction), inline: true },
+					{ name: `\`${getLocale('ACCOUNT_CREATED', interaction)}\``, value: '<t:' + Math.floor(user.createdTimestamp / 1000) + ':f>', inline: true },
 				])
-				.setFooter(`ID: ${user.id}` + (client && client.user ? ` | Information brought to you by ${client.user.username}` : ''));
+				.setFooter({ text: `ID: ${user.id}` + (client && client.user ? ` | ${getLocale('MSG_INFORMATION_BROUGHT_TO_YOU_BY', interaction, [client.user.username])}` : ''), iconURL: client && client.user ? client.user.displayAvatarURL({ dynamic: true }) : undefined });
 
 			if (user.flags && user.flags.toArray().length > 0) {
-				Embed.addField('`Flags`', user.flags.toArray().join(',\n'), true);
+				Embed.addField(`\`${getLocale('FLAGS', interaction)}\``, user.flags.toArray().join(',\n'), true);
 			}
 			interaction.reply({ embeds: [Embed] });
 		}

@@ -2,6 +2,8 @@ import { CommandInteraction, GuildMember, MessageEmbed, TextChannel } from 'disc
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { DataClient } from '../..';
 
+import getLocale from '../../locales/locales';
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('logs')
@@ -11,15 +13,15 @@ module.exports = {
 		if (!interaction.guild || !(interaction.member instanceof GuildMember)) return;
 		if (interaction.member.permissions.has('ADMINISTRATOR')) {
 			const channel = interaction.options.getChannel('channel');
-			if (!channel || !(channel instanceof TextChannel) || channel.guild !== interaction.guild) return interaction.reply('You must specify a valid channel.');
+			if (!channel || !(channel instanceof TextChannel) || channel.guild !== interaction.guild) return interaction.reply(getLocale('MSG_MUST_SPECIFY_CHANNEL', interaction));
 			await client.db.saveGuild(interaction.guild.id, { logs_channel: channel.id });
 			const Embed = new MessageEmbed()
-				.setDescription('The logs channel has been set to ' + channel.toString() + '.')
+				.setDescription(getLocale('MSG_LOGS_CHANNEL_SET_TO', interaction, [channel.toString()]))
 				.setColor(channel.guild.me?.displayColor || 0x00AE86);
 			return interaction.reply({ embeds: [Embed] });
 		}
 		else {
-			return interaction.reply('You must be an administrator to use this command.');
+			return interaction.reply(getLocale('MSG_MUST_BE_ADMIN', interaction));
 		}
 	},
 };
