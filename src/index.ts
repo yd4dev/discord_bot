@@ -16,14 +16,14 @@ export class DataClient extends Client {
 
 const client = new DataClient({ intents: new Intents(32767), partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
-require('./db.ts').connect(client);
+require('./db').connect(client);
 
 const commands: {}[] = [];
 client.commands = new Collection();
 
 (async function loadCommands(dir) {
 	for (const file of fs.readdirSync(`./src/${dir}`)) {
-		if (file.endsWith('.ts')) {
+		if (file.endsWith('.ts') || file.endsWith('.js')) {
 			const command = require(`./${dir}/${file}`);
 			// set a new item in the Collection
 			// with the key as the command name and the value as the exported module
@@ -43,7 +43,7 @@ client.commands = new Collection();
 
 (async function loadFeatures(dir) {
 	for (const file of fs.readdirSync(`./src/${dir}`)) {
-		if (file.endsWith('.ts')) {
+		if (file.endsWith('.ts') || file.endsWith('.js')) {
 			require(`./${dir}/${file}`)(client);
 		}
 		else {
