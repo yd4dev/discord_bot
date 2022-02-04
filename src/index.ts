@@ -119,7 +119,8 @@ client.on('interactionCreate', async interaction => {
 	}
 	catch (error: any) {
 		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		if (interaction.replied || interaction.deferred) { await interaction.editReply({ content: 'There was an error while executing this command!' }); }
+		else { await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true }); }
 		const botOwner = interaction.guild?.members.cache.get(process.env.botOwner || '');
 		if (botOwner) await botOwner.send(`Error while executing command ${commandName}: ${error.message}`);
 	}
