@@ -197,7 +197,7 @@ async function getInfo(data: any, index: number, interaction?: CommandInteractio
 				const maldata = await mal.getWatchListFromUser(user.mal).catch(() => null);
 				if (maldata) {
 					for (const anime of maldata) {
-						if (anime.animeId === media.idMal) {
+						if ((anime.animeId === media.idMal) && anime.score) {
 							const member = interaction.guild.members.cache.get(user._id);
 							if (member) embed.addField(member.user.tag, '⭐'.repeat(Math.round((anime.score ?? 0) / 2)) ?? '0', true);
 						}
