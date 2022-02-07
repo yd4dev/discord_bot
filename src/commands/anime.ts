@@ -108,7 +108,7 @@ module.exports = {
 						});
 				});
 			}).catch(err => {
-				if (err.response.errors[0].message === 'Not Found.') {
+				if (err.response?.errors[0]?.message === 'Not Found.') {
 					interaction.editReply(getLocale('ERR_NOT_FOUND', interaction));
 				}
 				else {
