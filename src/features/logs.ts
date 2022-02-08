@@ -8,6 +8,10 @@ async function checkLogsChannel(guild: Guild, client: DataClient) {
 	return null;
 }
 
+function sendLogs(embed: MessageEmbed, channel: TextChannel) {
+	channel.send({ embeds: [embed] }).catch(() => null);
+}
+
 module.exports = (client: DataClient) => {
 	client.on('guildMemberAdd', async (member) => {
 		const logs = await checkLogsChannel(member.guild, client);
@@ -17,7 +21,7 @@ module.exports = (client: DataClient) => {
 				.setDescription(`${member.user.tag} (${member.id}) has joined the server.`)
 				.setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
 				.setColor(0x00AE86);
-			logs.send({ embeds: [Embed] });
+			sendLogs(Embed, logs);
 		}
 	});
 	client.on('guildMemberRemove', async (member) => {
@@ -28,7 +32,7 @@ module.exports = (client: DataClient) => {
 				.setDescription(`${member.user.tag} (${member.id}) has left the server.`)
 				.setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
 				.setColor(0xFF0000);
-			logs.send({ embeds: [Embed] });
+			sendLogs(Embed, logs);
 		}
 	});
 	client.on('guildMemberUpdate', async (oldMember, newMember) => {
@@ -40,7 +44,7 @@ module.exports = (client: DataClient) => {
 					.setDescription(`${oldMember.user.tag} (${oldMember.id}) has changed their nickname to ${newMember.nickname}`)
 					.setThumbnail(newMember.user.displayAvatarURL({ dynamic: true }))
 					.setColor(0x00AE86);
-				logs.send({ embeds: [Embed] });
+				sendLogs(Embed, logs);
 			}
 			else if (oldMember.communicationDisabledUntil !== newMember.communicationDisabledUntil) {
 				if (newMember.isCommunicationDisabled()) {
@@ -49,7 +53,7 @@ module.exports = (client: DataClient) => {
 						.setDescription(`${oldMember.user.tag} (${oldMember.id}) has been timed-out until <t:${Math.floor((newMember.communicationDisabledUntilTimestamp || 0) / 1000)}:f>`)
 						.setThumbnail(newMember.user.displayAvatarURL({ dynamic: true }))
 						.setColor(0xFFFF99);
-					logs.send({ embeds: [Embed] });
+					sendLogs(Embed, logs);
 				}
 				else {
 					const Embed = new MessageEmbed()
@@ -57,7 +61,7 @@ module.exports = (client: DataClient) => {
 						.setDescription(`${oldMember.user.tag} (${oldMember.id}) has been un-timed-out`)
 						.setThumbnail(newMember.user.displayAvatarURL({ dynamic: true }))
 						.setColor(0x00AE86);
-					logs.send({ embeds: [Embed] });
+					sendLogs(Embed, logs);
 				}
 			}
 		}
@@ -73,7 +77,7 @@ module.exports = (client: DataClient) => {
 					.addField('Channel', message.channel.toString())
 					.setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
 					.setColor(0xFF0000);
-				logs.send({ embeds: [Embed] });
+				sendLogs(Embed, logs);
 			}
 		}
 	});
@@ -93,7 +97,7 @@ module.exports = (client: DataClient) => {
 					.setAuthor({ name: newMessage.author.tag, iconURL: newMessage.author.displayAvatarURL({ dynamic: true }) })
 					.setURL(newMessage.url)
 					.setColor(0x00AE86);
-				logs.send({ embeds: [Embed] });
+				sendLogs(Embed, logs);
 			}
 		}
 	});
@@ -114,7 +118,7 @@ module.exports = (client: DataClient) => {
 						Embed.setDescription('Avatar Changed');
 						Embed.setThumbnail(newUser.displayAvatarURL({ dynamic: true }));
 					}
-					if (Embed.fields.length > 0 || Embed.description) logs.send({ embeds: [Embed] });
+					if (Embed.fields.length > 0 || Embed.description) sendLogs(Embed, logs);
 				}
 			}
 		}
