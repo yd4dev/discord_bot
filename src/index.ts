@@ -41,6 +41,24 @@ client.commands = new Collection();
 	}
 })('commands');
 
+(async function loadContextCommands(dir) {
+	for (const file of fs.readdirSync(`./src/${dir}`)) {
+		if (file.endsWith('.ts') || file.endsWith('.js')) {
+			const command = require(`./${dir}/${file}`);
+
+			commands.push(command.data.toJSON());
+		}
+		else {
+			fs.stat(`./src/${dir}/${file}`, (err, stats) => {
+				if (err) return console.log(err);
+				if (stats.isDirectory()) {
+					loadContextCommands(`${dir}/${file}`);
+				}
+			});
+		}
+	}
+})('contexts');
+
 (async function loadFeatures(dir) {
 	for (const file of fs.readdirSync(`./src/${dir}`)) {
 		if (file.endsWith('.ts') || file.endsWith('.js')) {
@@ -95,34 +113,39 @@ client.on('ready', async () => {
 });
 
 client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
+	if (interaction.isCommand()) {
+		const { commandName } = interaction;
 
-	const { commandName } = interaction;
+		if (!client.commands.has(commandName)) return;
 
-	if (!client.commands.has(commandName)) return;
-
-	try {
-		await client.commands.get(commandName).execute(interaction, client);
-		if (interaction.guild) {
-			const data = await client.db.loadGuild(interaction.guild.id);
-			if (data.logs_channel) {
-				const channel = interaction.guild.channels.cache.get(data.logs_channel);
-				if (channel && channel instanceof TextChannel) {
-					const embed = new MessageEmbed()
-						.setTitle('Command executed')
-						.setDescription(interaction.toString())
-						.setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) });
-					channel.send({ embeds: [embed] });
+		try {
+			await client.commands.get(commandName).execute(interaction, client);
+			if (interaction.guild) {
+				const data = await client.db.loadGuild(interaction.guild.id);
+				if (data.logs_channel) {
+					const channel = interaction.guild.channels.cache.get(data.logs_channel);
+					if (channel && channel instanceof TextChannel) {
+						const embed = new MessageEmbed()
+							.setTitle('Command executed')
+							.setDescription(interaction.toString())
+							.setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) });
+						channel.send({ embeds: [embed] });
+					}
 				}
 			}
 		}
+		catch (error: any) {
+			console.error(error);
+			if (interaction.replied || interaction.deferred) { await interaction.editReply({ content: 'There was an error while executing this command!' }); }
+			else { await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true }); }
+			const botOwner = interaction.guild?.members.cache.get(process.env.botOwner || '');
+			if (botOwner) await botOwner.send(`Error while executing command ${commandName}: ${error.message}`);
+		}
 	}
-	catch (error: any) {
-		console.error(error);
-		if (interaction.replied || interaction.deferred) { await interaction.editReply({ content: 'There was an error while executing this command!' }); }
-		else { await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true }); }
-		const botOwner = interaction.guild?.members.cache.get(process.env.botOwner || '');
-		if (botOwner) await botOwner.send(`Error while executing command ${commandName}: ${error.message}`);
+	else if (interaction.isContextMenu()) {
+		// interaction.reply({ content: interaction.options.getMessage('message')?.content });
+		console.log(interaction);
+		require('./contexts/whois').execute(interaction, client);
 	}
 });
 client.login(process.env.token);
