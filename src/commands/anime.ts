@@ -6,7 +6,7 @@ import mal from 'mal-scraper';
 import AnimeSyncSchema from '../schemas/animesync';
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	command: new SlashCommandBuilder()
 		.setName('anime')
 		.setDescription('Search for anime!')
 		.addSubcommand(subcommand => subcommand.setName('search')

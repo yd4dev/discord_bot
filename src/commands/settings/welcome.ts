@@ -10,7 +10,7 @@ const role_set = new SlashCommandSubcommandBuilder()
 	.addRoleOption(option => option.setName('role').setDescription('The role to set as the default role.').setRequired(true));
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	command: new SlashCommandBuilder()
 		.setName('welcome')
 		.setDescription('Change what happens when a new member joins the server.')
 		.addSubcommandGroup(subcommandGroup => subcommandGroup.setName('role').setDescription('Change the default role for someone who joins the server.').addSubcommand(role_set)),

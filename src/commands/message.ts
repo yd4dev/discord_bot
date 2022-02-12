@@ -4,7 +4,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import getLocale from '../locales/locales';
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	command: new SlashCommandBuilder()
 		.setName('message')
 		.setDescription('Write a message!')
 		.addSubcommand((command) =>
