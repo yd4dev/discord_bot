@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
-import { Client, Collection, Intents, MessageEmbed, TextChannel } from 'discord.js';
+import { Client, Collection, Intents } from 'discord.js';
 
 require('dotenv').config();
 
