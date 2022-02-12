@@ -5,7 +5,7 @@ import { DataClient } from '../..';
 import getLocale from '../../locales/locales';
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	command: new SlashCommandBuilder()
 		.setName('logs')
 		.setDescription('Set the logs channel for a server!')
 		.addChannelOption(option => option.setName('channel').setDescription('The channel to set as the logs channel.').setRequired(true)),

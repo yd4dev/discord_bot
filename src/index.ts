@@ -8,6 +8,7 @@ require('dotenv').config();
 import { guildLoad, guildSave } from './db';
 export class DataClient extends Client {
 	commands: Record<string, any> = new Collection();
+	contexts: Record<string, any> = new Collection();
 	db = {
 		loadGuild: guildLoad,
 		saveGuild: guildSave,
@@ -20,15 +21,22 @@ require('./db').connect(client);
 
 const commands: {}[] = [];
 client.commands = new Collection();
+client.contexts = new Collection();
 
 (async function loadCommands(dir) {
 	for (const file of fs.readdirSync(`./src/${dir}`)) {
 		if (file.endsWith('.ts') || file.endsWith('.js')) {
 			const command = require(`./${dir}/${file}`);
-			// set a new item in the Collection
+			// set a new item in the Collections
 			// with the key as the command name and the value as the exported module
-			client.commands.set(command.data.name, command);
-			commands.push(command.data.toJSON());
+			if (command.command) {
+				commands.push(command.command.toJSON());
+				client.commands.set(command.command.name, command);
+			}
+			if (command.context) {
+				commands.push(command.context.toJSON());
+				client.contexts.set(command.context.name, command);
+			}
 		}
 		else {
 			fs.stat(`./src/${dir}/${file}`, (err, stats) => {
@@ -40,24 +48,6 @@ client.commands = new Collection();
 		}
 	}
 })('commands');
-
-(async function loadContextCommands(dir) {
-	for (const file of fs.readdirSync(`./src/${dir}`)) {
-		if (file.endsWith('.ts') || file.endsWith('.js')) {
-			const command = require(`./${dir}/${file}`);
-
-			commands.push(command.data.toJSON());
-		}
-		else {
-			fs.stat(`./src/${dir}/${file}`, (err, stats) => {
-				if (err) return console.log(err);
-				if (stats.isDirectory()) {
-					loadContextCommands(`${dir}/${file}`);
-				}
-			});
-		}
-	}
-})('contexts');
 
 (async function loadFeatures(dir) {
 	for (const file of fs.readdirSync(`./src/${dir}`)) {
@@ -113,26 +103,13 @@ client.on('ready', async () => {
 });
 
 client.on('interactionCreate', async interaction => {
-	if (interaction.isCommand()) {
+	if (interaction.isCommand() || interaction.isContextMenu()) {
 		const { commandName } = interaction;
 
-		if (!client.commands.has(commandName)) return;
-
 		try {
-			await client.commands.get(commandName).execute(interaction, client);
-			if (interaction.guild) {
-				const data = await client.db.loadGuild(interaction.guild.id);
-				if (data.logs_channel) {
-					const channel = interaction.guild.channels.cache.get(data.logs_channel);
-					if (channel && channel instanceof TextChannel) {
-						const embed = new MessageEmbed()
-							.setTitle('Command executed')
-							.setDescription(interaction.toString())
-							.setAuthor({ name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) });
-						channel.send({ embeds: [embed] });
-					}
-				}
-			}
+			if (interaction.isCommand() && client.commands.has(commandName)) await client.commands.get(commandName).execute(interaction, client);
+			else if (interaction.isContextMenu() && client.contexts.has(commandName)) await client.contexts.get(commandName).execute(interaction, client);
+			else return;
 		}
 		catch (error: any) {
 			console.error(error);
@@ -141,11 +118,6 @@ client.on('interactionCreate', async interaction => {
 			const botOwner = interaction.guild?.members.cache.get(process.env.botOwner || '');
 			if (botOwner) await botOwner.send(`Error while executing command ${commandName}: ${error.message}`);
 		}
-	}
-	else if (interaction.isContextMenu()) {
-		// interaction.reply({ content: interaction.options.getMessage('message')?.content });
-		console.log(interaction);
-		require('./contexts/whois').execute(interaction, client);
 	}
 });
 client.login(process.env.token);

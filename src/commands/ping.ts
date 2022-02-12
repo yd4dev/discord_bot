@@ -3,7 +3,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import getLocale from '../locales/locales';
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	command: new SlashCommandBuilder()
 		.setName('ping')
 		.setDescription('Pong!'),
 	async execute(interaction: CommandInteraction) {
