@@ -31,8 +31,8 @@ module.exports = {
 			if (interaction.guild) {
 				const dblists = await AnimeSyncSchema.find({ '_id': { $in: interaction.guild.members.cache.map(m => m.id) } });
 				for (const user of dblists) {
-					if (user.anilist) {
-						userlistsquery += `_${user._id}: MediaListCollection(userName: "${user.anilist}", type:ANIME) {
+					if (user.site === 'anilist') {
+						userlistsquery += `_${user._id}: MediaListCollection(userName: "${user.name}", type:ANIME) {
 							lists {
 								entries {
 									score
@@ -73,6 +73,7 @@ module.exports = {
 `;
 
 			request('https://graphql.anilist.co', query).then(async data => {
+				if (data.Page.media.length === 0) throw new Error('Not Found.');
 				let index = 0;
 
 				const row = new MessageActionRow()
@@ -108,7 +109,7 @@ module.exports = {
 						});
 				});
 			}).catch(err => {
-				if (err.response?.errors[0]?.message === 'Not Found.') {
+				if (err.message === 'Not Found.') {
 					interaction.editReply(getLocale('ERR_NOT_FOUND', interaction));
 				}
 				else {
@@ -118,26 +119,36 @@ module.exports = {
 		}
 			break;
 		case 'sync': {
-			const site = interaction.options.getString('site');
-			const name = interaction.options.getString('name');
-			if (!site) return interaction.reply(getLocale('ERR_MISSING_ARGUMENT', interaction, ['site']));
-			if (!name) return interaction.reply(getLocale('ERR_MISSING_ARGUMENT', interaction, ['name']));
+			try {
+				const site = interaction.options.getString('site');
+				const name = interaction.options.getString('name');
+				if (!site) return interaction.editReply(getLocale('ERR_MISSING_ARGUMENT', interaction, ['site']));
+				if (!name) return interaction.editReply(getLocale('ERR_MISSING_ARGUMENT', interaction, ['name']));
 
-			let data;
+				let data;
 
-			if (site === 'mal') {
-				data = { user: interaction.user.id, mal: name };
-			}
-			else if (site === 'anilist') {
-				data = { user: interaction.user.id, anilist: name };
-			}
-			else {
-				return interaction.reply(getLocale('ERR_INVALID_ARGUMENT', interaction, ['site']));
-			}
+				if (site === 'mal') {
+					data = { name: name, site: 'mal' };
+				}
+				else if (site === 'anilist') {
+					data = { name: name, site: 'anilist' };
+					await request('https://graphql.anilist.co', gql`{User(name: "${name}") {id, name}}`).then(async d => {
+						data = { name: d.User.name, site: 'anilist' };
+					}).catch(() => {
+						throw new Error('Not Found.');
+					});
+				}
+				else {
+					return interaction.editReply(getLocale('ERR_INVALID_ARGUMENT', interaction, ['site']));
+				}
 
-			AnimeSyncSchema.findOneAndUpdate({ _id: interaction.user.id }, data, { upsert: true }).then(() => {
-				interaction.editReply('Successfully saved!');
-			});
+				AnimeSyncSchema.findOneAndUpdate({ _id: interaction.user.id }, data, { upsert: true }).then(() => {
+					interaction.editReply('Successfully saved!');
+				});
+			}
+			catch {
+				interaction.editReply(getLocale('ERR_INVALID_ARGUMENT', interaction, ['name']));
+			}
 		}
 			break;
 		default:
@@ -193,8 +204,8 @@ async function getInfo(data: any, index: number, interaction?: CommandInteractio
 		const dblists = await AnimeSyncSchema.find({ '_id': { $in: interaction.guild.members.cache.map(m => m.id) } });
 
 		for (const user of dblists) {
-			if (user.mal) {
-				const maldata = await mal.getWatchListFromUser(user.mal).catch(() => null);
+			if (user.site === 'mal') {
+				const maldata = await mal.getWatchListFromUser(user.name).catch(() => null);
 				if (maldata) {
 					for (const anime of maldata) {
 						if ((anime.animeId === media.idMal) && anime.score) {
